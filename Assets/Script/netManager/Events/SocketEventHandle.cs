@@ -76,9 +76,9 @@ namespace AssemblyCSharp
 
 		public static SocketEventHandle getInstance(){
 			if (_instance == null) {
-				//GameObject temp = new GameObject ();
-               // _instance = temp.AddComponent<SocketEventHandle>();
-                _instance = new SocketEventHandle();
+				GameObject temp = new GameObject ();
+                _instance = temp.AddComponent<SocketEventHandle>();
+//                _instance = new SocketEventHandle();
 			}
 			return _instance;
 		}

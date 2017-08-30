@@ -30,7 +30,7 @@ public class UpdateScript{
 		MyDebug.Log ("returnxml  =  "+returnxml);
 		XmlDocument xmlDoc = new XmlDocument();
 		xmlDoc.LoadXml(returnxml);
-		XmlNodeList nodeList = xmlDoc.SelectSingleNode ("versions").ChildNodes;
+		XmlNodeList nodeList = xmlDoc.SelectNodes ("versions/version");
 		foreach(XmlNode xmlNodeVersion in nodeList){
 			Version123 temp = new Version123();
 			temp.title = xmlNodeVersion.SelectSingleNode ("title").InnerText;

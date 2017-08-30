@@ -6,7 +6,7 @@ using UnityEngine;
  */
 namespace AssemblyCSharp
 {
-	public class ServiceErrorListener :  MonoBehaviour
+	public class ServiceErrorListener //:  MonoBehaviour
 	{
 		public ServiceErrorListener ()
 		{
