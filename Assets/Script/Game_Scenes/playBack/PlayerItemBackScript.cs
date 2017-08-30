@@ -48,9 +48,9 @@ public class PlayerItemBackScript : MonoBehaviour {
 		//开始下载图片
 		WWW www = new WWW(avatarvo.headIcon);
 		yield return www;
-		if (www != null) {
+		if (www != null && www.texture != null ) {
 			Texture2D texture2D = www.texture;
-			byte[] bytes = texture2D.EncodeToPNG ();
+			//byte[] bytes = texture2D.EncodeToPNG ();
 			//将图片赋给场景上的Sprite
 			Sprite tempSp = Sprite.Create (texture2D, new Rect (0, 0, texture2D.width, texture2D.height), new Vector2 (0, 0));
 			headerIcon.sprite = tempSp;

@@ -32,9 +32,10 @@ public class LoginSystemScript : MonoBehaviour {
 		SocketEventHandle.getInstance ().LoginCallBack += LoginCallBack;
 		SocketEventHandle.getInstance ().RoomBackResponse += RoomBackResponse;
 		versionText.text ="版本号：" +Application.version;
+		#if UNITY_ANDROID
 		WxPayImpl test = new WxPayImpl(gameObject);
 		test.callTest ("dddddddddddddddddddddddddddd");
-		
+		#endif
 	}
 	
 	// Update is called once per frame

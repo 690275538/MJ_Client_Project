@@ -11,6 +11,8 @@ public class InitializationConfigScritp : MonoBehaviour {
 	
 	int num = 0;
 	bool hasPaused   = false;
+	ServiceErrorListener seriveError = null;
+
 	void Start () {
 		
 		MicroPhoneInput.getInstance ();
@@ -22,7 +24,7 @@ public class InitializationConfigScritp : MonoBehaviour {
 
 		UpdateScript update = new UpdateScript ();
 		StartCoroutine (update.updateCheck ());
-		ServiceErrorListener seriveError = new ServiceErrorListener();
+		seriveError = new ServiceErrorListener();
 		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		//heartbeatTimer ();
 		heartbeatThread();

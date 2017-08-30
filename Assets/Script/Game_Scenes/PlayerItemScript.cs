@@ -79,7 +79,7 @@ public class PlayerItemScript : MonoBehaviour {
 		WWW www = new WWW(avatarvo.account.headicon);
 		yield return www;
 		//下载完成，保存图片到路径filePath
-		if (www != null) {
+		if (www != null && www.texture != null) {
 			Texture2D texture2D = www.texture;
 			//byte[] bytes = texture2D.EncodeToPNG ();
 
