@@ -78,7 +78,6 @@ public class LoginSystemScript : MonoBehaviour {
 		Invoke ("resetClickNum", 10f);
 
 	}
-
 	public void doLogin(){
         //GlobalDataScript.getInstance ().wechatOperate.login ();//TODO 
         if (uinInput.text != "" ) {
