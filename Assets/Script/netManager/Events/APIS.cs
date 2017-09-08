@@ -7,15 +7,19 @@ namespace AssemblyCSharp
 		public APIS ()
 		{
 		}
-		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
-		public const string chatSocketUrl = "whyzx.com";
-		//public const string chatSocketUrl = "192.168.0.112";
-		//public const string socketUrl = "118.178.20.36";
-		public const string socketUrl = "whyzx.com";
+//		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+//		public const string chatSocketUrl = "whyzx.com";
+//		public const string socketUrl = "whyzx.com";
+//		public const string PIC_PATH = "http://whyzx.com:8080/";
+//		public const string ImgUrl = "http://whyzx.com:8080/MaJiangManage/images";
 
-		public const string PIC_PATH = "http://whyzx.com:8080/";
-	//	public const string apkDownLoadurl="192.168.0.111/aaa/weipai.apk";
-		public const string ImgUrl = "http://whyzx.com:8080/MaJiangManage/images";
+
+		public const string UPDATE_INFO_JSON_URL = "http://10.66.214.195:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+		public const string chatSocketUrl = "10.66.214.195";
+		public const string socketUrl = "10.66.214.195";
+		public const string PIC_PATH = "http://10.66.214.195:8080/";
+		public const string ImgUrl = "http://10.66.214.195:8080/MaJiangManage/images";
+
 		public const int head = 0x000030;
 		public const int headRESPONSE = 0x000031;
 

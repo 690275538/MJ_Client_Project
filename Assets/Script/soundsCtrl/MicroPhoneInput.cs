@@ -31,7 +31,7 @@ public class MicroPhoneInput : MonoBehaviour {
 		SocketEventHandle.getInstance ().micInputNotice += micInputNotice;
 		playAudio = GameObject.Find ("GamePlayAudio").GetComponent<AudioSource> ();
 		if (playAudio.clip == null) {
-			playAudio.clip = AudioClip.Create("playRecordClip", 160000, 1, 8000, false, false);  
+			playAudio.clip = AudioClip.Create("playRecordClip", 160000, 1, 8000, false);  
 		}
 	}  
 
@@ -53,10 +53,6 @@ public class MicroPhoneInput : MonoBehaviour {
 			foreach (string deviceStr in Microphone.devices)  
 			{  
 				Debug.Log("device name = " + deviceStr);  
-			}  
-			if(micArray.Length==0)  
-			{  
-				Debug.LogError("no mic device");  
 			}  
 
 			GameObject MicObj=new GameObject("MicObj");  
