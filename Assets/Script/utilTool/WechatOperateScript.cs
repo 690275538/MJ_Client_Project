@@ -34,7 +34,7 @@ public class WechatOperateScript : MonoBehaviour {
 	 * 
 	 */ 
 	public void login(){
-	shareSdk.GetUserInfo(PlatformType.WeChat);
+		shareSdk.GetUserInfo(PlatformType.WeChat);
 	
 
 	}
@@ -214,7 +214,7 @@ public class WechatOperateScript : MonoBehaviour {
 			ShareContent customizeShareParams = new ShareContent();
 			customizeShareParams.SetTitle(title);
 			customizeShareParams.SetText (str);
-			customizeShareParams.SetUrl ("http://www.weipaigame.com/downLoad/index.html");
+			customizeShareParams.SetUrl (APIS.Download_URL);
 			customizeShareParams.SetImageUrl(APIS.ImgUrl+"icon96.png");
 			customizeShareParams.SetShareType(ContentType.Webpage);
 			customizeShareParams.SetObjectID("");
@@ -224,19 +224,17 @@ public class WechatOperateScript : MonoBehaviour {
 
 
 	public void testLogin(string uin){
-        MyDebug.Log("uin:" + uin);
         LoginVo loginvo = new LoginVo();
         try
         {
 
-            loginvo.openId = "openid" + uin;
-            loginvo.nickName = "nickname" + uin;
+            loginvo.openId = "" + uin;
+            loginvo.nickName = "" + uin;
             loginvo.headIcon = "";
-            loginvo.unionid = "unionid" + uin;
+            loginvo.unionid = "" + uin;
             loginvo.province = "广东省";
             loginvo.city = "深圳";
-            string sex = "1";
-            loginvo.sex = int.Parse(sex);
+			loginvo.sex = 1;
             loginvo.IP = GlobalDataScript.getInstance().getIpAddress();
             String msg = JsonMapper.ToJson(loginvo);
 
@@ -247,7 +245,6 @@ public class WechatOperateScript : MonoBehaviour {
             GlobalDataScript.loginResponseData.account = new Account();
             GlobalDataScript.loginResponseData.account.city = loginvo.city;
             GlobalDataScript.loginResponseData.account.openid = loginvo.openId;
-            MyDebug.Log(" loginvo.nickName:" + loginvo.nickName);
             GlobalDataScript.loginResponseData.account.nickname = loginvo.nickName;
             GlobalDataScript.loginResponseData.account.headicon = loginvo.headIcon;
             GlobalDataScript.loginResponseData.account.unionid = loginvo.city;
@@ -257,7 +254,6 @@ public class WechatOperateScript : MonoBehaviour {
         }
         catch (Exception e)
         {
-            MyDebug.Log("微信接口有变动！" + e.Message);
             TipsManagerScript.getInstance().setTips("请先打开你的微信客户端");
             return;
         }

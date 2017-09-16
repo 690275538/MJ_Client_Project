@@ -71,7 +71,6 @@ public class CustomSocket{
         {
             //设置标志,连接服务端失败!
 			showMessageTip("服务器断开连接，请重新运行程序或稍后再试");
-			MyDebug.Log("11111111111111111111111111111111");
 		//	ReConnectScript.getInstance().ReConnectToServer(); 
 			Debug.Log(ex.ToString());   
 			isConnected = false;
@@ -114,8 +113,7 @@ public class CustomSocket{
             }
             else
             {
-			//	showMessageTip("服务器断开连接，请重新运行程序或稍后再试");
-				MyDebug.Log("22222222222222222222222222222");
+				showMessageTip("服务器断开连接，请重新运行程序或稍后再试");
 				isConnected = false;
 				SocketEventHandle.getInstance ().noticeDisConect ();
 				//ReConnectScript.getInstance().ReConnectToServer(); 
@@ -125,8 +123,7 @@ public class CustomSocket{
         catch(Exception ex)
         {
 			MyDebug.Log(ex.ToString());
-			MyDebug.Log("33333333333333333333333333");
-		//	showMessageTip("服务器断开连接，请重新运行程序或稍后再试");
+			showMessageTip("服务器断开连接，请重新运行程序或稍后再试");
 			isConnected = false;
 			SocketEventHandle.getInstance ().noticeDisConect ();
 			//ReConnectScript.getInstance().ReConnectToServer(); 
@@ -154,9 +151,7 @@ public class CustomSocket{
 			}
 
 		}catch(Exception ex){
-			MyDebug.Log (ex.ToString());
-			isConnected = false;
-			//showMessageTip ("服务器已断开连接，请重新登录");
+			showMessageTip ("服务器已断开连接，请重新登录");
 			isConnected = false;
 			SocketEventHandle.getInstance ().noticeDisConect ();
 			return false;
@@ -213,8 +208,7 @@ public class CustomSocket{
             {
                 try
                 {
-					IAsyncResult ar = stream.BeginRead(state.buffer, 0, StateObject.BufferSize,
-                            new AsyncCallback(TCPReadCallBack), state);
+					stream.BeginRead(state.buffer, 0, StateObject.BufferSize,new AsyncCallback(TCPReadCallBack), state);
                   
                 }
                 catch(Exception ex)
@@ -270,8 +264,7 @@ public class CustomSocket{
 				sources = null;
 				ReceiveCallBack (dd);
 			}
-            mas.BeginRead(state.buffer, 0, StateObject.BufferSize,
-                    new AsyncCallback(TCPReadCallBack), state);
+            mas.BeginRead(state.buffer, 0, StateObject.BufferSize,new AsyncCallback(TCPReadCallBack), state);
         }
         else
         {
@@ -306,14 +299,13 @@ public class CustomSocket{
 		//通知调用端接收完毕
 		try
 		{
-		//	MyDebug.Log("m_receiveBuffer======"+m_receiveBuffer.Length);
 				MemoryStream ms = new MemoryStream(m_receiveBuffer);
 				BinaryReader buffers = new BinaryReader(ms, UTF8Encoding.Default);
 				readBuffer(buffers);
 		}
 		catch (Exception ex)
 		{
-			MyDebug.Log ("socket exception:"+ex.Message);
+			
 			throw new Exception(ex.Message);
 		}
 	}
@@ -326,13 +318,13 @@ public class CustomSocket{
 			startTimer ();
 			hasStartTimer = true;
 		}
-		//MyDebug.Log ("lengs ====>>  "+lens);
+
 
 		if (lens > buffers.BaseStream.Length) {
 			waitLen = lens;
 			isWait = true;
 			buffers.BaseStream.Position = 0;
-			byte[] dd = new byte[buffers.BaseStream.Length];
+			byte[] dd = new byte[buffers.BaseStream.Length];//TODO 明显有问题，应该是lens
 			byte[] temp =  buffers.ReadBytes ((int)buffers.BaseStream.Length);
 			Array.Copy (temp, 0, dd, 0, (int)buffers.BaseStream.Length);
 			if (sources == null) {
@@ -349,7 +341,6 @@ public class CustomSocket{
 			response.status = status;
 			response.message = message;
 			response.headCode = headcode;
-			MyDebug.Log("response.headCode = "+response.headCode+"  response.message =   "+message);
 			SocketEventHandle.getInstance().addResponse(response);
 		}
 		if (buffers.BaseStream.Position < buffers.BaseStream.Length) {
@@ -378,7 +369,7 @@ public class CustomSocket{
 
 	public void timeout(object source, System.Timers.ElapsedEventArgs e)   
 	{  
-		//MyDebug.Log ("disConnectCount+" + disConnectCount);
+		
 		disConnectCount += 1;
 		if (disConnectCount >= 15) {
 			t.Stop ();

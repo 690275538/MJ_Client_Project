@@ -23,6 +23,9 @@ namespace cn.sharesdk.unity3d
 		public string appKey = "14a7c5a79c370";
 		#elif UNITY_IPHONE
 		public string appKey = "14abc08290738";
+
+		#elif UNITY_STANDALONE
+		public string appKey = "14abc08290738";
 		#endif
 		public DevInfoSet devInfo;
 		public ShareSDKImpl shareSDKUtils;

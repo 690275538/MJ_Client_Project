@@ -36,12 +36,12 @@ public class MyMahjongScript : MonoBehaviour
 	public Transform pengGangParenTransformR;
 	public Transform pengGangParenTransformT;
 	public List<AvatarVO> avatarList;
-	public Image weipaiImg;
+	public Image centerTitle;
 	public Button inviteFriendButton;
 	public  Button ExitRoomButton;
 
-	public Image live1;
-	public Image live2;
+	public Image remainCard;
+	public Image remainRound;
 	public Image centerImage;
 	public GameObject noticeGameObject;
 	public Text noticeText;
@@ -118,7 +118,7 @@ public class MyMahjongScript : MonoBehaviour
 	/// <summary>
 	/// 手牌数组，0自己，1-右边。2-上边。3-左边
 	/// </summary>
-	public List<List<GameObject>> handerCardList;
+	public List<List<GameObject>> handCardList;
 	/// <summary>
 	/// 打在桌子上的牌
 	/// </summary>
@@ -235,10 +235,10 @@ public class MyMahjongScript : MonoBehaviour
 
 	private void initArrayList(){
 		mineList = new List<List<int>>();
-		handerCardList = new List<List<GameObject>> ();
+		handCardList = new List<List<GameObject>> ();
 		tableCardList = new List<List<GameObject>> ();
 		for (int i = 0; i < 4; i++) {
-			handerCardList.Add (new List<GameObject>());
+			handCardList.Add (new List<GameObject>());
 			tableCardList.Add (new List<GameObject>());
 		}
 
@@ -265,14 +265,14 @@ public class MyMahjongScript : MonoBehaviour
 	/// <param name="obj">Object.</param>
 	public void cardSelect(GameObject obj)
 	{
-		for (int i = 0; i < handerCardList[0].Count; i++)
+		for (int i = 0; i < handCardList[0].Count; i++)
 		{
-			if (handerCardList[0] [i] == null) {
-				handerCardList[0].RemoveAt (i);
+			if (handCardList[0] [i] == null) {
+				handCardList[0].RemoveAt (i);
 				i--;
 			} else {
-				handerCardList[0] [i].transform.localPosition = new Vector3 (handerCardList[0] [i].transform.localPosition.x, -292f); //从右到左依次对齐
-				handerCardList[0] [i].transform.GetComponent<bottomScript> ().selected = false;
+				handCardList[0] [i].transform.localPosition = new Vector3 (handCardList[0] [i].transform.localPosition.x, -292f); //从右到左依次对齐
+				handCardList[0] [i].transform.GetComponent<bottomScript> ().selected = false;
 			}
 		}
 		if (obj != null)
@@ -307,8 +307,8 @@ public class MyMahjongScript : MonoBehaviour
 
 		GlobalDataScript.finalGameEndVo = null;
 		GlobalDataScript.mainUuid = avatarList [bankerId].account.uuid;
-		initArrayList ();
-		curDirString = getDirection (bankerId);
+//		initArrayList ();
+//		curDirString = getDirection (bankerId);
 		playerItems [curDirIndex].setbankImgEnable (true);
 		SetDirGameObjectAction();
 		isFirstOpen = false;
@@ -334,11 +334,11 @@ public class MyMahjongScript : MonoBehaviour
 
 	private void cleanGameplayUI(){
 		canClickButtonFlag = true;
-		weipaiImg.transform.gameObject.SetActive(false);
+		centerTitle.transform.gameObject.SetActive(false);
 		inviteFriendButton.transform.gameObject.SetActive (false);
 		ExitRoomButton.transform.gameObject.SetActive (false);
-		live1.transform.gameObject.SetActive (true);
-		live2.transform.gameObject.SetActive (true);
+		remainCard.transform.gameObject.SetActive (true);
+		remainRound.transform.gameObject.SetActive (true);
 		centerImage.transform.gameObject.SetActive (true);
 		liujuEffectGame.SetActive (false);
 	}
@@ -521,7 +521,7 @@ public class MyMahjongScript : MonoBehaviour
 				for (int b = 0; b < mineList[0][a]; b++)
 				{
 					GameObject gob = Instantiate(Resources.Load("prefab/card/Bottom_B")) as GameObject;
-					//GameObject.Instantiate ("");
+
 					if (gob != null)//
 					{
 						gob.transform.SetParent(parentList[0]);//设置父节点
@@ -530,7 +530,7 @@ public class MyMahjongScript : MonoBehaviour
 						gob.GetComponent<bottomScript>().reSetPoisiton += cardSelect;
 						gob.GetComponent<bottomScript>().setPoint(a);//设置指针          
 						SetPosition(false);
-						handerCardList[0].Add(gob);//增加游戏对象
+						handCardList[0].Add(gob);//增加游戏对象
 					}
 					else
 					{
@@ -663,17 +663,17 @@ public class MyMahjongScript : MonoBehaviour
 
 				case DirectionEnum.Top: //上
 					temp.transform.localPosition = new Vector3(-204+ 38*i, 0); //位置   
-					handerCardList[2].Add(temp);
-				temp.transform.localScale = Vector3.one; //原大小
+					handCardList[2].Add(temp);
+					temp.transform.localScale = Vector3.one; //原大小
                         break;
 				case DirectionEnum.Left: //左
 					temp.transform.localPosition = new Vector3(0, -105 + i*30); //位置   
 				        temp.transform.SetSiblingIndex(0);
-                        handerCardList[3].Add(temp);
+                        handCardList[3].Add(temp);
 					break;
 				case DirectionEnum.Right: //右
 					temp.transform.localPosition = new Vector3(0, 119 - i*30); //位置     
-                        handerCardList[1].Add(temp);
+                        handCardList[1].Add(temp);
 					break;
 				}
 			}
@@ -699,7 +699,7 @@ public class MyMahjongScript : MonoBehaviour
 			pickCardItem.GetComponent<bottomScript>().setPoint(MoPaiCardPoint); //得到索引
 			insertCardIntoList(pickCardItem);
 		}
-		MyDebug.Log ("moPai  goblist count === >> "+ handerCardList[0].Count);
+		MyDebug.Log ("moPai  goblist count === >> "+ handCardList[0].Count);
 
 	}
 
@@ -741,8 +741,8 @@ public class MyMahjongScript : MonoBehaviour
 
 		} else {
 			int dirIndex = getIndexByDir (getDirection (curAvatarIndex));
-			GameObject obj = handerCardList [dirIndex] [0];
-			handerCardList [dirIndex].RemoveAt (0);
+			GameObject obj = handCardList [dirIndex] [0];
+			handCardList [dirIndex].RemoveAt (0);
 			Destroy (obj);
 
 		}
@@ -921,12 +921,12 @@ public class MyMahjongScript : MonoBehaviour
 			mineList [0] [putOutCardPoint]++;
 			mineList [1] [putOutCardPoint] = 2;
 			int removeCount = 0;
-			for (int i = 0; i < handerCardList [0].Count; i++) {
-				GameObject temp = handerCardList [0] [i];
+			for (int i = 0; i < handCardList [0].Count; i++) {
+				GameObject temp = handCardList [0] [i];
 				int tempCardPoint = temp.GetComponent<bottomScript> ().getPoint ();
 				if (tempCardPoint == putOutCardPoint) {
 
-					handerCardList [0].RemoveAt (i);
+					handCardList [0].RemoveAt (i);
 					Destroy (temp);
 					i--;
 					removeCount++;
@@ -939,7 +939,7 @@ public class MyMahjongScript : MonoBehaviour
 			bottomPeng ();
 		
 		} else {//==============================================其他人碰牌
-			List<GameObject> tempCardList = handerCardList[getIndexByDir(curDirString)];
+			List<GameObject> tempCardList = handCardList[getIndexByDir(curDirString)];
 			string path= "Prefab/PengGangCard/PengGangCard_"+curDirString;
 			if (tempCardList != null) {
 				MyDebug.Log ("tempCardList.count======前"+tempCardList.Count);
@@ -1077,17 +1077,17 @@ public class MyMahjongScript : MonoBehaviour
 		switch (curDirString)
 		{
 		case DirectionEnum.Right:
-			tempCardList = handerCardList[1];
+			tempCardList = handCardList[1];
 			path = "Prefab/PengGangCard/PengGangCard_R";
 			path2 = "Prefab/PengGangCard/GangBack_L&R";
 			break;
 		case DirectionEnum.Top:
-			tempCardList = handerCardList[2];
+			tempCardList = handCardList[2];
 			path = "Prefab/PengGangCard/PengGangCard_T";
 			path2 = "Prefab/PengGangCard/GangBack_T";
 			break;
 		case DirectionEnum.Left:
-			tempCardList = handerCardList[3];
+			tempCardList = handCardList[3];
 			path = "Prefab/PengGangCard/PengGangCard_L";
 			path2 = "Prefab/PengGangCard/GangBack_L&R";
 			break;
@@ -1343,7 +1343,7 @@ public class MyMahjongScript : MonoBehaviour
 	/// <param name="obj">Object.</param>
 	public void cardChange(GameObject obj)//
 	{
-		int handCardCount = handerCardList [0].Count -1;
+		int handCardCount = handCardList [0].Count -1;
 		if (handCardCount == 13 || handCardCount == 10 || handCardCount == 7 || handCardCount == 4 || handCardCount == 1) {
 			GlobalDataScript.isDrag = false;
 			obj.GetComponent<bottomScript> ().onSendMessage -= cardChange;
@@ -1351,8 +1351,8 @@ public class MyMahjongScript : MonoBehaviour
 			MyDebug.Log("card change over");
 			int putOutCardPointTemp = obj.GetComponent<bottomScript>().getPoint();//将当期打出牌的点数传出
 			pushOutFromMineList(putOutCardPointTemp);                         //将牌的索引从minelist里面去掉
-			handerCardList[0].Remove (obj);
-			MyDebug.Log ("cardchange  goblist count = > "+handerCardList[0].Count);
+			handCardList[0].Remove (obj);
+			MyDebug.Log ("cardchange  goblist count = > "+handCardList[0].Count);
 			Destroy(obj);
 			SetPosition (false);
 			createPutOutCardAndPlayAction (putOutCardPointTemp,getMyIndexFromList());//讲拖出牌进行第一段动画的播放
@@ -1411,34 +1411,34 @@ public class MyMahjongScript : MonoBehaviour
 	{
 		if(item != null){
 			int curCardPoint = item.GetComponent<bottomScript>().getPoint();//得到当前牌指针
-			for (int i = 0; i < handerCardList[0].Count; i++)//i<游戏物体个数 自增
+			for (int i = 0; i < handCardList[0].Count; i++)//i<游戏物体个数 自增
 			{
-				int cardPoint = handerCardList[0][i].GetComponent<bottomScript>().getPoint();//得到所有牌指针
+				int cardPoint = handCardList[0][i].GetComponent<bottomScript>().getPoint();//得到所有牌指针
 				if (cardPoint >=curCardPoint )//牌指针>=当前牌的时候插入
 				{
-					handerCardList[0].Insert(i, item);//在
+					handCardList[0].Insert(i, item);//在
 					return;
 				}
 			}
-			handerCardList[0].Add(item);//游戏对象列表添加当前牌
+			handCardList[0].Add(item);//游戏对象列表添加当前牌
 		}
 		item = null;
 	}
 
 	public void SetPosition(bool flag)//设置位置
 	{
-		int count = handerCardList[0].Count;
+		int count = handCardList[0].Count;
 		//int startX = 594 - count*79;
 		int startX = 594 - count*80;
 		if (flag) {
 			for (int i = 0; i < count-1; i++) {
-				handerCardList[0] [i].transform.localPosition = new Vector3 (startX + i * 80f, -292f); //从左到右依次对齐
+				handCardList[0] [i].transform.localPosition = new Vector3 (startX + i * 80f, -292f); //从左到右依次对齐
 			}
-			handerCardList[0] [count-1].transform.localPosition = new Vector3 (580f, -292f); //从左到右依次对齐
+			handCardList[0] [count-1].transform.localPosition = new Vector3 (580f, -292f); //从左到右依次对齐
 
 		} else {
 			for (int i = 0; i < count; i++) {
-				handerCardList[0] [i].transform.localPosition = new Vector3 (startX + i * 80f -80f, -292f); //从左到右依次对齐
+				handCardList[0] [i].transform.localPosition = new Vector3 (startX + i * 80f -80f, -292f); //从左到右依次对齐
 			}
 		}
 	}
@@ -1584,11 +1584,11 @@ public class MyMahjongScript : MonoBehaviour
 
 					//销毁手牌中的三张牌
 					int removeCount = 0;
-					for (int i = 0; i < handerCardList [0].Count; i++) {
-						GameObject temp = handerCardList [0] [i];
-						int tempCardPoint = handerCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
+					for (int i = 0; i < handCardList [0].Count; i++) {
+						GameObject temp = handCardList [0] [i];
+						int tempCardPoint = handCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
 						if (selfGangCardPoint == tempCardPoint) {
-							handerCardList [0].RemoveAt (i);
+							handCardList [0].RemoveAt (i);
 							Destroy (temp);
 							i--;
 							removeCount++;
@@ -1618,10 +1618,10 @@ public class MyMahjongScript : MonoBehaviour
 
 				} else {//在碰牌数组以内，则一定是自摸的牌
 
-					for (int i = 0; i < handerCardList [0].Count; i++) {
-						if (handerCardList [0] [i].GetComponent<bottomScript> ().getPoint () == selfGangCardPoint) {
-							GameObject temp = handerCardList [0] [i];
-							handerCardList [0].RemoveAt (i);
+					for (int i = 0; i < handCardList [0].Count; i++) {
+						if (handCardList [0] [i].GetComponent<bottomScript> ().getPoint () == selfGangCardPoint) {
+							GameObject temp = handCardList [0] [i];
+							handCardList [0].RemoveAt (i);
 							Destroy (temp);
 							break;
 						}
@@ -1647,11 +1647,11 @@ public class MyMahjongScript : MonoBehaviour
 				mineList [1] [selfGangCardPoint] = 4;
 				int removeCount = 0;
 
-				for (int i = 0; i < handerCardList [0].Count; i++) {
-					GameObject temp = handerCardList [0] [i];
-					int tempCardPoint = handerCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
+				for (int i = 0; i < handCardList [0].Count; i++) {
+					GameObject temp = handCardList [0] [i];
+					int tempCardPoint = handCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
 					if (selfGangCardPoint == tempCardPoint) {
-						handerCardList [0].RemoveAt (i);
+						handCardList [0].RemoveAt (i);
 						Destroy (temp);
 						i--;
 						removeCount++;
@@ -1736,7 +1736,7 @@ public class MyMahjongScript : MonoBehaviour
 	/// 清理桌面
 	/// </summary>
 	public void clean(){
-		cleanArrayList (handerCardList);
+		cleanArrayList (handCardList);
 		cleanArrayList (tableCardList);
 		cleanArrayList (PengGangList_L);
 		cleanArrayList (PengGangCardList); 
@@ -1890,9 +1890,10 @@ public class MyMahjongScript : MonoBehaviour
 	/// <returns>The my index from list.</returns>
 	private int getMyIndexFromList(){
 		if (avatarList != null) {
+			var myaccount = GlobalDataScript.loginResponseData.account;
 			for (int i = 0; i < avatarList.Count; i++)
 			{
-				if (avatarList[i].account.uuid == GlobalDataScript.loginResponseData.account.uuid ||avatarList[i].account.openid == GlobalDataScript.loginResponseData.account.openid)
+				if (avatarList[i].account.uuid == myaccount.uuid ||avatarList[i].account.openid == myaccount.openid)
 
 				{
 					GlobalDataScript.loginResponseData.account.uuid = avatarList [i].account.uuid;
@@ -2115,10 +2116,10 @@ public class MyMahjongScript : MonoBehaviour
 		avatarList [bankerId].main = false;
 		getDirection (bankerId);
 		playerItems [curDirIndex].setbankImgEnable (false);
-		if (handerCardList != null && handerCardList.Count > 0 && handerCardList [0].Count > 0) {
-			for (int i = 0; i < handerCardList[0].Count; i++) {
-				handerCardList [0] [i].GetComponent<bottomScript> ().onSendMessage -= cardChange;
-				handerCardList [0] [i].GetComponent<bottomScript> ().reSetPoisiton -= cardSelect;
+		if (handCardList != null && handCardList.Count > 0 && handCardList [0].Count > 0) {
+			for (int i = 0; i < handCardList[0].Count; i++) {
+				handCardList [0] [i].GetComponent<bottomScript> ().onSendMessage -= cardChange;
+				handCardList [0] [i].GetComponent<bottomScript> ().reSetPoisiton -= cardSelect;
 			}
 		}
 
@@ -2409,7 +2410,7 @@ public class MyMahjongScript : MonoBehaviour
 						gob.GetComponent<bottomScript>().onSendMessage += cardChange;//发送消息fd
 						gob.GetComponent<bottomScript>().reSetPoisiton += cardSelect;
 						gob.GetComponent<bottomScript>().setPoint(i);//设置指针                                                                                         
-						handerCardList[0].Add(gob);//增加游戏对象
+						handCardList[0].Add(gob);//增加游戏对象
 					}
 				}
 
@@ -2780,11 +2781,11 @@ public class MyMahjongScript : MonoBehaviour
 
 		if (pickAvatarIndexTemp == getMyIndexFromList()) {//自己摸牌
 			if (currentCardPointTemp == -2) {
-				MoPaiCardPoint = handerCardList[0][handerCardList[0].Count-1].GetComponent<bottomScript>().getPoint();
+				MoPaiCardPoint = handCardList[0][handCardList[0].Count-1].GetComponent<bottomScript>().getPoint();
 				SelfAndOtherPutoutCard = MoPaiCardPoint; 
 				useForGangOrPengOrChi = curAvatarIndexTemp;
-				Destroy(handerCardList[0][handerCardList[0].Count-1]);
-				handerCardList[0].Remove(handerCardList[0][handerCardList[0].Count-1]);
+				Destroy(handCardList[0][handCardList[0].Count-1]);
+				handCardList[0].Remove(handCardList[0][handCardList[0].Count-1]);
 				SetPosition (false);
 				putCardIntoMineList (MoPaiCardPoint);
 				moPai ();
@@ -2794,15 +2795,15 @@ public class MyMahjongScript : MonoBehaviour
 				MyDebug.Log ("自己摸牌");
 
 			} else {
-				if ((handerCardList [0].Count) % 3 != 1) {
+				if ((handCardList [0].Count) % 3 != 1) {
 					MoPaiCardPoint = currentCardPointTemp;
 					MyDebug.Log ("摸牌" + MoPaiCardPoint);
 					SelfAndOtherPutoutCard = MoPaiCardPoint; 
 					useForGangOrPengOrChi = curAvatarIndexTemp;
-					for(int i=0;i<handerCardList[0].Count;i++){
-						if(handerCardList[0][i].GetComponent<bottomScript>().getPoint()== currentCardPointTemp){
-							Destroy(handerCardList[0][i]);
-							handerCardList[0].Remove(handerCardList[0][i]);
+					for(int i=0;i<handCardList[0].Count;i++){
+						if(handCardList[0][i].GetComponent<bottomScript>().getPoint()== currentCardPointTemp){
+							Destroy(handCardList[0][i]);
+							handCardList[0].Remove(handCardList[0][i]);
 							break;
 						}
 					}

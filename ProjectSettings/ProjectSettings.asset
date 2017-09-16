@@ -10,7 +10,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: whyzx
-  productName: "\u540C\u4E50\u9EBB\u5C06"
+  productName: "\u94C1\u811A\u9EBB\u5C06"
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_ShowUnitySplashScreen: 1
@@ -168,8 +168,8 @@ PlayerSettings:
   AndroidTargetDevice: 0
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: /Users/devin/Desktop/MJ_Client_Project/TongleMJ.keystore
-  AndroidKeyaliasName: tlmj_key
+  AndroidKeystoreName: TJ.keystore
+  AndroidKeyaliasName: tj
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   androidEnableBanner: 1

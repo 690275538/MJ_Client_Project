@@ -499,7 +499,7 @@ GameObject:
   - 222: {fileID: 22231988}
   - 114: {fileID: 11413354}
   m_Layer: 5
-  m_Name: Leaved1
+  m_Name: remainRound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1648,7 +1648,7 @@ GameObject:
   - 222: {fileID: 22226688}
   - 114: {fileID: 11411234}
   m_Layer: 5
-  m_Name: Image_game_start_weipai
+  m_Name: center_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1870,7 +1870,7 @@ GameObject:
   - 222: {fileID: 22283946}
   - 114: {fileID: 11440212}
   m_Layer: 5
-  m_Name: Leaved
+  m_Name: remainCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3005,7 +3005,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 123b81b34994c564f81f3d82030ec458, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5ed15b34e7ebe4171b91ff8f1cc40fd4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3174,7 +3174,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 58ff0bda6952dc24c93d589b4e205d24, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4e96105e1c9c6457a8daccfb6621e5f8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4133,7 +4133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headerIcon: {fileID: 11400084}
-  bankerImg: {fileID: 11434804}
+  bankerImg: {fileID: 0}
   nameText: {fileID: 11481856}
   readyImg: {fileID: 11499974}
   scoreText: {fileID: 0}
@@ -5393,11 +5393,11 @@ MonoBehaviour:
   pengGangParenTransformL: {fileID: 22487544}
   pengGangParenTransformR: {fileID: 22421084}
   pengGangParenTransformT: {fileID: 22466548}
-  weipaiImg: {fileID: 11411234}
+  centerTitle: {fileID: 11411234}
   inviteFriendButton: {fileID: 11450256}
   ExitRoomButton: {fileID: 11475330}
-  live1: {fileID: 11440212}
-  live2: {fileID: 11413354}
+  remainCard: {fileID: 11440212}
+  remainRound: {fileID: 11413354}
   centerImage: {fileID: 11436414}
   noticeGameObject: {fileID: 127846}
   noticeText: {fileID: 11442204}
@@ -6542,7 +6542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headerIcon: {fileID: 11466436}
-  bankerImg: {fileID: 11401244}
+  bankerImg: {fileID: 0}
   nameText: {fileID: 11462468}
   readyImg: {fileID: 11423908}
   scoreText: {fileID: 11436606}
@@ -7323,7 +7323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headerIcon: {fileID: 11448874}
-  bankerImg: {fileID: 11488890}
+  bankerImg: {fileID: 0}
   nameText: {fileID: 11470566}
   readyImg: {fileID: 11463904}
   scoreText: {fileID: 0}
@@ -7397,7 +7397,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   headerIcon: {fileID: 11499320}
-  bankerImg: {fileID: 11473586}
+  bankerImg: {fileID: 0}
   nameText: {fileID: 11453162}
   readyImg: {fileID: 11419342}
   scoreText: {fileID: 0}
@@ -9745,7 +9745,7 @@ RectTransform:
   m_LocalRotation: {x: 1, y: 0, z: 0, w: -0.00000016292068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180, z: -180}
   m_Children:
   - {fileID: 22449030}
   m_Father: {fileID: 22437608}

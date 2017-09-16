@@ -88,11 +88,7 @@ public class HomePanelScript : MonoBehaviour {
 			}
 		}
 
-//		TimeNum += Time.deltaTime;
-//		if(TimeNum >= waiteTime){
-//			TimeNum = 0;
-//			setNoticeTextMessage ();
-//		}
+
 
 	}
 
@@ -139,12 +135,9 @@ public class HomePanelScript : MonoBehaviour {
 	private void initUI(){
 		if (GlobalDataScript.loginResponseData != null) {
 			headIcon = GlobalDataScript.loginResponseData.account.headicon;
-			string nickName = GlobalDataScript.loginResponseData.account.nickname;
-			int roomCardcount = GlobalDataScript.loginResponseData.account.roomcard;
-			cardCountText.text = roomCardcount+"";
-			nickNameText.text = nickName;
+			cardCountText.text = GlobalDataScript.loginResponseData.account.roomcard.ToString();
+			nickNameText.text = GlobalDataScript.loginResponseData.account.nickname;
 			IpText.text = "ID:" + GlobalDataScript.loginResponseData.account.uuid;
-			GlobalDataScript.loginResponseData.account.roomcard = roomCardcount;
 		}
         StartCoroutine (LoadImg());
 	//	CustomSocket.getInstance ().sendMsg (new GetContactInfoRequest ());

@@ -59,9 +59,8 @@ public class ZhanjiPanelScript : MonoBehaviour {
 			DetailPanel.SetActive (false);
 			for (int i = 0; i < detailItemPanelList.Count; i++) {
 				Destroy (detailItemPanelList [i]);
-				detailItemPanelList.RemoveAt (i);
-				i--;
 			}
+			detailItemPanelList.Clear ();
 			currentDisplayFlag = 0;
 		} else {
 			removeListener ();
@@ -84,13 +83,12 @@ public class ZhanjiPanelScript : MonoBehaviour {
 		if (roomPanelList != null && roomPanelList.Count > 0) {
 			for (int i = 0; i <roomPanelList.Count; i++) {
 				Destroy (roomPanelList [i]);
-				roomPanelList.RemoveAt (i);
-				i--;
 			}
+			roomPanelList.Clear ();
 		}
 
 
-		if (roomZhanjiData != null && roomZhanjiData.roomDataList.Count != 0) {
+		if (roomZhanjiData.roomDataList.Count != 0) {
 			currentDisplayFlag = 0;
 			RoomPanel.SetActive (true);
 			DetailPanel.SetActive (false);
@@ -117,13 +115,12 @@ public class ZhanjiPanelScript : MonoBehaviour {
 
 		for (int i = 0; i < detailItemPanelList.Count; i++) {
 			Destroy (detailItemPanelList [i]);
-			detailItemPanelList.RemoveAt (i);
-			i--;
 		}
+		detailItemPanelList.Clear ();
 
-		if (roomDetailData.standingDetail != null && roomDetailData.standingDetail.Count > 0) {
+		if (roomDetailData.standingDetail.Count > 0) {
 			string content = roomDetailData.standingDetail [0].content;
-			if (content != null && content != "") {
+			if (!string.IsNullOrEmpty(content)) {
 				string[] infoList = content.Split (new char[1]{','});
 				for (int i = 0; i < infoList.Length-1; i++) {
 					string name = infoList [i].Split (new char[1]{':'})[0];

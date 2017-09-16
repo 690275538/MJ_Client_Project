@@ -63,14 +63,11 @@ public class LoginSystemScript : MonoBehaviour {
 			return;
 		}
 
-
-
 		GlobalDataScript.reinitData ();//初始化界面数据
 		if (agreeProtocol.isOn) {
 			doLogin ();
 			watingPanel.SetActive(true);
 		} else {
-			MyDebug.Log ("请先同意用户使用协议");
 			TipsManagerScript.getInstance ().setTips ("请先同意用户使用协议");
 		}
 

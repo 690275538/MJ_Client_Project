@@ -24,6 +24,9 @@ public class FileIO
             Application.persistentDataPath + "/";
 #elif UNITY_IPHONE
             Application.persistentDataPath + "/";
+
+#elif UNITY_STANDALONE
+			Application.persistentDataPath + "/";
 #endif
         }
     }
@@ -52,7 +55,10 @@ public class FileIO
 #elif UNITY_ANDROID
     Application.persistentDataPath + "/";
 #elif UNITY_IPHONE
-    Application.persistentDataPath + "/";
+	Application.persistentDataPath + "/";
+#elif UNITY_STANDALONE
+	Application.persistentDataPath + "/";
+
 #endif
 
         //string str = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second + ":" + DateTime.Now.Millisecond + "-" + "\n";
