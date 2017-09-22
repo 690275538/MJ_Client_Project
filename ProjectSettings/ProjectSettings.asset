@@ -93,7 +93,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleIdentifier: com.whyzx.tlmj
+  bundleIdentifier: com.whyzx.tjmj
   bundleVersion: 1.0.0
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
@@ -104,7 +104,7 @@ PlayerSettings:
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
   AndroidPreferredInstallLocation: 1
-  aotOptions: 
+  aotOptions: nrgctx-trampolines=8096,nimt-trampolines=8096,ntrampolines=4048
   apiCompatibilityLevel: 2
   stripEngineCode: 1
   iPhoneStrippingLevel: 0
@@ -120,7 +120,7 @@ PlayerSettings:
     serializedVersion: 2
     m_Bits: 238
   iPhoneSdkVersion: 988
-  iPhoneTargetOSVersion: 22
+  iPhoneTargetOSVersion: 24
   tvOSSdkVersion: 0
   tvOSTargetOSVersion: 900
   uIPrerenderedIcon: 0
@@ -190,7 +190,10 @@ PlayerSettings:
   - m_BuildTarget: Android
     m_StaticBatching: 1
     m_DynamicBatching: 0
-  m_BuildTargetGraphicsAPIs: []
+  m_BuildTargetGraphicsAPIs:
+  - m_BuildTarget: iOSSupport
+    m_APIs: 1000000008000000
+    m_Automatic: 0
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
   wiiUTitleID: 0005000011000000

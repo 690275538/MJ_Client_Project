@@ -683,25 +683,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0ddde4b6006fa4a912bec7ca093d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  appKey: 31346137633561373963333730
+  appKey: 212ab8459c6c5
   devInfo:
     wechat:
       Enable: 1
-      SortId: 35
-      AppId: 777836383265636630636561333461633737
-      AppSecret: 3963663265663164326430396562633034326637323363646232383161336332
-      BypassApproval: 0
+      app_id: wx682ecf0cea34ac77
+      app_secret: 9cf2ef1d2d09ebc042f723cdb281a3c2
     wechatMoments:
       Enable: 1
-      SortId: 36
-      AppId: 777836383265636630636561333461633737
-      AppSecret: 3963663265663164326430396562633034326637323363646232383161336332
-      BypassApproval: 0
+      app_id: wx682ecf0cea34ac77
+      app_secret: 9cf2ef1d2d09ebc042f723cdb281a3c2
     wechatFavorites:
       Enable: 1
-      SortId: 37
-      AppId: 777834383638623335303631663837383835
-      AppSecret: 3634303230333631623865633463393939333663306533393939613966323439
+      app_id: wx682ecf0cea34ac77
+      app_secret: 9cf2ef1d2d09ebc042f723cdb281a3c2
 --- !u!114 &1006521401
 MonoBehaviour:
   m_ObjectHideFlags: 0

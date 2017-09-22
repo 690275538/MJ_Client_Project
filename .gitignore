@@ -57,7 +57,7 @@ Temporary Items
 sysinfo.txt
 *.stackdump
 /Assets/AssetStoreTools*
-*.apk
+#*.apk
 *.unitypackage
  
 # ===================================== #
@@ -92,3 +92,4 @@ ehthumbs.db
 Corridor/Library/ShaderCache/
 Corridor/Library/metadata/
 /Avatar*
+/tjmj/
