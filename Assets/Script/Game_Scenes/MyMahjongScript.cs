@@ -17,13 +17,9 @@ public class MyMahjongScript : MonoBehaviour
 	public Text Number;
 	public Text roomRemark;
 	public Image headIconImg;
-	public GameObject pengEffectGame;
-	public GameObject gangEffectGame;
-	public GameObject huEffectGame;
-	public GameObject liujuEffectGame;
 	public int otherPengCard;
 	public int otherGangCard;
-	public ButtonActionScript btnActionScript;
+	ActionEffectHelper _actionHelper;
 	public List<Transform> parentList;
 	public List<Transform> outparentList;
 	public List<GameObject> dirGameList;
@@ -57,7 +53,6 @@ public class MyMahjongScript : MonoBehaviour
 	private List<List<GameObject>> PengGangList_L;
 	private List<List<GameObject>> PengGangList_T;
 	private List<List<GameObject>> PengGangList_R;
-	private string effectType;
 	private List<List<int>> mineList;
 	private int gangKind;
 	private int otherGangType;
@@ -94,14 +89,6 @@ public class MyMahjongScript : MonoBehaviour
 	/// 当前的方向字符串
 	/// </summary>
 	private string curDirString = "B";
-	/// <summary>
-	/// 普通胡牌算法
-	/// </summary>
-	private NormalHuScript norHu;
-	/// <summary>
-	/// 赖子胡牌算法
-	/// </summary>
-	private NaiziHuScript naiziHu;
 
 	// Use this for initialization
 	private GameToolScript gameTool;
@@ -138,8 +125,6 @@ public class MyMahjongScript : MonoBehaviour
 
 	private string passType = "";
 
-	//private bool isSelfPickCard = false;
-
 
 
 	void Start()
@@ -148,25 +133,20 @@ public class MyMahjongScript : MonoBehaviour
 		timeFlag = true;
 		SoundCtrl.getInstance ().stopBGM ();
 		//===========================================================================================
-		norHu = new NormalHuScript();
-		naiziHu = new NaiziHuScript ();
 		gameTool = new GameToolScript ();
 		versionText.text = "V" + Application.version;
 		//===========================================================================================
-		btnActionScript = gameObject.GetComponent<ButtonActionScript> ();
+		_actionHelper = gameObject.GetComponent<ActionEffectHelper> ();
+		_actionHelper.addListener (this);
 		addListener ();
 		initPanel ();
 		initArrayList ();
-		//initPerson ();//初始化每个成员1000分
 
 		GlobalDataScript.isonLoginPage = false;
 		if (GlobalDataScript.reEnterRoomData != null) {
 			GlobalDataScript.loginResponseData.roomId = GlobalDataScript.reEnterRoomData.roomId;
 			reEnterRoom ();
-		} else {
-			//readyGame();
-			//markselfReadyGame ();
-		}
+		} 
 		GlobalDataScript.reEnterRoomData = null;
 
 	}
@@ -177,8 +157,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	void initPanel(){
 		clean ();
-		btnActionScript.cleanBtnShow ();
-		//masContaner.SetActive (false);
+		_actionHelper.cleanBtnShow ();
 	}
 
 	public void addListener(){
@@ -190,7 +169,7 @@ public class MyMahjongScript : MonoBehaviour
 		SocketEventHandle.getInstance().PengCardCallBack += otherPeng;
 		SocketEventHandle.getInstance().GangCardCallBack += gangResponse;
 		SocketEventHandle.getInstance().gangCardNotice += otherGang;
-		SocketEventHandle.getInstance ().btnActionShow += actionBtnShow;
+		SocketEventHandle.getInstance ().onActionBtnNotice += onActionBtnNotice;
 		SocketEventHandle.getInstance ().HupaiCallBack += hupaiCallBack;
 		//	SocketEventHandle.getInstance ().FinalGameOverCallBack += finalGameOverCallBack;
 		SocketEventHandle.getInstance ().outRoomCallback += outRoomCallbak;
@@ -216,7 +195,7 @@ public class MyMahjongScript : MonoBehaviour
 		SocketEventHandle.getInstance().PengCardCallBack -= otherPeng;
 		SocketEventHandle.getInstance().GangCardCallBack -= gangResponse;
 		SocketEventHandle.getInstance().gangCardNotice -= otherGang;
-		SocketEventHandle.getInstance ().btnActionShow -= actionBtnShow;
+		SocketEventHandle.getInstance ().onActionBtnNotice -= onActionBtnNotice;
 		SocketEventHandle.getInstance ().HupaiCallBack -= hupaiCallBack;
 		//SocketEventHandle.getInstance ().FinalGameOverCallBack -= finalGameOverCallBack;
 		SocketEventHandle.getInstance ().outRoomCallback -= outRoomCallbak;
@@ -250,29 +229,22 @@ public class MyMahjongScript : MonoBehaviour
 
 	}
 
-	/**
-	private void initPerson(){
-		GameOverPlayerCoins = new List<int> (4);
-		GameOverPlayerCoins.Add(1000);
-		GameOverPlayerCoins.Add(1000);
-		GameOverPlayerCoins.Add(1000);
-		GameOverPlayerCoins.Add(1000);
-	}
-	*/
+
 	/// <summary>
 	/// Cards the select.
 	/// </summary>
 	/// <param name="obj">Object.</param>
 	public void cardSelect(GameObject obj)
 	{
-		for (int i = 0; i < handCardList[0].Count; i++)
+		List<GameObject> m = handCardList [0];
+		for (int i = 0; i < m.Count; i++)
 		{
-			if (handCardList[0] [i] == null) {
-				handCardList[0].RemoveAt (i);
+			if (m [i] == null) {
+				m.RemoveAt (i);
 				i--;
 			} else {
-				handCardList[0] [i].transform.localPosition = new Vector3 (handCardList[0] [i].transform.localPosition.x, -292f); //从右到左依次对齐
-				handCardList[0] [i].transform.GetComponent<bottomScript> ().selected = false;
+				m [i].transform.localPosition = new Vector3 (m [i].transform.localPosition.x, -292f); //从右到左依次对齐
+				m [i].transform.GetComponent<bottomScript> ().selected = false;
 			}
 		}
 		if (obj != null)
@@ -299,19 +271,17 @@ public class MyMahjongScript : MonoBehaviour
 		curDirString = getDirection (bankerId);
 		LeavedRoundNumText.text = GlobalDataScript.surplusTimes+"";//刷新剩余圈数
 		if (!isFirstOpen) {
-			btnActionScript = gameObject.GetComponent<ButtonActionScript> ();
+			_actionHelper = gameObject.GetComponent<ActionEffectHelper> ();
 			initPanel ();
 			initArrayList ();
 			avatarList [bankerId].main = true;
 		}
+		isFirstOpen = false;
 
 		GlobalDataScript.finalGameEndVo = null;
 		GlobalDataScript.mainUuid = avatarList [bankerId].account.uuid;
-//		initArrayList ();
-//		curDirString = getDirection (bankerId);
 		playerItems [curDirIndex].setbankImgEnable (true);
 		SetDirGameObjectAction();
-		isFirstOpen = false;
 		GlobalDataScript.isOverByPlayer = false;
 
 		mineList = sgvo.paiArray;
@@ -323,13 +293,7 @@ public class MyMahjongScript : MonoBehaviour
 
 		ShowLeavedCardsNumForInit();
 
-		if (curDirString == DirectionEnum.Bottom) {
-			//isSelfPickCard = true;
-			GlobalDataScript.isDrag = true;
-		} else {
-			//isSelfPickCard = false;
-			GlobalDataScript.isDrag = false;
-		}
+		GlobalDataScript.isDrag = curDirString == DirectionEnum.Bottom;
 	}
 
 	private void cleanGameplayUI(){
@@ -340,7 +304,7 @@ public class MyMahjongScript : MonoBehaviour
 		remainCard.transform.gameObject.SetActive (true);
 		remainRound.transform.gameObject.SetActive (true);
 		centerImage.transform.gameObject.SetActive (true);
-		liujuEffectGame.SetActive (false);
+		_actionHelper.liujuEffect.SetActive (false);
 	}
 
 
@@ -373,11 +337,6 @@ public class MyMahjongScript : MonoBehaviour
 		LeavedCastNumText.text = (LeavedCardsNum)+"";
 
 
-		/**
-		GlobalDataScript.roomVo.roundNumber--;
-		StartRoundNum = roomCreateVo.roundNumber;
-		LeavedRoundNumText.text = StartRoundNum + "";
-		*/
 	}
 
 	public void CardsNumChange()
@@ -457,7 +416,7 @@ public class MyMahjongScript : MonoBehaviour
 		MoPaiCardPoint = cardvo.cardPoint;
 		MyDebug.Log ("摸牌" + MoPaiCardPoint);
 		SelfAndOtherPutoutCard = MoPaiCardPoint; 
-		useForGangOrPengOrChi = cardvo.cardPoint;
+		useForGangOrPengOrChi = MoPaiCardPoint;
 		putCardIntoMineList (MoPaiCardPoint);
 		moPai ();
 		curDirString = DirectionEnum.Bottom;
@@ -465,13 +424,12 @@ public class MyMahjongScript : MonoBehaviour
 		CardsNumChange();
 		//checkHuOrGangOrPengOrChi (MoPaiCardPoint,2);
 		GlobalDataScript.isDrag = true;
-	//	isSelfPickCard = true;
 	}
 	/// <summary>
 	/// 胡，杠，碰，吃，pass按钮显示.
 	/// </summary>
 	/// <param name="response">Response.</param>
-	public void actionBtnShow(ClientResponse response){
+	public void onActionBtnNotice(ClientResponse response){
 		GlobalDataScript.isDrag = false;
 		string[] strs=response.message.Split (new char[1]{','});
 		if (curDirString == DirectionEnum.Bottom) {
@@ -482,7 +440,7 @@ public class MyMahjongScript : MonoBehaviour
 
 		for (int i = 0; i < strs.Length; i++) {
 			if (strs [i].Equals ("hu")) {
-				btnActionScript.showBtn (1);
+				_actionHelper.showBtn (ActionType.HU);
 
 			}else if(strs[i].Contains("qianghu")){
 				
@@ -492,19 +450,20 @@ public class MyMahjongScript : MonoBehaviour
 				
 				}
 
-				btnActionScript.showBtn (1);
+				_actionHelper.showBtn (ActionType.HU);
 				isQiangHu = true;
 			}else if(strs[i].Contains("peng")){
-				btnActionScript.showBtn (3);
+				_actionHelper.showBtn (ActionType.PENG);
 				putOutCardPoint =int.Parse(strs [i].Split (new char[1]{ ':' }) [2]);
 
 
-			}else if(strs[i].Equals("chi")){
-				//btnActionScript.showBtn (3);
+			}else if(strs[i].Contains("chi")){
+				_actionHelper.showBtn (ActionType.CHI);
+				putOutCardPoint =int.Parse(strs [i].Split (new char[1]{ ':' }) [2]);
 			}
 			if(strs[i].Contains("gang")){
 				
-				btnActionScript.showBtn (2);
+				_actionHelper.showBtn (ActionType.GANG);
 				gangPaiList = strs [i].Split (new char[1]{ ':' });
 				List<string> gangPaiListTemp = gangPaiList.ToList ();
 				gangPaiListTemp.RemoveAt (0);
@@ -548,7 +507,7 @@ public class MyMahjongScript : MonoBehaviour
 		if (bankerId == getMyIndexFromList ()) {
 			SetPosition (true);//设置位置
 			MyDebug.Log ("初始化数据自己为庄家");
-		//	checkHuPai();
+
 		} else {
 			SetPosition (false);
 			otherPickCardAndCreate (bankerId);
@@ -557,58 +516,6 @@ public class MyMahjongScript : MonoBehaviour
 
 
 
-
-	/// <summary>
-	/// 检测胡牌
-	/// </summary>
-	/**
-	private bool checkHuPai(){
-		RoomCreateVo roomvo = GlobalDataScript.roomVo;
-		if (roomvo.hong) {
-			if (naiziHu.isHu (mineList)) {
-				MyDebug.Log ("赖子胡牌了");
-				effectType = "hu";
-				pengGangHuEffectCtrl();
-				return true;
-
-			} else {
-				GlobalDataScript.isDrag = true;
-				return false;
-			}
-		} else {
-			if (roomvo.sevenDouble) {
-				int result = norHu.checkSevenDouble (mineList [0]);
-				if (result == 0) {
-				} else {
-					effectType = "hu";
-					pengGangHuEffectCtrl();
-					return true;
-				}
-			}
-			if (norHu.isHuPai (mineList [0]))
-			{
-				MyDebug.Log ("胡牌了");
-				effectType = "hu";
-				pengGangHuEffectCtrl();
-				return true;
-			} else {
-				GlobalDataScript.isDrag = true;
-				return false;
-			}
-		}
-
-	}
-	*/
-
-	/*
-	private bool addPointAndCheckHu(int cardPoint){
-		bool result = false;
-		putCardIntoMineList (cardPoint);
-		result = checkHuPai ();
-		pushOutFromMineList (cardPoint);
-		return result;
-	}
-	*/
 
 	private void setAllPlayerReadImgVisbleToFalse(){
 		for (int i = 0; i < playerItems.Count; i++) {
@@ -908,8 +815,7 @@ public class MyMahjongScript : MonoBehaviour
 		curDirString = getDirection (cardVo.avatarId);
 		print("Current Diretion==========>" + curDirString);
 		SetDirGameObjectAction ();
-		effectType = "peng";
-		pengGangHuEffectCtrl();
+		_actionHelper.pengGangHuEffectCtrl(ActionType.PENG);
 		SoundCtrl.getInstance ().playSoundByAction ("peng",avatarList [cardVo.avatarId].account.sex);
 		if (cardOnTable != null) {
 			reSetOutOnTabelCardPosition (cardOnTable);
@@ -1019,42 +925,6 @@ public class MyMahjongScript : MonoBehaviour
 		PengGangCardList.Add(templist);
 		GlobalDataScript.isDrag = true;
 	}
-	private void  pengGangHuEffectCtrl()
-	{
-		if (effectType == "peng")
-		{
-			pengEffectGame.SetActive (true);
-			// pengEffectGameList[getIndexByDir(curDirString)].SetActive(true);
-		}
-		else if (effectType == "gang")
-		{
-			gangEffectGame.SetActive (true);
-			// gangEffectGameList[getIndexByDir(curDirString)].SetActive(true);
-		}
-		else if (effectType == "hu")
-		{
-			huEffectGame.SetActive (true);
-			// huEffectGameList[getIndexByDir(curDirString)].SetActive(true);
-		}else if(effectType == "liuju"){
-			liujuEffectGame.SetActive (true);
-		}
-		invokeHidePengGangHuEff();
-	}
-
-	private void invokeHidePengGangHuEff()
-	{
-		Invoke("HidePengGangHuEff", 1f);
-	}
-
-	private void HidePengGangHuEff()
-	{
-		//   pengEffectGameList[getIndexByDir(curDirString)].SetActive(false);
-		// gangEffectGameList[getIndexByDir(curDirString)].SetActive(false);
-		// huEffectGameList[getIndexByDir(curDirString)].SetActive(false);
-		pengEffectGame.SetActive(false);
-		gangEffectGame.SetActive (false);
-		huEffectGame.SetActive (false);
-	}
 
 	private void otherGang(ClientResponse response) //其他人杠牌
 	{
@@ -1066,8 +936,7 @@ public class MyMahjongScript : MonoBehaviour
 		string path2 = "";
 		Vector3 tempvector3 = new Vector3(0, 0, 0);
 		curDirString = getDirection(gangNotice.avatarId);
-		effectType = "gang";
-		pengGangHuEffectCtrl ();
+		_actionHelper.pengGangHuEffectCtrl (ActionType.GANG);
 		SetDirGameObjectAction();
 		SoundCtrl.getInstance().playSoundByAction("gang", avatarList[gangNotice.avatarId].account.sex);
 		List<GameObject> tempCardList = null;
@@ -1428,7 +1297,6 @@ public class MyMahjongScript : MonoBehaviour
 	public void SetPosition(bool flag)//设置位置
 	{
 		int count = handCardList[0].Count;
-		//int startX = 594 - count*79;
 		int startX = 594 - count*80;
 		if (flag) {
 			for (int i = 0; i < count-1; i++) {
@@ -1515,15 +1383,8 @@ public class MyMahjongScript : MonoBehaviour
 	/// </summary>
 	public void myPassBtnClick()
 	{
-		//GlobalDataScript.isDrag = true;
-		btnActionScript.cleanBtnShow ();
-		//nextMoPai();
-		/*
-		if(isSelfPickCard ){
-			GlobalDataScript.isDrag = true;
-			isSelfPickCard = false;
-		}
-		*/
+		_actionHelper.cleanBtnShow ();
+
 		if (passType == "selfPickCard") {
 			GlobalDataScript.isDrag = true;
 		}
@@ -1537,10 +1398,20 @@ public class MyMahjongScript : MonoBehaviour
 		UpateTimeReStart ();
 		CardVO cardvo = new CardVO ();
 		cardvo.cardPoint = putOutCardPoint;
-		CustomSocket.getInstance().sendMsg(new PengCardRequest(cardvo));
-		btnActionScript.cleanBtnShow();
+		CustomSocket.getInstance().sendMsg(new PengPaiRequest(cardvo));
+		_actionHelper.cleanBtnShow();
 	}
-
+	public void myChiBtnClick()
+	{
+		GlobalDataScript.isDrag = true;
+		UpateTimeReStart ();
+		CardVO cardvo = new CardVO ();
+		cardvo.cardPoint = putOutCardPoint;
+		cardvo.onePoint = putOutCardPoint;
+		cardvo.twoPoint = putOutCardPoint;
+		CustomSocket.getInstance().sendMsg(new ChiPaiRequest(cardvo));
+		_actionHelper.cleanBtnShow();
+	}
 
 
 	public void gangResponse(ClientResponse response)
@@ -1548,22 +1419,8 @@ public class MyMahjongScript : MonoBehaviour
 		UpateTimeReStart ();
 		GangBackVO gangBackVo = JsonMapper.ToObject<GangBackVO>(response.message);
 		gangKind = gangBackVo.type;
-		int Num = 0;
-		bool pengOrNot = false;
-		//checkHuOrGangOrPengOrChi (MoPaiCardPoint,2);
-	//	GlobalDataScript.isDrag = true;
 
 		if (gangBackVo.cardList.Count == 0) {
-			/*创建一个摸的牌***/
-			/**
-			SelfAndOtherPutoutCard = gangBackVo.cardList[0]; 
-			//useForGangOrPengOrChi = gangBackVo.cardList[0];
-			putCardIntoMineList (gangBackVo.cardList[0]);
-			moPai ();
-			curDirString = DirectionEnum.Bottom;
-			SetDirGameObjectAction ();
-			CardsNumChange();
-			**/
 
 
 			if (gangKind == 0) {//明杠
@@ -1720,12 +1577,11 @@ public class MyMahjongScript : MonoBehaviour
 			selfGangCardPoint = useForGangOrPengOrChi;
 		}
 
-		CustomSocket.getInstance().sendMsg(new GangCardRequest(useForGangOrPengOrChi,0));
+		CustomSocket.getInstance().sendMsg(new GangPaiRequest(useForGangOrPengOrChi,0));
 		MyDebug.Log ("==myGangBtnClick=Invoke=====>");
 		SoundCtrl.getInstance ().playSoundByAction ("gang", GlobalDataScript.loginResponseData.account.sex);
-		btnActionScript.cleanBtnShow ();
-		effectType = "gang";
-		pengGangHuEffectCtrl();
+		_actionHelper.cleanBtnShow ();
+		_actionHelper.pengGangHuEffectCtrl(ActionType.GANG);
 		gangPaiList = null;
 		return;
 
@@ -1834,15 +1690,13 @@ public class MyMahjongScript : MonoBehaviour
 	}
 
 	private void addAvatarVOToList(AvatarVO avatar){
-		if (avatarList == null) {
-			avatarList = new List<AvatarVO> ();
-		}
 		avatarList.Add (avatar);
 		setSeat (avatar);
 
 	}
-
+	//房主创建房间，并第一个进入房间
 	public void createRoomAddAvatarVO(AvatarVO avatar){
+		avatarList = new List<AvatarVO> ();
 		avatar.scores = 1000;
 		addAvatarVOToList (avatar);
 		setRoomRemark ();
@@ -1852,7 +1706,7 @@ public class MyMahjongScript : MonoBehaviour
 	
 	}
 
-
+	//其他人进入房间
 	public void joinToRoom(List<AvatarVO> avatars){
 		avatarList = avatars;
 		for (int i = 0; i < avatars.Count; i++) {
@@ -1889,6 +1743,7 @@ public class MyMahjongScript : MonoBehaviour
 	/// </summary>
 	/// <returns>The my index from list.</returns>
 	private int getMyIndexFromList(){
+		//return getIndex (GlobalDataScript.loginResponseData.account.uuid);
 		if (avatarList != null) {
 			var myaccount = GlobalDataScript.loginResponseData.account;
 			for (int i = 0; i < avatarList.Count; i++)
@@ -1903,7 +1758,6 @@ public class MyMahjongScript : MonoBehaviour
 
 			}
 		}
-
 		MyDebug.Log ("数据异常返回0");
 		return 0;
 	}
@@ -1930,7 +1784,7 @@ public class MyMahjongScript : MonoBehaviour
 	/**
 	 * 胡牌请求
 	 */ 
-	public void hupaiRequest(){
+	public void myHuBtnClick(){
 
 		if (SelfAndOtherPutoutCard != -1) {
 			int cardPoint = SelfAndOtherPutoutCard;//需修改成正确的胡牌cardpoint
@@ -1942,7 +1796,7 @@ public class MyMahjongScript : MonoBehaviour
 			}
 			string sendMsg = JsonMapper.ToJson (requestVo);
 			CustomSocket.getInstance().sendMsg(new HupaiRequest(sendMsg));
-			btnActionScript.cleanBtnShow ();
+			_actionHelper.cleanBtnShow ();
 		}
 
 
@@ -1965,36 +1819,10 @@ public class MyMahjongScript : MonoBehaviour
 		string scores = GlobalDataScript.hupaiResponseVo.currentScore;
 		hupaiCoinChange (scores);
 
-		/*
-		for (int i = 0; i < GlobalDataScript.hupaiResponseVo.avatarList.Count; i++)
-		{
-			HupaiResponseItem hupaiResponseItem = GlobalDataScript.hupaiResponseVo.avatarList[i];
-
-			int avarIndex = getIndex (hupaiResponseItem.uuid);
-			switch (getDirection(getIndex(hupaiResponseItem.uuid)))
-			{
-				case DirectionEnum.Bottom:
-				huPaiCoinChanges(hupaiResponseItem, 0,avarIndex);
-					break;
-				case DirectionEnum.Left:
-				huPaiCoinChanges(hupaiResponseItem, 3,avarIndex);
-					break;
-				case DirectionEnum.Right:
-				huPaiCoinChanges(hupaiResponseItem, 1,avarIndex);
-					break;
-				case DirectionEnum.Top:
-				huPaiCoinChanges(hupaiResponseItem, 2,avarIndex);
-					break;
-
-			}
-		}
-*/
-
 
 		if (GlobalDataScript.hupaiResponseVo.type == "0") {
 			SoundCtrl.getInstance ().playSoundByAction ("hu", GlobalDataScript.loginResponseData.account.sex);
-			effectType = "hu";
-			pengGangHuEffectCtrl ();
+			_actionHelper.pengGangHuEffectCtrl (ActionType.HU);
 			for (int i = 0; i < GlobalDataScript.hupaiResponseVo.avatarList.Count; i++) {
 				if (checkAvarHupai (GlobalDataScript.hupaiResponseVo.avatarList [i]) == 1) {//胡
 					playerItems [getIndexByDir (getDirection (i))].setHuFlagDisplay ();
@@ -2026,8 +1854,7 @@ public class MyMahjongScript : MonoBehaviour
 		} else if (GlobalDataScript.hupaiResponseVo.type == "1") {
 
 			SoundCtrl.getInstance ().playSoundByAction ("liuju", GlobalDataScript.loginResponseData.account.sex);
-			effectType = "liuju";
-			pengGangHuEffectCtrl ();
+			_actionHelper.pengGangHuEffectCtrl (ActionType.LIUJU);
 			Invoke ("openGameOverPanelSignal", 3);
 		} else {
 			Invoke ("openGameOverPanelSignal", 3);
@@ -2077,16 +1904,6 @@ public class MyMahjongScript : MonoBehaviour
 
 
 
-	/**
-	public void huPaiCoinChanges(HupaiResponseItem hupaiResponseItem,int index,int avarIndex)
-	{
-		int totalScore = hupaiResponseItem.totalScore;
-		int  curentScore  =  int.Parse(playerItems[index].scoreText.text);
-		playerItems[index].scoreText.text = curentScore+ totalScore +"";
-		avatarList [avarIndex].scores = curentScore + totalScore;
-		//GameOverPlayerCoins[index].ToString();
-	}
-*/
 
 	private void hupaiCoinChange(string scores){
 		string[] scoreList = scores.Split (new char[1]{ ',' });
@@ -2104,7 +1921,7 @@ public class MyMahjongScript : MonoBehaviour
 
 
 	private void openGameOverPanelSignal(){//单局结算
-		liujuEffectGame.SetActive (false);
+		_actionHelper.liujuEffect.SetActive (false);
 		setAllPlayerHuImgVisbleToFalse ();
 		if (zhuamaPanel != null) {
 			Destroy (zhuamaPanel.GetComponent<ZhuMaScript>());
@@ -2130,30 +1947,7 @@ public class MyMahjongScript : MonoBehaviour
 		//GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ().setDisplaContent (0,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);	
 	}
 
-	/**
 
-	//全局结束请求回调
-	private void finalGameOverCallBack(ClientResponse response){
-		GlobalDataScript.finalGameEndVo = JsonMapper.ToObject<FinalGameEndVo> (response.message);
-		Invoke ("finalGameOver",12);
-	}
-
-	private void finalGameOver(){
-
-		loadPerfab ("prefab/Panel_Game_Over", 1);
-		initPanel ();
-		weipaiImg.transform.gameObject.SetActive(false);
-		inviteFriendButton.transform.gameObject.SetActive (false);
-		ExitRoomButton.transform.gameObject.SetActive (false);
-		live1.transform.gameObject.SetActive (true);
-		live2.transform.gameObject.SetActive (true);
-		centerImage.transform.gameObject.SetActive (true);
-
-		Destroy (GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ());
-		Destroy (GlobalDataScript.singalGameOver);
-		exitOrDissoliveRoom ();
-	}
-	*/
 
 
 	private void  loadPerfab(string perfabName ,int openFlag){

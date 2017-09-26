@@ -2,9 +2,9 @@
 using LitJson;
 namespace AssemblyCSharp
 {
-	public class PengCardRequest : ClientRequest
+	public class PengPaiRequest : ClientRequest
 	{
-		public PengCardRequest (CardVO cardvo)
+		public PengPaiRequest (CardVO cardvo)
 		{
 			headCode = APIS.PENGPAI_REQUEST;
 			messageContent = JsonMapper.ToJson (cardvo);;

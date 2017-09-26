@@ -34,7 +34,6 @@ public class HomePanelScript : MonoBehaviour {
 	/// </summary>
 	private bool startFlag = false;
 	public  float waiteTime = 1;
-	private float TimeNum = 0;
 	private int showNum = 0;
     private int i;
     private int a=0;

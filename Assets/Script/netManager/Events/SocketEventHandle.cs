@@ -27,7 +27,7 @@ namespace AssemblyCSharp
 		public ServerCallBackEvent HupaiCallBack;//胡牌回调
 		public ServerCallBackEvent FinalGameOverCallBack;//全局结束回调
 	    public ServerCallBackEvent gangCardNotice;//
-		public ServerCallBackEvent btnActionShow;//碰杠行为按钮显示
+		public ServerCallBackEvent onActionBtnNotice;//碰杠行为按钮显示
 
 		public ServerCallBackEvent outRoomCallback;//退出房间回调
 		public ServerCallBackEvent dissoliveRoomResponse;
@@ -166,9 +166,9 @@ namespace AssemblyCSharp
 			            gangCardNotice(response);
 			        }
                     break;
-				case APIS.RETURN_INFO_RESPONSE:
-					if (btnActionShow != null) {
-						btnActionShow (response);
+				case APIS.ACTION_BUTTON_NOTICE:
+					if (onActionBtnNotice != null) {
+						onActionBtnNotice (response);
 					}
 					break;
 			case APIS.HUPAI_RESPONSE:
@@ -307,6 +307,123 @@ namespace AssemblyCSharp
 
 		public void noticeDisConect(){
 			isDisconnet = true;
+		}
+
+		public void clearListener(){
+			if (CreateRoomCallBack != null) {
+				CreateRoomCallBack = null;
+			}
+
+			if (JoinRoomCallBack != null) {
+				JoinRoomCallBack = null;
+			}
+
+			if (StartGameNotice != null) {
+				StartGameNotice = null;
+			}
+
+			if (pickCardCallBack != null) {
+				pickCardCallBack = null;
+			}
+
+			if (otherPickCardCallBack != null) {
+				otherPickCardCallBack = null;
+			}
+
+			if (putOutCardCallBack != null) {
+				putOutCardCallBack = null;
+			}
+
+			if (PengCardCallBack != null) {
+				PengCardCallBack = null;
+			}
+
+			if (GangCardCallBack != null) {
+				GangCardCallBack = null;
+			}
+
+			if (HupaiCallBack != null) {
+				HupaiCallBack = null;
+			}
+
+
+			if (gangCardNotice != null) {
+				gangCardNotice = null;
+			}
+
+
+
+			if (onActionBtnNotice != null) {
+				onActionBtnNotice = null;
+			}
+
+			if (outRoomCallback != null) {
+				outRoomCallback = null;
+			}
+
+			if (dissoliveRoomResponse != null) {
+				dissoliveRoomResponse = null;
+			}
+
+			if (gameReadyNotice != null) {
+				gameReadyNotice = null;
+			}
+
+
+
+			if (messageBoxNotice != null) {
+				messageBoxNotice = null;
+			}
+
+
+
+			if (backLoginNotice != null) {
+				backLoginNotice = null;
+			}
+
+			if (cardChangeNotice != null) {
+				cardChangeNotice = null;
+			}
+
+
+
+			if (offlineNotice != null) {
+				offlineNotice = null;
+			}
+
+			if (onlineNotice != null) {
+				onlineNotice = null;
+			}
+
+			if (giftResponse != null) {
+				giftResponse = null;
+			}
+
+			if (returnGameResponse != null) {
+				returnGameResponse = null;
+			}
+
+			if (gameFollowBanderNotice != null) {
+				gameFollowBanderNotice = null;
+			}
+
+			if (contactInfoResponse != null) {
+				contactInfoResponse = null;
+			}
+
+			if (zhanjiResponse != null) {
+				zhanjiResponse = null;
+			}
+
+
+
+			if (zhanjiDetailResponse != null) {
+				zhanjiDetailResponse = null;
+			}
+
+			if (gameBackPlayResponse != null) {
+				gameBackPlayResponse = null;
+			}
 		}
 	}
 }

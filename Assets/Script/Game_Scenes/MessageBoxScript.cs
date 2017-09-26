@@ -19,7 +19,7 @@ public class MessageBoxScript : MonoBehaviour {
 		SoundCtrl.getInstance ().playMessageBoxSound (index);
 		CustomSocket.getInstance ().sendMsg (new MessageBoxRequest(index,GlobalDataScript.loginResponseData.account.uuid));
 		if (myMaj == null) {
-			myMaj = GameObject.Find ("Panel_GamePlay(Clone)").GetComponent<MyMahjongScript>();
+			myMaj = GameObject.Find ("Panel_GamePlay").GetComponent<MyMahjongScript>();
 		}
 		if (myMaj != null) {
 			myMaj.playerItems [0].showChatMessage (index);

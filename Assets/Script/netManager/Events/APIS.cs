@@ -41,7 +41,7 @@ namespace AssemblyCSharp
 		public const int PICKCARD_RESPONSE = 0x100004;//自己摸牌 
 		public const int OTHER_PICKCARD_RESPONSE_NOTICE = 0x100014;//别人摸牌通知
 
-		public const int RETURN_INFO_RESPONSE =  0x100000;
+		public const int ACTION_BUTTON_NOTICE =  0x100000;
 		public const int CHUPAI_REQUEST = 0x100001;//出牌请求
 		public const int CHUPAI_RESPONSE = 0x100002;//出牌通知
 
@@ -54,6 +54,10 @@ namespace AssemblyCSharp
         public const int HUPAI_RESPONSE = 0x100010;//胡牌通知
 		public const int HUPAIALL_RESPONSE = 0x100110;//全局结束通知
         public const int GAVEUP_REQUEST = 0x100015;//放弃（胡，杠，碰，吃）
+
+
+		public const int CHIPAI_REQUEST = 0x100011;//吃牌请求
+		public const int CHIPAI_RESPONSE = 0x100012;//吃牌通知
 
 		public const int BACK_LOGIN_REQUEST = 0x001001;//掉线后重新登录查询当前牌桌情况请求
 		public const int BACK_LOGIN_RESPONSE= 0x001002;//掉线后重新登录查询当前牌桌情况返回

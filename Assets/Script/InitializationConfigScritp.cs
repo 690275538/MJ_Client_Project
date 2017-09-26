@@ -8,13 +8,11 @@ using System.Threading;
 
 
 public class InitializationConfigScritp : MonoBehaviour {
-	
-	int num = 0;
-	bool hasPaused   = false;
+	static InitializationConfigScritp instance;
 	ServiceErrorListener seriveError = null;
 
 	void Start () {
-		
+		instance = this;
 		MicroPhoneInput.getInstance ();
 		GlobalDataScript.getInstance ();
 		//CustomSocket.getInstance().Connect();
@@ -44,7 +42,7 @@ public class InitializationConfigScritp : MonoBehaviour {
 			//CustomSocket.getInstance ().Connect();
 			//ChatSocket.getInstance ().Connect ();
 		} else {
-			cleaListener ();
+			SocketEventHandle.getInstance ().clearListener ();
 			PrefabManage.loadPerfab ("Prefab/Panel_Start");
 
 		}
@@ -56,145 +54,6 @@ public class InitializationConfigScritp : MonoBehaviour {
 	}
 
 
-
-	private void cleaListener(){
-		/*
-		if (SocketEventHandle.getInstance ().LoginCallBack != null) {
-			SocketEventHandle.getInstance ().LoginCallBack = null;
-		}
-*/
-		if (SocketEventHandle.getInstance ().CreateRoomCallBack != null) {
-			SocketEventHandle.getInstance ().CreateRoomCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().JoinRoomCallBack != null) {
-			SocketEventHandle.getInstance ().JoinRoomCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().StartGameNotice != null) {
-			SocketEventHandle.getInstance ().StartGameNotice = null;
-		}
-
-		if (SocketEventHandle.getInstance ().pickCardCallBack != null) {
-			SocketEventHandle.getInstance ().pickCardCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().otherPickCardCallBack != null) {
-			SocketEventHandle.getInstance ().otherPickCardCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().putOutCardCallBack != null) {
-			SocketEventHandle.getInstance ().putOutCardCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().PengCardCallBack != null) {
-			SocketEventHandle.getInstance ().PengCardCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().GangCardCallBack != null) {
-			SocketEventHandle.getInstance ().GangCardCallBack = null;
-		}
-
-		if (SocketEventHandle.getInstance ().HupaiCallBack != null) {
-			SocketEventHandle.getInstance ().HupaiCallBack = null;
-		}
-
-	
-		if (SocketEventHandle.getInstance ().gangCardNotice != null) {
-			SocketEventHandle.getInstance ().gangCardNotice = null;
-		}
-
-
-
-		if (SocketEventHandle.getInstance ().btnActionShow != null) {
-			SocketEventHandle.getInstance ().btnActionShow = null;
-		}
-
-		if (SocketEventHandle.getInstance ().outRoomCallback != null) {
-			SocketEventHandle.getInstance ().outRoomCallback = null;
-		}
-
-		if (SocketEventHandle.getInstance ().dissoliveRoomResponse != null) {
-			SocketEventHandle.getInstance ().dissoliveRoomResponse = null;
-		}
-
-		if (SocketEventHandle.getInstance ().gameReadyNotice != null) {
-			SocketEventHandle.getInstance ().gameReadyNotice = null;
-		}
-
-	
-
-		if (SocketEventHandle.getInstance ().messageBoxNotice != null) {
-			SocketEventHandle.getInstance ().messageBoxNotice = null;
-		}
-
-
-
-		if (SocketEventHandle.getInstance ().backLoginNotice != null) {
-			SocketEventHandle.getInstance ().backLoginNotice = null;
-		}
-		/*
-		if (SocketEventHandle.getInstance ().RoomBackResponse != null) {
-			SocketEventHandle.getInstance ().RoomBackResponse = null;
-		}
-		*/
-
-		if (SocketEventHandle.getInstance ().cardChangeNotice != null) {
-			SocketEventHandle.getInstance ().cardChangeNotice = null;
-		}
-
-
-
-		if (SocketEventHandle.getInstance ().offlineNotice != null) {
-			SocketEventHandle.getInstance ().offlineNotice = null;
-		}
-
-		if (SocketEventHandle.getInstance ().onlineNotice != null) {
-			SocketEventHandle.getInstance ().onlineNotice = null;
-		}
-
-		if (SocketEventHandle.getInstance ().giftResponse != null) {
-			SocketEventHandle.getInstance ().giftResponse = null;
-		}
-
-		if (SocketEventHandle.getInstance ().returnGameResponse != null) {
-			SocketEventHandle.getInstance ().returnGameResponse = null;
-		}
-
-		if (SocketEventHandle.getInstance ().gameFollowBanderNotice != null) {
-			SocketEventHandle.getInstance ().gameFollowBanderNotice = null;
-		}
-
-		if (SocketEventHandle.getInstance ().contactInfoResponse != null) {
-			SocketEventHandle.getInstance ().contactInfoResponse = null;
-		}
-
-		if (SocketEventHandle.getInstance ().zhanjiResponse != null) {
-			SocketEventHandle.getInstance ().zhanjiResponse = null;
-		}
-
-
-
-		if (SocketEventHandle.getInstance ().zhanjiDetailResponse != null) {
-			SocketEventHandle.getInstance ().zhanjiDetailResponse = null;
-		}
-
-		if (SocketEventHandle.getInstance ().gameBackPlayResponse != null) {
-			SocketEventHandle.getInstance ().gameBackPlayResponse = null;
-		}
-
-	}
-
-	void FixedUpdate(){
-		/**
-		num++;
-		if (num == 150) {
-			num = 0;
-
-			CustomSocket.getInstance ().sendHeadData ();
-		}
-		**/
-	}
 
 	System.Timers.Timer t;
 	private  void heartbeatTimer(){

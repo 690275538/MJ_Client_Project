@@ -10,7 +10,7 @@ using System.Text;
 
 public class GlobalDataScript
 {
-
+	/**是否到自己出牌**/
     public static bool isDrag = false;
 	/**登陆返回数据**/
 	public static AvatarVO loginResponseData;
@@ -125,6 +125,7 @@ public class GlobalDataScript
 	public string getIpAddress()
 	{
 		string tempip = "";
+		return "127.0.0.1";
 		try
 		{
 			WebRequest wr = WebRequest.Create("http://1212.ip138.com/ic.asp");
