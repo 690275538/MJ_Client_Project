@@ -4,9 +4,7 @@ namespace AssemblyCSharp
 {
 	public class Constants
 	{
-		public Constants ()
-		{
-		}
+		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;
 	}
 	public enum GameType{
 		ZHUAN_ZHUAN=1,

@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public  bool hong;
 		public int ma;
 		public int roomId;
-		public int roomType;//1转转；2、划水；3、长沙
+		public GameType roomType;
 		/**局数**/
 		public int roundNumber;
 		public bool sevenDouble;

@@ -179,12 +179,12 @@ public class WechatOperateScript : MonoBehaviour {
 			if (roomvo.hong) {
 				str += "红中麻将,";
 			} else {
-				if (roomvo.roomType == 1) {
+				if (roomvo.roomType == GameType.ZHUAN_ZHUAN) {
 					str += "转转麻将,";
-				} else if (roomvo.roomType == 2){
+				} else if (roomvo.roomType == GameType.HUA_SHUI){
 					str += "划水麻将,";
-				}else if (roomvo.roomType == 3){
-					str += "长沙麻将,";
+				}else if (roomvo.roomType == GameType.GI_PING_HU){
+					str += "鸡平胡,";
 				}
 			}
 
@@ -210,7 +210,7 @@ public class WechatOperateScript : MonoBehaviour {
 			}
 			str += "有胆，你就来！";
 
-			string title = "微牌    "+ "房间号："+roomvo.roomId;
+			string title = "铁脚麻将    "+ "房间号："+roomvo.roomId;
 			ShareContent customizeShareParams = new ShareContent();
 			customizeShareParams.SetTitle(title);
 			customizeShareParams.SetText (str);

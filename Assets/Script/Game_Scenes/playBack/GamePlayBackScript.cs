@@ -55,7 +55,6 @@ public class GamePlayBackScript : MonoBehaviour {
 	private string[] pathDirString = new string[]{"B","R","T","L" };
 	private int myIndex;
 
-	private int roomType;//房间类型
 
 	// Use this for initialization
 	void Start () {
@@ -175,7 +174,7 @@ public class GamePlayBackScript : MonoBehaviour {
 		} else if(temp.type == 7){
 			qiangGangHu (tempcurIndex, int.Parse (temp.cardIndex));
 		}else if (temp.type == 8) {
-			if (roomType == GameConfig.GAME_TYPE_HUASHUI) {//划水麻将不显示码框
+			if (aa.roomvo.roomType == GameType.HUA_SHUI) {//划水麻将不显示码框
 			} else {
 				zhuama (temp.ma,temp.valideMa);
 
@@ -350,8 +349,7 @@ public class GamePlayBackScript : MonoBehaviour {
 		}
 	}
 
-	public void setRoomRemark(RoomCreateVo roomvo){
-		roomType = roomvo.roomType;
+	private void setRoomRemark(RoomCreateVo roomvo){
 		string str = "房间号：\n"+roomvo.roomId+"\n";
 		str += "圈数："+roomvo.roundNumber+"\n";
 		if (roomvo.hong) {
@@ -359,12 +357,12 @@ public class GamePlayBackScript : MonoBehaviour {
 			str += "红中麻将\n";
 		} else {
 			cardCount = 55;
-			if (roomvo.roomType == 1) {
+			if (roomvo.roomType == GameType.ZHUAN_ZHUAN) {
 				str += "转转麻将\n";
-			} else if (roomvo.roomType == 2){
+			} else if (roomvo.roomType == GameType.HUA_SHUI){
 				str += "划水麻将\n";
-			}else if (roomvo.roomType == 3){
-				str += "长沙麻将\n";
+			}else if (roomvo.roomType == GameType.GI_PING_HU){
+				str += "鸡平胡\n";
 			}
 		}
 		if (roomvo.ziMo == 1) {

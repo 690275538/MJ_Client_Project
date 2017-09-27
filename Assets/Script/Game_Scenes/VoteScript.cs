@@ -20,8 +20,7 @@ public class VoteScript : MonoBehaviour {
 	private int disagreeCount = 0;
 	private string dissolveType;
 	private List<string> playerNames;
-	private float timer = GameConfig.GAME_DEFALUT_AGREE_TIME;
-	private bool isStop = false;
+	private float timer = Constants.GAME_DEFALUT_AGREE_TIME;
 
 
 	// Use this for initialization
@@ -38,7 +37,6 @@ public class VoteScript : MonoBehaviour {
 			{
 				timer = 0;
 				clickOk ();
-				isStop = true;
 				//UpateTimeReStart();
 			}
 			timerText.text = Math.Floor(timer) + "";

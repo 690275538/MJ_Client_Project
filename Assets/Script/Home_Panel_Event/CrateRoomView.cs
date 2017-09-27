@@ -106,7 +106,7 @@ public class CrateRoomView : MonoBehaviour {
 		}
 
 		sendVo = new RoomCreateVo ();
-		sendVo.roomType = (int) GameType.GI_PING_HU;
+		sendVo.roomType = GameType.GI_PING_HU;
 
 		sendVo.magnification = maCount;
 
@@ -145,7 +145,7 @@ public class CrateRoomView : MonoBehaviour {
 			}
 		}
 		sendVo = new RoomCreateVo ();
-		sendVo.roomType = (int) GameType.ZHUAN_ZHUAN;
+		sendVo.roomType = GameType.ZHUAN_ZHUAN;
 
 		sendVo.ma = maCount;
 		sendVo.ziMo = isZimo?1:0;
@@ -182,7 +182,7 @@ public class CrateRoomView : MonoBehaviour {
 		}
 
 		sendVo = new RoomCreateVo ();
-		sendVo.roomType = (int) GameType.HUA_SHUI;
+		sendVo.roomType = GameType.HUA_SHUI;
 
 		sendVo.xiaYu = maCount;
 		sendVo.ziMo = isZimo?1:0;

@@ -341,7 +341,7 @@ public class SignalOverItemScript : MonoBehaviour {
 			}
 		}
 
-		if (GlobalDataScript.roomVo.roomType == GameConfig.GAME_TYPE_HUASHUI) {
+		if (GlobalDataScript.roomVo.roomType == GameType.HUA_SHUI) {
 			itemTemp = Instantiate (Resources.Load ("Prefab/Image_yu")) as GameObject;
 			itemTemp.transform.parent = paiArrayPanel.transform;
 			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalDataScript.roomVo.xiaYu);

@@ -11,7 +11,7 @@ namespace AssemblyCSharp
 		public int ma;
 		public string name;
 		public int roomId;
-		public int roomType;
+		public GameType roomType;
 		public int roundNumber;
 		public bool sevenDouble;
 		public int xiaYu;

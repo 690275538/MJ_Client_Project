@@ -1645,30 +1645,29 @@ public class MyMahjongScript : MonoBehaviour
 		RoomCreateVo roomvo = GlobalDataScript.roomVo;
 		GlobalDataScript.totalTimes = roomvo.roundNumber;
 		GlobalDataScript.surplusTimes = roomvo.roundNumber;
-	//	LeavedRoundNumText.text = GlobalDataScript.surplusTimes + "";
-		string str = "房间号：\n"+roomvo.roomId+"\n";
-		str += "圈数："+roomvo.roundNumber+"\n";
+		string str = "房间号：\n" + roomvo.roomId + "\n";
+		str += "圈数：" + roomvo.roundNumber + "\n";
 
-		if (roomvo.roomType == 3) {
-			str += "长沙麻将\n";
+		if (roomvo.roomType == GameType.GI_PING_HU) {
+			str += "鸡平胡\n";
 		} else {
-			if (roomvo.hong) {
-				str += "红中麻将\n";
-			} else {
-				if (roomvo.roomType == 1) {
+			
+			if (roomvo.roomType == GameType.ZHUAN_ZHUAN) {
+				if (roomvo.hong) {
+					str += "红中麻将\n";
+				} else {
 					str += "转转麻将\n";
-				} else if (roomvo.roomType == 2){
-					str += "划水麻将\n";
-				}else if (roomvo.roomType == 3){
-					str += "长沙麻将\n";
 				}
+
+			} else if (roomvo.roomType == GameType.HUA_SHUI) {
+				str += "划水麻将\n";
 			}
 			if (roomvo.ziMo == 1) {
 				str += "只能自摸\n";
 			} else {
 				str += "可抢杠胡\n";
 			}
-			if(roomvo.sevenDouble && roomvo.roomType != GameConfig.GAME_TYPE_HUASHUI){
+			if (roomvo.sevenDouble && roomvo.roomType != GameType.HUA_SHUI) {
 				str += "可胡七对\n";
 			}
 
@@ -1676,15 +1675,15 @@ public class MyMahjongScript : MonoBehaviour
 				str += "有风牌\n";
 			}
 			if (roomvo.xiaYu > 0) {
-				str += "下鱼数：" + roomvo.xiaYu+"";
+				str += "下鱼数：" + roomvo.xiaYu + "";
 			}
 
 			if (roomvo.ma > 0) {
-				str += "抓码数：" + roomvo.ma+"";
+				str += "抓码数：" + roomvo.ma + "";
 			}
 		}
 		if (roomvo.magnification > 0) {
-			str += "倍率：" + roomvo.magnification+"";
+			str += "倍率：" + roomvo.magnification + "";
 		}
 		roomRemark.text = str;
 	}
@@ -1837,7 +1836,7 @@ public class MyMahjongScript : MonoBehaviour
 			}
 
 			allMas = GlobalDataScript.hupaiResponseVo.allMas;
-			if (GlobalDataScript.roomVo.roomType == GameConfig.GAME_TYPE_ZHUANZHUAN || GlobalDataScript.roomVo.roomType == GameConfig.GAME_TYPE_CHANGSHA ) {//只有转转麻将才显示抓码信息
+			if (GlobalDataScript.roomVo.roomType == GameType.ZHUAN_ZHUAN || GlobalDataScript.roomVo.roomType == GameType.GI_PING_HU ) {//只有转转麻将才显示抓码信息
 				if (GlobalDataScript.roomVo.ma > 0 && allMas!=null && allMas.Length>0) {
 					zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
 					zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, GlobalDataScript.hupaiResponseVo.validMas);
