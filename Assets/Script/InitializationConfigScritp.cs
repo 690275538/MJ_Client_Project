@@ -79,14 +79,6 @@ public class InitializationConfigScritp : MonoBehaviour {
 
 	public  void doSendHeartbeat( object source, System.Timers.ElapsedEventArgs e){
 		CustomSocket.getInstance ().sendHeadData ();
-		/*
-		bool flag = 
-		if (!flag) {
-			if (t != null) {
-				t.Stop ();
-			}
-		}
-		*/
 	}
 
 

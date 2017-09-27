@@ -181,7 +181,7 @@ public class HomePanelScript : MonoBehaviour {
 	 */ 
 	public void openCreateRoomDialog(){
 		if (GlobalDataScript.loginResponseData == null || GlobalDataScript.loginResponseData.roomId == 0) {
-			loadPerfab ("Prefab/Panel_Create_Dialog");
+			loadPerfab ("Prefab/Panel_Create_Room_View");
 		} else {
 		
 			TipsManagerScript.getInstance ().setTips("当前正在房间状态，无法创建房间");
