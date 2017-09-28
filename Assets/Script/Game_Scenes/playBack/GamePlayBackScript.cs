@@ -27,7 +27,6 @@ public class GamePlayBackScript : MonoBehaviour {
 	public GameObject genZhuang;
 	public GameObject exitPanel;
 	//======================================
-	private float timer = 0;
 	private int LeavedCardsNum;
 	private int MoPaiCardPoint;
 	private int cardCount;
@@ -45,7 +44,6 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	private int timeNum = 0;
 	private int stepNum = 0;
-	private int count= 0;
 	private bool play = false;
 	private GamePlayResponseVo aa = new GamePlayResponseVo ();
 	/// <summary>
@@ -79,7 +77,6 @@ public class GamePlayBackScript : MonoBehaviour {
 			PlayerBackVO player = aa.playerItems [i];
 			playerItems [i].setAvatarVo (player);
 		}
-		int indexCount = 0;
 	}
 	private void initCard(){
 		for (int i = 0; i <aa.playerItems.Count; i++) {
@@ -349,7 +346,7 @@ public class GamePlayBackScript : MonoBehaviour {
 		}
 	}
 
-	private void setRoomRemark(RoomCreateVo roomvo){
+	private void setRoomRemark(RoomVO roomvo){
 		string str = "房间号：\n"+roomvo.roomId+"\n";
 		str += "圈数："+roomvo.roundNumber+"\n";
 		if (roomvo.hong) {
@@ -897,7 +894,6 @@ public class GamePlayBackScript : MonoBehaviour {
 		}
 		if (zhuamaPanel == null) {
 			List<AvatarVO> avatarList = new List<AvatarVO> ();
-			int tempCount = 0;
 			for (int i = 0; i < 4; i++) {
 				AvatarVO avo = new AvatarVO ();
 				avo.account = new Account ();
@@ -924,7 +920,7 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	private void getMyIndex(){
 		for(int i=0;i<aa.playerItems.Count;i++){
-			if(aa.playerItems [i].uuid == GlobalDataScript.loginResponseData.account.uuid){
+			if(aa.playerItems [i].uuid == GlobalData.myAvatarVO.account.uuid){
 				myIndex =  i;
 			}
 		}

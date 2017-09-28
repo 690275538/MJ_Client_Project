@@ -11,7 +11,7 @@ using LitJson;
 
 
 
-public class MyMahjongScript : MonoBehaviour
+public class MyMahjongScript : MonoBehaviour ,ISceneView
 {
 	public double lastTime;
 	public Text Number;
@@ -67,7 +67,6 @@ public class MyMahjongScript : MonoBehaviour
 	/// </summary>
 	private int bankerId;
 	private int curDirIndex;
-	private GameObject curCard;
 	/// <summary>
 	/// 打出来的牌
 	/// </summary>
@@ -126,6 +125,17 @@ public class MyMahjongScript : MonoBehaviour
 	private string passType = "";
 
 
+	#region ISceneView implementation
+	public void open (object data = null)
+	{
+		
+	}
+	public void close (object data = null)
+	{
+		exitOrDissoliveRoom ();
+	}
+	#endregion
+
 
 	void Start()
 	{
@@ -142,12 +152,11 @@ public class MyMahjongScript : MonoBehaviour
 		initPanel ();
 		initArrayList ();
 
-		GlobalDataScript.isonLoginPage = false;
-		if (GlobalDataScript.reEnterRoomData != null) {
-			GlobalDataScript.loginResponseData.roomId = GlobalDataScript.reEnterRoomData.roomId;
+		if (GlobalData.reEnterRoomData != null) {
+			GlobalData.myAvatarVO.roomId = GlobalData.reEnterRoomData.roomId;
 			reEnterRoom ();
 		} 
-		GlobalDataScript.reEnterRoomData = null;
+		GlobalData.reEnterRoomData = null;
 
 	}
 
@@ -260,16 +269,16 @@ public class MyMahjongScript : MonoBehaviour
 	/// <param name="response">Response.</param>
 	public void startGame(ClientResponse response)
 	{
-		GlobalDataScript.roomAvatarVoList = avatarList;
+		GlobalData.roomAvatarVoList = avatarList;
 		//GlobalDataScript.surplusTimes -= 1;
 		StartGameVO sgvo = JsonMapper.ToObject<StartGameVO>(response.message);
 		bankerId = sgvo.bankerId;
 		cleanGameplayUI ();
 		//开始游戏后不显示
 		MyDebug.Log("startGame");
-		GlobalDataScript.surplusTimes --;
+		GlobalData.surplusTimes --;
 		curDirString = getDirection (bankerId);
-		LeavedRoundNumText.text = GlobalDataScript.surplusTimes+"";//刷新剩余圈数
+		LeavedRoundNumText.text = GlobalData.surplusTimes+"";//刷新剩余圈数
 		if (!isFirstOpen) {
 			_actionHelper = gameObject.GetComponent<ActionEffectHelper> ();
 			initPanel ();
@@ -278,11 +287,11 @@ public class MyMahjongScript : MonoBehaviour
 		}
 		isFirstOpen = false;
 
-		GlobalDataScript.finalGameEndVo = null;
-		GlobalDataScript.mainUuid = avatarList [bankerId].account.uuid;
+		GlobalData.finalGameEndVo = null;
+		GlobalData.mainUuid = avatarList [bankerId].account.uuid;
 		playerItems [curDirIndex].setbankImgEnable (true);
 		SetDirGameObjectAction();
-		GlobalDataScript.isOverByPlayer = false;
+		GlobalData.isOverByPlayer = false;
 
 		mineList = sgvo.paiArray;
 
@@ -293,7 +302,7 @@ public class MyMahjongScript : MonoBehaviour
 
 		ShowLeavedCardsNumForInit();
 
-		GlobalDataScript.isDrag = curDirString == DirectionEnum.Bottom;
+		GlobalData.isDrag = curDirString == DirectionEnum.Bottom;
 	}
 
 	private void cleanGameplayUI(){
@@ -310,7 +319,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	public void ShowLeavedCardsNumForInit()
 	{
-		RoomCreateVo roomCreateVo = GlobalDataScript.roomVo;
+		RoomVO roomCreateVo = GlobalData.roomVO;
 
 		bool hong = (bool) roomCreateVo.hong  ;
 		int RoomType = (int) roomCreateVo.roomType;
@@ -423,14 +432,14 @@ public class MyMahjongScript : MonoBehaviour
 		SetDirGameObjectAction ();
 		CardsNumChange();
 		//checkHuOrGangOrPengOrChi (MoPaiCardPoint,2);
-		GlobalDataScript.isDrag = true;
+		GlobalData.isDrag = true;
 	}
 	/// <summary>
 	/// 胡，杠，碰，吃，pass按钮显示.
 	/// </summary>
 	/// <param name="response">Response.</param>
 	public void onActionBtnNotice(ClientResponse response){
-		GlobalDataScript.isDrag = false;
+		GlobalData.isDrag = false;
 		string[] strs=response.message.Split (new char[1]{','});
 		if (curDirString == DirectionEnum.Bottom) {
 			passType = "selfPickCard";
@@ -447,7 +456,7 @@ public class MyMahjongScript : MonoBehaviour
 				try{
 					SelfAndOtherPutoutCard = int.Parse( strs[i].Split(new char[1]{':'})[1]);
 				}catch (Exception e){
-				
+					Debug.Log(e.ToString());
 				}
 
 				_actionHelper.showBtn (ActionType.HU);
@@ -642,7 +651,7 @@ public class MyMahjongScript : MonoBehaviour
 		MyDebug.Log ("otherPickCard avatarIndex = "+curAvatarIndex);
 		useForGangOrPengOrChi = cardPoint;
 		if (otherPickCardItem != null) {
-			int dirIndex = getIndexByDir (getDirection (curAvatarIndex));
+			
 			Destroy (otherPickCardItem);
 			otherPickCardItem = null;
 
@@ -769,7 +778,7 @@ public class MyMahjongScript : MonoBehaviour
 		{
 			path = "Prefab/ThrowCard/TopAndBottomCard";
 			poisVector3 = new Vector3(-261 + tableCardList[0].Count%14*37, (int)(tableCardList[0].Count/14)*67f);
-			GlobalDataScript.isDrag = false;
+			GlobalData.isDrag = false;
 		}
 		else if (outDir == DirectionEnum.Right)
 		{
@@ -923,7 +932,7 @@ public class MyMahjongScript : MonoBehaviour
 			templist.Add(obj1);
 		}
 		PengGangCardList.Add(templist);
-		GlobalDataScript.isDrag = true;
+		GlobalData.isDrag = true;
 	}
 
 	private void otherGang(ClientResponse response) //其他人杠牌
@@ -1186,6 +1195,7 @@ public class MyMahjongScript : MonoBehaviour
 					return i;
 				}
 			}catch (Exception e){
+				Debug.Log(e.ToString());
 				return -1;
 			}
 
@@ -1214,7 +1224,7 @@ public class MyMahjongScript : MonoBehaviour
 	{
 		int handCardCount = handCardList [0].Count -1;
 		if (handCardCount == 13 || handCardCount == 10 || handCardCount == 7 || handCardCount == 4 || handCardCount == 1) {
-			GlobalDataScript.isDrag = false;
+			GlobalData.isDrag = false;
 			obj.GetComponent<bottomScript> ().onSendMessage -= cardChange;
 			obj.GetComponent<bottomScript> ().reSetPoisiton -= cardSelect;
 			MyDebug.Log("card change over");
@@ -1349,9 +1359,9 @@ public class MyMahjongScript : MonoBehaviour
 		noticeGameObject.SetActive (true);
 
 
-		if (GlobalDataScript.noticeMegs != null && GlobalDataScript.noticeMegs.Count != 0) {
+		if (GlobalData.noticeMegs != null && GlobalData.noticeMegs.Count != 0) {
 			noticeText.transform.localPosition = new Vector3 (500,noticeText.transform.localPosition.y);
-			noticeText.text = GlobalDataScript.noticeMegs [showNoticeNumber];
+			noticeText.text = GlobalData.noticeMegs [showNoticeNumber];
 			float time = noticeText.text.Length*0.5f+422f/56f;
 
 			Tweener tweener=noticeText.transform.DOLocalMove(
@@ -1364,7 +1374,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	void moveCompleted(){
 		showNoticeNumber++;
-		if (showNoticeNumber == GlobalDataScript.noticeMegs.Count) {
+		if (showNoticeNumber == GlobalData.noticeMegs.Count) {
 			showNoticeNumber = 0;
 		}
 		noticeGameObject.SetActive (false);
@@ -1386,7 +1396,7 @@ public class MyMahjongScript : MonoBehaviour
 		_actionHelper.cleanBtnShow ();
 
 		if (passType == "selfPickCard") {
-			GlobalDataScript.isDrag = true;
+			GlobalData.isDrag = true;
 		}
 		passType = "";
 		CustomSocket.getInstance().sendMsg(new GaveUpRequest());
@@ -1394,7 +1404,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	public void myPengBtnClick()
 	{
-		GlobalDataScript.isDrag = true;
+		GlobalData.isDrag = true;
 		UpateTimeReStart ();
 		CardVO cardvo = new CardVO ();
 		cardvo.cardPoint = putOutCardPoint;
@@ -1403,7 +1413,7 @@ public class MyMahjongScript : MonoBehaviour
 	}
 	public void myChiBtnClick()
 	{
-		GlobalDataScript.isDrag = true;
+		GlobalData.isDrag = true;
 		UpateTimeReStart ();
 		CardVO cardvo = new CardVO ();
 		cardvo.cardPoint = putOutCardPoint;
@@ -1567,7 +1577,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	{
 		//useForGangOrPengOrChi = int.Parse (gangPaiList [0]);
-		GlobalDataScript.isDrag = true;
+		GlobalData.isDrag = true;
 		if (gangPaiList.Length == 1) {
 			useForGangOrPengOrChi = int.Parse (gangPaiList [0]);
 			selfGangCardPoint = useForGangOrPengOrChi;
@@ -1579,7 +1589,7 @@ public class MyMahjongScript : MonoBehaviour
 
 		CustomSocket.getInstance().sendMsg(new GangPaiRequest(useForGangOrPengOrChi,0));
 		MyDebug.Log ("==myGangBtnClick=Invoke=====>");
-		SoundCtrl.getInstance ().playSoundByAction ("gang", GlobalDataScript.loginResponseData.account.sex);
+		SoundCtrl.getInstance ().playSoundByAction ("gang", GlobalData.myAvatarVO.account.sex);
 		_actionHelper.cleanBtnShow ();
 		_actionHelper.pengGangHuEffectCtrl(ActionType.GANG);
 		gangPaiList = null;
@@ -1600,10 +1610,6 @@ public class MyMahjongScript : MonoBehaviour
 		cleanArrayList (PengGangList_T);
 		if (mineList != null) {
 			mineList.Clear ();
-		}
-
-		if (curCard != null) {
-			Destroy (curCard);
 		}
 
 
@@ -1642,9 +1648,9 @@ public class MyMahjongScript : MonoBehaviour
 	}
 
 	public void setRoomRemark(){
-		RoomCreateVo roomvo = GlobalDataScript.roomVo;
-		GlobalDataScript.totalTimes = roomvo.roundNumber;
-		GlobalDataScript.surplusTimes = roomvo.roundNumber;
+		RoomVO roomvo = GlobalData.roomVO;
+		GlobalData.totalTimes = roomvo.roundNumber;
+		GlobalData.surplusTimes = roomvo.roundNumber;
 		string str = "房间号：\n" + roomvo.roomId + "\n";
 		str += "圈数：" + roomvo.roundNumber + "\n";
 
@@ -1724,7 +1730,7 @@ public class MyMahjongScript : MonoBehaviour
 
 		//GlobalDataScript.palyerBaseInfo.Add (avatar.account.uuid, avatar.account);
 
-		if (avatar.account.uuid == GlobalDataScript.loginResponseData.account.uuid) {
+		if (avatar.account.uuid == GlobalData.myAvatarVO.account.uuid) {
 			playerItems [0].setAvatarVo (avatar);
 		} else {
 			int myIndex = getMyIndexFromList ();
@@ -1744,13 +1750,13 @@ public class MyMahjongScript : MonoBehaviour
 	private int getMyIndexFromList(){
 		//return getIndex (GlobalDataScript.loginResponseData.account.uuid);
 		if (avatarList != null) {
-			var myaccount = GlobalDataScript.loginResponseData.account;
+			var myaccount = GlobalData.myAvatarVO.account;
 			for (int i = 0; i < avatarList.Count; i++)
 			{
 				if (avatarList[i].account.uuid == myaccount.uuid ||avatarList[i].account.openid == myaccount.openid)
 
 				{
-					GlobalDataScript.loginResponseData.account.uuid = avatarList [i].account.uuid;
+					GlobalData.myAvatarVO.account.uuid = avatarList [i].account.uuid;
 					MyDebug.Log ("数据正常返回"+i);
 					return i;
 				}
@@ -1812,21 +1818,21 @@ public class MyMahjongScript : MonoBehaviour
 	 */ 
 	private void hupaiCallBack(ClientResponse response){
 		//删除这句，未区分胡家是谁
-		GlobalDataScript.hupaiResponseVo = new HupaiResponseVo();
-		GlobalDataScript.hupaiResponseVo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
+		GlobalData.hupaiResponseVo = new HupaiResponseVo();
+		GlobalData.hupaiResponseVo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
 
-		string scores = GlobalDataScript.hupaiResponseVo.currentScore;
+		string scores = GlobalData.hupaiResponseVo.currentScore;
 		hupaiCoinChange (scores);
 
 
-		if (GlobalDataScript.hupaiResponseVo.type == "0") {
-			SoundCtrl.getInstance ().playSoundByAction ("hu", GlobalDataScript.loginResponseData.account.sex);
+		if (GlobalData.hupaiResponseVo.type == "0") {
+			SoundCtrl.getInstance ().playSoundByAction ("hu", GlobalData.myAvatarVO.account.sex);
 			_actionHelper.pengGangHuEffectCtrl (ActionType.HU);
-			for (int i = 0; i < GlobalDataScript.hupaiResponseVo.avatarList.Count; i++) {
-				if (checkAvarHupai (GlobalDataScript.hupaiResponseVo.avatarList [i]) == 1) {//胡
+			for (int i = 0; i < GlobalData.hupaiResponseVo.avatarList.Count; i++) {
+				if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 1) {//胡
 					playerItems [getIndexByDir (getDirection (i))].setHuFlagDisplay ();
 					SoundCtrl.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
-				} else if (checkAvarHupai (GlobalDataScript.hupaiResponseVo.avatarList [i]) == 2) {
+				} else if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 2) {
 					playerItems [getIndexByDir (getDirection (i))].setHuFlagDisplay ();
 					SoundCtrl.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
 				} else {
@@ -1835,11 +1841,11 @@ public class MyMahjongScript : MonoBehaviour
 
 			}
 
-			allMas = GlobalDataScript.hupaiResponseVo.allMas;
-			if (GlobalDataScript.roomVo.roomType == GameType.ZHUAN_ZHUAN || GlobalDataScript.roomVo.roomType == GameType.GI_PING_HU ) {//只有转转麻将才显示抓码信息
-				if (GlobalDataScript.roomVo.ma > 0 && allMas!=null && allMas.Length>0) {
+			allMas = GlobalData.hupaiResponseVo.allMas;
+			if (GlobalData.roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.roomVO.roomType == GameType.GI_PING_HU ) {//只有转转麻将才显示抓码信息
+				if (GlobalData.roomVO.ma > 0 && allMas!=null && allMas.Length>0) {
 					zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
-					zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, GlobalDataScript.hupaiResponseVo.validMas);
+					zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, GlobalData.hupaiResponseVo.validMas);
 					Invoke ("openGameOverPanelSignal", 7);
 				} else {
 					Invoke ("openGameOverPanelSignal", 3);
@@ -1850,9 +1856,9 @@ public class MyMahjongScript : MonoBehaviour
 			}
 
 
-		} else if (GlobalDataScript.hupaiResponseVo.type == "1") {
+		} else if (GlobalData.hupaiResponseVo.type == "1") {
 
-			SoundCtrl.getInstance ().playSoundByAction ("liuju", GlobalDataScript.loginResponseData.account.sex);
+			SoundCtrl.getInstance ().playSoundByAction ("liuju", GlobalData.myAvatarVO.account.sex);
 			_actionHelper.pengGangHuEffectCtrl (ActionType.LIUJU);
 			Invoke ("openGameOverPanelSignal", 3);
 		} else {
@@ -1940,8 +1946,8 @@ public class MyMahjongScript : MonoBehaviour
 		}
 
 		initPanel ();
-		obj.GetComponent<GameOverScript>().setDisplaContent(0,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);
-		GlobalDataScript.singalGameOverList.Add (obj);
+		obj.GetComponent<GameOverScript>().setDisplaContent(0,avatarList,allMas,GlobalData.hupaiResponseVo.validMas);
+		GlobalData.singalGameOverList.Add (obj);
 		allMas = "";//初始化码牌数据为空
 		//GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ().setDisplaContent (0,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);	
 	}
@@ -1951,7 +1957,7 @@ public class MyMahjongScript : MonoBehaviour
 
 	private void  loadPerfab(string perfabName ,int openFlag){
 		GameObject obj= PrefabManage.loadPerfab (perfabName);
-		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);
+		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,avatarList,allMas,GlobalData.hupaiResponseVo.validMas);
 	}
 
 	private void reSetOutOnTabelCardPosition(GameObject cardOnTable){
@@ -1971,7 +1977,7 @@ public class MyMahjongScript : MonoBehaviour
 	 */ 
 	public void quiteRoom(){
 		OutRoomRequestVo vo = new OutRoomRequestVo ();
-		vo.roomId = GlobalDataScript.roomVo.roomId ;
+		vo.roomId = GlobalData.roomVO.roomId ;
 		string sendMsg = JsonMapper.ToJson (vo);
 		CustomSocket.getInstance().sendMsg(new OutRoomRequest(sendMsg));
 	}
@@ -1982,7 +1988,7 @@ public class MyMahjongScript : MonoBehaviour
 			if (responseMsg.type == "0") {
 
 				int uuid = responseMsg.uuid;
-				if (uuid != GlobalDataScript.loginResponseData.account.uuid) {
+				if (uuid != GlobalData.myAvatarVO.account.uuid) {
 					int index = getIndex (uuid);
 					avatarList.RemoveAt (index);
 
@@ -2005,7 +2011,7 @@ public class MyMahjongScript : MonoBehaviour
 			}
 
 		} else {
-			TipsManagerScript.getInstance ().setTips ("退出房间失败：" + responseMsg.error);
+			TipsManager.getInstance ().setTips ("退出房间失败：" + responseMsg.error);
 		}
 	}
 
@@ -2014,9 +2020,9 @@ public class MyMahjongScript : MonoBehaviour
 	public void dissoliveRoomRequest(){
 		if (canClickButtonFlag) {
 			dissoliveRoomType = "0";
-			TipsManagerScript.getInstance ().loadDialog ("申请解散房间", "你确定要申请解散房间？", doDissoliveRoomRequest, cancle);
+			TipsManager.getInstance ().loadDialog ("申请解散房间", "你确定要申请解散房间？", doDissoliveRoomRequest, cancle);
 		} else {
-			TipsManagerScript.getInstance ().setTips ("还没有开始游戏，不能申请退出房间");
+			TipsManager.getInstance ().setTips ("还没有开始游戏，不能申请退出房间");
 		}
 
 	}
@@ -2030,20 +2036,20 @@ public class MyMahjongScript : MonoBehaviour
 		DissoliveRoomResponseVo dissoliveRoomResponseVo = JsonMapper.ToObject<DissoliveRoomResponseVo> (response.message);
 		string plyerName = dissoliveRoomResponseVo.accountName;
 		if (dissoliveRoomResponseVo.type == "0") {
-			GlobalDataScript.isonApplayExitRoomstatus = true;
+			GlobalData.isonApplayExitRoomstatus = true;
 			dissoliveRoomType = "1";
 			dissoDialog = PrefabManage.loadPerfab ("Prefab/Panel_Apply_Exit");
 			dissoDialog.GetComponent<VoteScript> ().iniUI (plyerName, avatarList);
 		} else if (dissoliveRoomResponseVo.type == "3") {
 			
 		
-			if (zhuamaPanel != null && GlobalDataScript.isonApplayExitRoomstatus ) {
+			if (zhuamaPanel != null && GlobalData.isonApplayExitRoomstatus ) {
 				Destroy (zhuamaPanel.GetComponent<ZhuMaScript>());
 				Destroy (zhuamaPanel);
 			}
-			GlobalDataScript.isonApplayExitRoomstatus = false;
+			GlobalData.isonApplayExitRoomstatus = false;
 			if (dissoDialog != null) {
-				GlobalDataScript.isOverByPlayer = true;
+				GlobalData.isOverByPlayer = true;
 				dissoDialog.GetComponent<VoteScript> ().removeListener ();
 				Destroy (dissoDialog.GetComponent<VoteScript> ());
 				Destroy (dissoDialog);
@@ -2059,11 +2065,11 @@ public class MyMahjongScript : MonoBehaviour
 	 */ 
 	public void  doDissoliveRoomRequest(){
 		DissoliveRoomRequestVo dissoliveRoomRequestVo = new DissoliveRoomRequestVo ();
-		dissoliveRoomRequestVo.roomId = GlobalDataScript.loginResponseData.roomId;
+		dissoliveRoomRequestVo.roomId = GlobalData.myAvatarVO.roomId;
 		dissoliveRoomRequestVo.type = dissoliveRoomType;
 		string sendMsg = JsonMapper.ToJson (dissoliveRoomRequestVo);
 		CustomSocket.getInstance().sendMsg(new DissoliveRoomRequest(sendMsg));
-		GlobalDataScript.isonApplayExitRoomstatus = true;
+		GlobalData.isonApplayExitRoomstatus = true;
 	}
 
 	private void cancle(){
@@ -2076,20 +2082,20 @@ public class MyMahjongScript : MonoBehaviour
 	}
 
 	public void exitOrDissoliveRoom(){
-		GlobalDataScript.loginResponseData.resetData ();//复位房间数据
-		GlobalDataScript.loginResponseData.roomId = 0;//复位房间数据
-		GlobalDataScript.roomVo.roomId = 0;
-		GlobalDataScript.soundToggle = true;
+		GlobalData.myAvatarVO.resetData ();//复位房间数据
+		GlobalData.myAvatarVO.roomId = 0;//复位房间数据
+		GlobalData.roomVO.roomId = 0;
+		GlobalData.soundToggle = true;
 		clean ();
 		removeListener ();
 
 		SoundCtrl.getInstance ().playBGM ();
-		if (GlobalDataScript.homePanel != null) {
-			GlobalDataScript.homePanel.SetActive (true);
-			GlobalDataScript.homePanel.transform.SetSiblingIndex (1);
+		if (GlobalData.homePanel != null) {
+			GlobalData.homePanel.SetActive (true);
+			GlobalData.homePanel.transform.SetSiblingIndex (1);
 		} else {
-			GlobalDataScript.homePanel=PrefabManage.loadPerfab ("Prefab/Panel_Home");
-			GlobalDataScript.homePanel.transform.SetSiblingIndex (1);
+			GlobalData.homePanel=PrefabManage.loadPerfab ("Prefab/Panel_Home");
+			GlobalData.homePanel.transform.SetSiblingIndex (1);
 		}
 
 		while(playerItems.Count >0){
@@ -2129,30 +2135,30 @@ public class MyMahjongScript : MonoBehaviour
 	/*************************断线重连*********************************/
 	private void reEnterRoom(){
 		
-		if (GlobalDataScript.reEnterRoomData != null) {
+		if (GlobalData.reEnterRoomData != null) {
 			//显示房间基本信息
-			GlobalDataScript.roomVo.addWordCard = GlobalDataScript.reEnterRoomData.addWordCard;
-			GlobalDataScript.roomVo.hong = GlobalDataScript.reEnterRoomData.hong;
-			GlobalDataScript.roomVo.name = GlobalDataScript.reEnterRoomData.name;
-			GlobalDataScript.roomVo.roomId = GlobalDataScript.reEnterRoomData.roomId;
-			GlobalDataScript.roomVo.roomType = GlobalDataScript.reEnterRoomData.roomType;
-			GlobalDataScript.roomVo.roundNumber = GlobalDataScript.reEnterRoomData.roundNumber;
-			GlobalDataScript.roomVo.sevenDouble = GlobalDataScript.reEnterRoomData.sevenDouble;
-			GlobalDataScript.roomVo.xiaYu = GlobalDataScript.reEnterRoomData.xiaYu;
-			GlobalDataScript.roomVo.ziMo = GlobalDataScript.reEnterRoomData.ziMo;
-			GlobalDataScript.roomVo.magnification = GlobalDataScript.reEnterRoomData.magnification;
-			GlobalDataScript.roomVo.ma = GlobalDataScript.reEnterRoomData.ma;
+			GlobalData.roomVO.addWordCard = GlobalData.reEnterRoomData.addWordCard;
+			GlobalData.roomVO.hong = GlobalData.reEnterRoomData.hong;
+			GlobalData.roomVO.name = GlobalData.reEnterRoomData.name;
+			GlobalData.roomVO.roomId = GlobalData.reEnterRoomData.roomId;
+			GlobalData.roomVO.roomType = GlobalData.reEnterRoomData.roomType;
+			GlobalData.roomVO.roundNumber = GlobalData.reEnterRoomData.roundNumber;
+			GlobalData.roomVO.sevenDouble = GlobalData.reEnterRoomData.sevenDouble;
+			GlobalData.roomVO.xiaYu = GlobalData.reEnterRoomData.xiaYu;
+			GlobalData.roomVO.ziMo = GlobalData.reEnterRoomData.ziMo;
+			GlobalData.roomVO.magnification = GlobalData.reEnterRoomData.magnification;
+			GlobalData.roomVO.ma = GlobalData.reEnterRoomData.ma;
 			setRoomRemark();
 			//设置座位
 
-			avatarList = GlobalDataScript.reEnterRoomData.playerList;
-			GlobalDataScript.roomAvatarVoList = GlobalDataScript.reEnterRoomData.playerList;
+			avatarList = GlobalData.reEnterRoomData.playerList;
+			GlobalData.roomAvatarVoList = GlobalData.reEnterRoomData.playerList;
 			for (int i = 0; i < avatarList.Count; i++) {
 				setSeat (avatarList [i]);
 			}
 
 			recoverOtherGlobalData ();
-			int[][] selfPaiArray = GlobalDataScript.reEnterRoomData.playerList [getMyIndexFromList ()].paiArray;
+			int[][] selfPaiArray = GlobalData.reEnterRoomData.playerList [getMyIndexFromList ()].paiArray;
 			if (selfPaiArray == null || selfPaiArray.Length == 0) {//游戏还没有开始
 			  
 
@@ -2181,7 +2187,7 @@ public class MyMahjongScript : MonoBehaviour
 	//恢复其他全局数据
 	private void recoverOtherGlobalData (){
 		int selfIndex = getMyIndexFromList ();
-		GlobalDataScript.loginResponseData.account.roomcard = GlobalDataScript.reEnterRoomData.playerList [selfIndex].account.roomcard;//恢复房卡数据，此时主界面还没有load所以无需操作界面显示
+		GlobalData.myAvatarVO.account.roomcard = GlobalData.reEnterRoomData.playerList [selfIndex].account.roomcard;//恢复房卡数据，此时主界面还没有load所以无需操作界面显示
 
 	}
 
@@ -2189,7 +2195,7 @@ public class MyMahjongScript : MonoBehaviour
 
 
 	private void dispalySelfhanderCard(){
-		mineList =ToList( GlobalDataScript.reEnterRoomData.playerList [getMyIndexFromList()].paiArray);
+		mineList =ToList( GlobalData.reEnterRoomData.playerList [getMyIndexFromList()].paiArray);
 		for (int i = 0; i < mineList [0].Count; i++) {
 			if (mineList [0] [i] > 0) {
 				for (int j = 0; j < mineList [0] [i]; j++) {
@@ -2232,9 +2238,9 @@ public class MyMahjongScript : MonoBehaviour
 	/**显示打牌数据在桌面**/
 	private void displayTableCards(){
 		//List<int[]> chupaiList = new List<int[]> ();
-		for (int i = 0; i < GlobalDataScript.reEnterRoomData.playerList.Count; i++) {
-			int[] chupai = GlobalDataScript.reEnterRoomData.playerList [i].chupais;
-			outDir = getDirection (getIndex (GlobalDataScript.reEnterRoomData.playerList [i].account.uuid));
+		for (int i = 0; i < GlobalData.reEnterRoomData.playerList.Count; i++) {
+			int[] chupai = GlobalData.reEnterRoomData.playerList [i].chupais;
+			outDir = getDirection (getIndex (GlobalData.reEnterRoomData.playerList [i].account.uuid));
 			if (chupai != null && chupai.Length > 0) {
 				for (int j = 0; j < chupai.Length; j++) {
 					ThrowBottom (chupai[j]);
@@ -2246,9 +2252,9 @@ public class MyMahjongScript : MonoBehaviour
 
 	/**显示其他人的手牌**/
 	private void displayOtherHandercard(){
-		for(int i=0 ;i<GlobalDataScript.reEnterRoomData.playerList.Count ;i++){
-			string dir = getDirection (getIndex (GlobalDataScript.reEnterRoomData.playerList [i].account.uuid));
-			int count = GlobalDataScript.reEnterRoomData.playerList[i].commonCards;
+		for(int i=0 ;i<GlobalData.reEnterRoomData.playerList.Count ;i++){
+			string dir = getDirection (getIndex (GlobalData.reEnterRoomData.playerList [i].account.uuid));
+			int count = GlobalData.reEnterRoomData.playerList[i].commonCards;
 			if (dir != DirectionEnum.Bottom) {
 				initOtherCardList (dir,count);
 			}
@@ -2258,11 +2264,11 @@ public class MyMahjongScript : MonoBehaviour
 
 	/**显示杠牌**/
 	private void displayallGangCard(){
-		for (int i = 0; i < GlobalDataScript.reEnterRoomData.playerList.Count; i++) {
-			int[] paiArrayType = GlobalDataScript.reEnterRoomData.playerList [i].paiArray[1];
-			string dirstr =  getDirection (getIndex (GlobalDataScript.reEnterRoomData.playerList [i].account.uuid));
+		for (int i = 0; i < GlobalData.reEnterRoomData.playerList.Count; i++) {
+			int[] paiArrayType = GlobalData.reEnterRoomData.playerList [i].paiArray[1];
+			string dirstr =  getDirection (getIndex (GlobalData.reEnterRoomData.playerList [i].account.uuid));
 			if (paiArrayType.Contains<int> (2)) {
-				string gangString = GlobalDataScript.reEnterRoomData.playerList [i].huReturnObjectVO.totalInfo.gang;
+				string gangString = GlobalData.reEnterRoomData.playerList [i].huReturnObjectVO.totalInfo.gang;
 				if (gangString != null) {
 					string[] gangtemps = gangString.Split (new char[1]{','});
 					for (int j = 0; j < gangtemps.Length; j++) {
@@ -2272,7 +2278,7 @@ public class MyMahjongScript : MonoBehaviour
 						gangpaiObj.cardPiont =int.Parse( item.Split (new char[1]{':'})[1]);
 						gangpaiObj.type = item.Split (new char[1]{':'})[2];
 						//增加判断是否为自己的杠牌的操作
-						GlobalDataScript.reEnterRoomData.playerList [i].paiArray [0] [gangpaiObj.cardPiont] -= 4;
+						GlobalData.reEnterRoomData.playerList [i].paiArray [0] [gangpaiObj.cardPiont] -= 4;
 
 
 						if (gangpaiObj.type == "an") {
@@ -2290,13 +2296,13 @@ public class MyMahjongScript : MonoBehaviour
 	}
 
 	private void displayPengCard(){
-		for (int i = 0; i < GlobalDataScript.reEnterRoomData.playerList.Count; i++) {
-			int[] paiArrayType = GlobalDataScript.reEnterRoomData.playerList [i].paiArray[1];
-			string dirstr =  getDirection (getIndex (GlobalDataScript.reEnterRoomData.playerList [i].account.uuid));
+		for (int i = 0; i < GlobalData.reEnterRoomData.playerList.Count; i++) {
+			int[] paiArrayType = GlobalData.reEnterRoomData.playerList [i].paiArray[1];
+			string dirstr =  getDirection (getIndex (GlobalData.reEnterRoomData.playerList [i].account.uuid));
 			if (paiArrayType.Contains<int> (1)) {
 				for (int j = 0; j < paiArrayType.Length; j++) {
-					if (paiArrayType [j] == 1 && GlobalDataScript.reEnterRoomData.playerList [i].paiArray [0] [j]>0 ) {
-						GlobalDataScript.reEnterRoomData.playerList [i].paiArray [0] [j] -= 3;
+					if (paiArrayType [j] == 1 && GlobalData.reEnterRoomData.playerList [i].paiArray [0] [j]>0 ) {
+						GlobalData.reEnterRoomData.playerList [i].paiArray [0] [j] -= 3;
 						doDisplayPengGangCard (dirstr, j,3,2);
 
 					}
@@ -2428,7 +2434,7 @@ public class MyMahjongScript : MonoBehaviour
 	}
 
 	public void inviteFriend(){
-		GlobalDataScript.getInstance ().wechatOperate.inviteFriend ();
+		GlobalData.getInstance ().wechatOperate.inviteFriend ();
 	}
 
 
@@ -2456,13 +2462,13 @@ public class MyMahjongScript : MonoBehaviour
 		}
 
 		//申请解散房间过程中，有人掉线，直接不能解散房间
-		if (GlobalDataScript.isonApplayExitRoomstatus) {
+		if (GlobalData.isonApplayExitRoomstatus) {
 			if (dissoDialog != null) {
 				dissoDialog.GetComponent<VoteScript> ().removeListener ();
 				Destroy (dissoDialog.GetComponent<VoteScript> ());
 				Destroy (dissoDialog);
 			}
-			TipsManagerScript.getInstance ().setTips ("由于" + avatarList [index].account.nickname + "离线，系统不能解散房间。");
+			TipsManager.getInstance ().setTips ("由于" + avatarList [index].account.nickname + "离线，系统不能解散房间。");
 
 		}
 	}
@@ -2530,7 +2536,7 @@ public class MyMahjongScript : MonoBehaviour
 
 
 	public void returnGameResponse(ClientResponse response){
-		string returnstr = response.message;
+//		string returnstr = response.message;
 		//JsonData returnJsonData = new JsonData (returnstr);
 		//1.显示剩余牌的张数和圈数
 		JsonData returnJsonData = JsonMapper.ToObject(response.message);
@@ -2539,7 +2545,7 @@ public class MyMahjongScript : MonoBehaviour
 		LeavedCardsNum = int.Parse(surplusCards);
 		int gameRound =int.Parse( returnJsonData ["gameRound"].ToString ());
 		LeavedRoundNumText.text =gameRound+ "";
-		GlobalDataScript.surplusTimes = gameRound;
+		GlobalData.surplusTimes = gameRound;
 
 
 		int curAvatarIndexTemp = -1;//当前出牌人的索引
@@ -2567,8 +2573,8 @@ public class MyMahjongScript : MonoBehaviour
 			SelfAndOtherPutoutCard = currentCardPointTemp; 
 
 
-		}catch( Exception ex){
-
+		}catch( Exception e){
+			Debug.Log(e.ToString());
 		}
 
 
@@ -2584,7 +2590,7 @@ public class MyMahjongScript : MonoBehaviour
 				moPai ();
 				curDirString = DirectionEnum.Bottom;
 				SetDirGameObjectAction ();
-				GlobalDataScript.isDrag = true;	
+				GlobalData.isDrag = true;	
 				MyDebug.Log ("自己摸牌");
 
 			} else {
@@ -2605,7 +2611,7 @@ public class MyMahjongScript : MonoBehaviour
 					moPai ();
 					curDirString = DirectionEnum.Bottom;
 					SetDirGameObjectAction ();
-					GlobalDataScript.isDrag = true;	
+					GlobalData.isDrag = true;	
 				}
 
 			}

@@ -17,9 +17,9 @@ public class MessageBoxScript : MonoBehaviour {
 
 	public void btnClick(int index){
 		SoundCtrl.getInstance ().playMessageBoxSound (index);
-		CustomSocket.getInstance ().sendMsg (new MessageBoxRequest(index,GlobalDataScript.loginResponseData.account.uuid));
+		CustomSocket.getInstance ().sendMsg (new MessageBoxRequest(index,GlobalData.myAvatarVO.account.uuid));
 		if (myMaj == null) {
-			myMaj = GameObject.Find ("Panel_GamePlay").GetComponent<MyMahjongScript>();
+			myMaj = SceneManager.getInstance ().CurScenePanel.GetComponent<MyMahjongScript> ();
 		}
 		if (myMaj != null) {
 			myMaj.playerItems [0].showChatMessage (index);

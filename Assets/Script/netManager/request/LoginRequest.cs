@@ -41,8 +41,7 @@ namespace AssemblyCSharp
 
 			if (data == null) {
 				LoginVo loginvo = new LoginVo ();
-				Random ran = new Random();
-				string str = ran.Next (100, 1000) + "for" + ran.Next (2000, 5000);
+
 				loginvo.openId = "127" ;
 
 
@@ -52,19 +51,19 @@ namespace AssemblyCSharp
 				loginvo.province = "21sfsd";
 				loginvo.city = "afafsdf";
 				loginvo.sex = 1;
-				loginvo.IP = GlobalDataScript.getInstance().getIpAddress();
+				loginvo.IP = GlobalData.getInstance().getIpAddress();
 				data = JsonMapper.ToJson (loginvo);
 
-				GlobalDataScript.loginVo = loginvo;
-				GlobalDataScript.loginResponseData = new AvatarVO ();
-				GlobalDataScript.loginResponseData.account = new Account ();
-				GlobalDataScript.loginResponseData.account.city = loginvo.city;
-				GlobalDataScript.loginResponseData.account.openid = loginvo.openId;
-				GlobalDataScript.loginResponseData.account.nickname = loginvo.nickName;
-				GlobalDataScript.loginResponseData.account.headicon = loginvo.headIcon;
-				GlobalDataScript.loginResponseData.account.unionid = loginvo.city;
-				GlobalDataScript.loginResponseData.account.sex = loginvo.sex;
-				GlobalDataScript.loginResponseData.IP = loginvo.IP;
+				GlobalData.loginVo = loginvo;
+				GlobalData.myAvatarVO = new AvatarVO ();
+				GlobalData.myAvatarVO.account = new Account ();
+				GlobalData.myAvatarVO.account.city = loginvo.city;
+				GlobalData.myAvatarVO.account.openid = loginvo.openId;
+				GlobalData.myAvatarVO.account.nickname = loginvo.nickName;
+				GlobalData.myAvatarVO.account.headicon = loginvo.headIcon;
+				GlobalData.myAvatarVO.account.unionid = loginvo.city;
+				GlobalData.myAvatarVO.account.sex = loginvo.sex;
+				GlobalData.myAvatarVO.IP = loginvo.IP;
 			}
 			messageContent = data;
 
@@ -76,8 +75,8 @@ namespace AssemblyCSharp
 		//退出登录
 		public LoginRequest (){
 			headCode = APIS.QUITE_LOGIN;
-			if (GlobalDataScript.loginResponseData != null) {
-				messageContent = GlobalDataScript.loginResponseData.account.uuid + "";
+			if (GlobalData.myAvatarVO != null) {
+				messageContent = GlobalData.myAvatarVO.account.uuid + "";
 			}
 
 		}

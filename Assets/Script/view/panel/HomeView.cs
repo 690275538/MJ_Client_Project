@@ -7,50 +7,51 @@ using System.Collections.Generic;
 using System.Threading;
 using DG.Tweening;
 
-public class HomePanelScript : MonoBehaviour {
-    public Image headIconImg;//头像路径
-	//public Image tipHeadIcon;
-	public Text noticeText;
-	//public Text tipNameText;
-//	public Text tipIdText;
-	//public Text tipIpText;
-    public Text nickNameText;//昵称
+public class HomeView : MonoBehaviour,ISceneView {
+	public Image headIconImg;//头像路径
+	private string headIcon;
+	public Text nickNameText;//昵称
 	public Text cardCountText;//房卡剩余数量
+	public Text noticeText;
+
 	public Text IpText;
 
 	public Text contactInfoContent;
 
-	//public GameObject userInfoPanel;
-	public GameObject roomCardPanel;
+
+	public GameObject contactInfoPanel;
 	WWW www;                     //请求
-	string filePath;             //保存的文件路径
-	Texture2D texture2D;         //下载的图片
-	private string headIcon;
+
 	private GameObject panelCreateDialog;//界面上打开的dialog
-	private GameObject panelExitDialog;
 	/// <summary>
 	/// 这个字段是作为消息显示的列表 ，如果要想通过管理后台随时修改通知信息，
 	/// 请接收服务器的数据，并重新赋值给这个字段就行了。
 	/// </summary>
 	private bool startFlag = false;
-	public  float waiteTime = 1;
 	private int showNum = 0;
-    private int i;
-    private int a=0;
-	// Use this for initialization
+
+	#region ISceneView implementation
+	public void open (object data = null)
+	{
+
+	}
+	public void close (object data = null)
+	{
+		removeListener ();
+	}
+	#endregion		
+
 	void Start () {
 		initUI();
-		GlobalDataScript.isonLoginPage = false;
 		checkEnterInRoom ();
 		addListener ();
 	}
-		
 
 	void setNoticeTextMessage(){
 		
-		if (GlobalDataScript.noticeMegs != null && GlobalDataScript.noticeMegs.Count != 0) {
+		if (GlobalData.noticeMegs != null && GlobalData.noticeMegs.Count != 0) {
 			noticeText.transform.localPosition = new Vector3 (500,noticeText.transform.localPosition.y);
-			noticeText.text = GlobalDataScript.noticeMegs [showNum];
+			noticeText.text = GlobalData.noticeMegs [showNum];
 			float time = noticeText.text.Length*0.5f+422f/56f;
 
 			Tweener tweener=noticeText.transform.DOLocalMove(
@@ -64,7 +65,7 @@ public class HomePanelScript : MonoBehaviour {
 
 	void moveCompleted(){
 		showNum++;
-		if (showNum == GlobalDataScript.noticeMegs.Count) {
+		if (showNum == GlobalData.noticeMegs.Count) {
 			showNum = 0;
 		}
 		setNoticeTextMessage ();
@@ -76,14 +77,10 @@ public class HomePanelScript : MonoBehaviour {
 			MyDebug.Log ("Input.GetKey(KeyCode.Escape)");
 			if(panelCreateDialog!=null){
 				Destroy (panelCreateDialog);
-				return;
-			}else if (panelExitDialog == null) {
-				panelExitDialog = Instantiate (Resources.Load("Prefab/Panel_Exit")) as GameObject;
-				panelExitDialog.transform.parent = gameObject.transform;
-				panelExitDialog.transform.localScale = Vector3.one;
-				//panelCreateDialog.transform.localPosition = new Vector3 (200f,150f);
-				panelExitDialog.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
-				panelExitDialog.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
+			}
+			else 
+			{
+				exitApp ();
 			}
 		}
 
@@ -112,7 +109,7 @@ public class HomePanelScript : MonoBehaviour {
 	//房卡变化处理
 	private void cardChangeNotice(ClientResponse response){
 		cardCountText.text = response.message;
-		GlobalDataScript.loginResponseData.account.roomcard =int.Parse(response.message);
+		GlobalData.myAvatarVO.account.roomcard =int.Parse(response.message);
 	}
 
 	private void gameBroadcastNotice(){
@@ -124,54 +121,47 @@ public class HomePanelScript : MonoBehaviour {
 	}
 
   
-	private void contactInfoResponse(ClientResponse response){
-		contactInfoContent.text = response.message;
-		roomCardPanel.SetActive (true);
-	}
 	/***
 	 *初始化显示界面 
 	 */
 	private void initUI(){
-		if (GlobalDataScript.loginResponseData != null) {
-			headIcon = GlobalDataScript.loginResponseData.account.headicon;
-			cardCountText.text = GlobalDataScript.loginResponseData.account.roomcard.ToString();
-			nickNameText.text = GlobalDataScript.loginResponseData.account.nickname;
-			IpText.text = "ID:" + GlobalDataScript.loginResponseData.account.uuid;
+		if (GlobalData.myAvatarVO != null) {
+			headIcon = GlobalData.myAvatarVO.account.headicon;
+			cardCountText.text = GlobalData.myAvatarVO.account.roomcard.ToString();
+			nickNameText.text = GlobalData.myAvatarVO.account.nickname;
+			IpText.text = "ID:" + GlobalData.myAvatarVO.account.uuid;
 		}
         StartCoroutine (LoadImg());
-	//	CustomSocket.getInstance ().sendMsg (new GetContactInfoRequest ());
 
 	}
 
 	public void showUserInfoPanel(){
-		//userInfoPanel.SetActive (true);
+		
 		GameObject obj= PrefabManage.loadPerfab("Prefab/userInfo");
-		obj.GetComponent<ShowUserInfoScript> ().setUIData (GlobalDataScript.loginResponseData);
+		obj.GetComponent<ShowUserInfoScript> ().setUIData (GlobalData.myAvatarVO);
 	}
 
-	/**
-	public void closeUserInfoPanel (){
-		userInfoPanel.SetActive (false);
-	}
-*/
+
 	public void showRoomCardPanel(){
 		CustomSocket.getInstance ().sendMsg (new GetContactInfoRequest ());
 
 	}
 
+	private void contactInfoResponse(ClientResponse response){
+		contactInfoContent.text = response.message;
+		contactInfoPanel.SetActive (true);
+	}
 	public void closeRoomCardPanel (){
-		roomCardPanel.SetActive (false);
+		contactInfoPanel.SetActive (false);
 	}
 
 	/****
 	 * 判断进入房间
 	 */ 
 	private void checkEnterInRoom(){
-		if (GlobalDataScript.roomVo!= null && GlobalDataScript.roomVo.roomId != 0) {
-			//loadPerfab ("Prefab/Panel_GamePlay");
-			GlobalDataScript.gamePlayPanel = PrefabManage.loadPerfab ("Prefab/Panel_GamePlay");
+		if (GlobalData.roomVO!= null && GlobalData.roomVO.roomId != 0) {
+			SceneManager.getInstance ().changeToScene (SceneType.GAME);
 		}
-
 	}
 
 
@@ -180,17 +170,13 @@ public class HomePanelScript : MonoBehaviour {
 	 * 
 	 */ 
 	public void openCreateRoomDialog(){
-		if (GlobalDataScript.loginResponseData == null || GlobalDataScript.loginResponseData.roomId == 0) {
+		if (GlobalData.myAvatarVO == null || GlobalData.myAvatarVO.roomId == 0) {
 			loadPerfab ("Prefab/Panel_Create_Room_View");
 		} else {
 		
-			TipsManagerScript.getInstance ().setTips("当前正在房间状态，无法创建房间");
+			TipsManager.getInstance ().setTips("当前正在房间状态，无法创建房间");
 		}
 
-
-
-
-		//Application.LoadLevel ("Play_Scene");
 	}
 
 	/***
@@ -199,26 +185,26 @@ public class HomePanelScript : MonoBehaviour {
 	 */ 
 	public void openEnterRoomDialog(){
 		
-		if (GlobalDataScript.roomVo == null || GlobalDataScript.roomVo.roomId == 0) {
+		if (GlobalData.roomVO == null || GlobalData.roomVO.roomId == 0) {
 			loadPerfab ("Prefab/Panel_Enter_Room");
 
 		} else {
-			TipsManagerScript.getInstance ().setTips("当前正在房间状态，无法加入新的房间");
+			TipsManager.getInstance ().setTips("当前正在房间状态，无法加入新的房间");
 		}
 	}
 
 	/**
 	 * 打开游戏规则对话框
 	 */ 
-	public void openGameRuleDialog(){
+	public void onRuleBtnClick(){
 		
 		loadPerfab ("Prefab/Panel_Game_Rule_Dialog");
 	}
 
 	/**
-	 * 打开游戏规则对话框
+	 * 打开排行榜
 	 */ 
-	public void openGameRankDialog(){
+	public void onRankBtnClick(){
 		loadPerfab ("Prefab/Panel_Rank_Dialog");
 	}
 
@@ -227,12 +213,12 @@ public class HomePanelScript : MonoBehaviour {
 	 * 打开抽奖对话框
 	 * 
 	*/
-	public void LotteryBtnClick()
+	public void onLotteryBtnClick()
 	{
 		loadPerfab ("Prefab/Panel_Lottery");
 	}
 
-    public void ZhanjiBtnClick()
+    public void onScoreBtnClick()
     {
         loadPerfab("Prefab/Panel_Report");
     }
@@ -252,13 +238,12 @@ public class HomePanelScript : MonoBehaviour {
 		if (headIcon != null && headIcon != "") {
 			WWW www = new WWW(headIcon);
 			yield return www;
-			//下载完成，保存图片到路径filePath
+
 			try {
-				texture2D = www.texture;
-				byte[] bytes = texture2D.EncodeToPNG();
+				Texture2D texture2D = www.texture;
+//				byte[] bytes = texture2D.EncodeToPNG();
 				//将图片赋给场景上的Sprite
-				Sprite tempSp = Sprite.Create(texture2D, new Rect(0,0,texture2D.width,texture2D.height),new Vector2(0,0));
-				headIconImg.sprite = tempSp;
+				headIconImg.sprite = Sprite.Create(texture2D, new Rect(0,0,texture2D.width,texture2D.height),new Vector2(0,0));
 
 			} catch (Exception e){
 				
@@ -270,14 +255,7 @@ public class HomePanelScript : MonoBehaviour {
 
 
 	public void exitApp(){
-		if (panelExitDialog == null) {
-			panelExitDialog = Instantiate (Resources.Load("Prefab/Panel_Exit")) as GameObject;
-			panelExitDialog.transform.parent = gameObject.transform;
-			panelExitDialog.transform.localScale = Vector3.one;
-			//panelCreateDialog.transform.localPosition = new Vector3 (200f,150f);
-			panelExitDialog.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
-			panelExitDialog.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
-		}
+		SceneManager.getInstance ().showExitPanel ();
 	}
 
 }

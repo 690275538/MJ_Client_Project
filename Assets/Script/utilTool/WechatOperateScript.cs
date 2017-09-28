@@ -59,30 +59,30 @@ public class WechatOperateScript : MonoBehaviour {
 				loginvo.city = (string)data ["city"];
 				string sex = data ["sex"].ToString ();
 				loginvo.sex = int.Parse (sex);
-				loginvo.IP = GlobalDataScript.getInstance ().getIpAddress ();
+				loginvo.IP = GlobalData.getInstance ().getIpAddress ();
 				String msg = JsonMapper.ToJson (loginvo);
 
 				CustomSocket.getInstance ().sendMsg (new LoginRequest (msg));
 
-				GlobalDataScript.loginVo = loginvo;
-				GlobalDataScript.loginResponseData = new AvatarVO ();
-				GlobalDataScript.loginResponseData.account = new Account ();
-				GlobalDataScript.loginResponseData.account.city = loginvo.city;
-				GlobalDataScript.loginResponseData.account.openid = loginvo.openId;
+				GlobalData.loginVo = loginvo;
+				GlobalData.myAvatarVO = new AvatarVO ();
+				GlobalData.myAvatarVO.account = new Account ();
+				GlobalData.myAvatarVO.account.city = loginvo.city;
+				GlobalData.myAvatarVO.account.openid = loginvo.openId;
 				MyDebug.Log(" loginvo.nickName:"+loginvo.nickName);
-				GlobalDataScript.loginResponseData.account.nickname = loginvo.nickName;
-				GlobalDataScript.loginResponseData.account.headicon = loginvo.headIcon;
-				GlobalDataScript.loginResponseData.account.unionid = loginvo.city;
-				GlobalDataScript.loginResponseData.account.sex = loginvo.sex;
-				GlobalDataScript.loginResponseData.IP = loginvo.IP;
+				GlobalData.myAvatarVO.account.nickname = loginvo.nickName;
+				GlobalData.myAvatarVO.account.headicon = loginvo.headIcon;
+				GlobalData.myAvatarVO.account.unionid = loginvo.city;
+				GlobalData.myAvatarVO.account.sex = loginvo.sex;
+				GlobalData.myAvatarVO.IP = loginvo.IP;
 
 			} catch (Exception e) {
 				MyDebug.Log ("微信接口有变动！" + e.Message);
-				TipsManagerScript.getInstance ().setTips ("请先打开你的微信客户端");
+				TipsManager.getInstance ().setTips ("请先打开你的微信客户端");
 				return;
 			}
 		} else {
-			TipsManagerScript.getInstance ().setTips ("微信登录失败");
+			TipsManager.getInstance ().setTips ("微信登录失败");
 		}
 
 
@@ -96,7 +96,7 @@ public class WechatOperateScript : MonoBehaviour {
 	 */ 
 	public void onShareCallBack(int reqID,ResponseState state,PlatformType type,Hashtable result){
 		if (state == ResponseState.Success) {
-			TipsManagerScript.getInstance ().setTips ("分享成功");
+			TipsManager.getInstance ().setTips ("分享成功");
 
 		} else if(state == ResponseState.Fail){
 			MyDebug.Log ("shar fail :" + result ["error_msg"]);
@@ -170,10 +170,10 @@ public class WechatOperateScript : MonoBehaviour {
 
 
 	public void inviteFriend(){
-		if(GlobalDataScript.roomVo != null){
-			RoomCreateVo roomvo = GlobalDataScript.roomVo;
-			GlobalDataScript.totalTimes = roomvo.roundNumber;
-			GlobalDataScript.surplusTimes = roomvo.roundNumber;
+		if(GlobalData.roomVO != null){
+			RoomVO roomvo = GlobalData.roomVO;
+			GlobalData.totalTimes = roomvo.roundNumber;
+			GlobalData.surplusTimes = roomvo.roundNumber;
 			string str="" ;
 
 			if (roomvo.hong) {
@@ -235,26 +235,27 @@ public class WechatOperateScript : MonoBehaviour {
             loginvo.province = "广东省";
             loginvo.city = "深圳";
 			loginvo.sex = 1;
-            loginvo.IP = GlobalDataScript.getInstance().getIpAddress();
+            loginvo.IP = GlobalData.getInstance().getIpAddress();
             String msg = JsonMapper.ToJson(loginvo);
 
             CustomSocket.getInstance().sendMsg(new LoginRequest(msg));
 
-            GlobalDataScript.loginVo = loginvo;
-            GlobalDataScript.loginResponseData = new AvatarVO();
-            GlobalDataScript.loginResponseData.account = new Account();
-            GlobalDataScript.loginResponseData.account.city = loginvo.city;
-            GlobalDataScript.loginResponseData.account.openid = loginvo.openId;
-            GlobalDataScript.loginResponseData.account.nickname = loginvo.nickName;
-            GlobalDataScript.loginResponseData.account.headicon = loginvo.headIcon;
-            GlobalDataScript.loginResponseData.account.unionid = loginvo.city;
-            GlobalDataScript.loginResponseData.account.sex = loginvo.sex;
-            GlobalDataScript.loginResponseData.IP = loginvo.IP;
+            GlobalData.loginVo = loginvo;
+            GlobalData.myAvatarVO = new AvatarVO();
+            GlobalData.myAvatarVO.account = new Account();
+            GlobalData.myAvatarVO.account.city = loginvo.city;
+            GlobalData.myAvatarVO.account.openid = loginvo.openId;
+            GlobalData.myAvatarVO.account.nickname = loginvo.nickName;
+            GlobalData.myAvatarVO.account.headicon = loginvo.headIcon;
+            GlobalData.myAvatarVO.account.unionid = loginvo.city;
+            GlobalData.myAvatarVO.account.sex = loginvo.sex;
+            GlobalData.myAvatarVO.IP = loginvo.IP;
 
         }
         catch (Exception e)
         {
-            TipsManagerScript.getInstance().setTips("请先打开你的微信客户端");
+			Debug.Log(e.ToString());
+            TipsManager.getInstance().setTips("请先打开你的微信客户端");
             return;
         }
 

@@ -207,7 +207,7 @@ public class MicroPhoneInput : MonoBehaviour {
 
 	public void micInputNotice(ClientResponse response){
 		MyDebug.Log ("micInputNotice");
-		if(GlobalDataScript.soundToggle){
+		if(GlobalData.soundToggle){
 			byte[] data = response.bytes;
 			int i = 0;
 			List<short> result = new List<short>();
@@ -304,7 +304,7 @@ public class MicroPhoneInput : MonoBehaviour {
 		Byte[] subChunk1 = BitConverter.GetBytes(16);  
 		fileStream.Write(subChunk1, 0, 4);  
 
-		UInt16 two = 2;  
+//		UInt16 two = 2;  
 		UInt16 one = 1;  
 
 		Byte[] audioFormat = BitConverter.GetBytes(one);  

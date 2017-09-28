@@ -41,7 +41,7 @@ public class UI_MicPhoneScript : MonoBehaviour
 			InputGameObject.SetActive(true);
 			MicroPhoneInput.getInstance ().StartRecord (getUserList ());
 		}else{
-			TipsManagerScript.getInstance ().setTips ("房间里只有你一个人，不能发送语音");
+			TipsManager.getInstance ().setTips ("房间里只有你一个人，不能发送语音");
 		}
     }
 
@@ -63,7 +63,7 @@ public class UI_MicPhoneScript : MonoBehaviour
 	private List<int> getUserList(){
 		List<int> userList = new List<int> ();
 		for(int i=0;i<myScript.avatarList.Count;i++){
-			if (myScript.avatarList [i].account.uuid != GlobalDataScript.loginResponseData.account.uuid) {
+			if (myScript.avatarList [i].account.uuid != GlobalData.myAvatarVO.account.uuid) {
 				userList.Add (myScript.avatarList[i].account.uuid);
 			}
 		}

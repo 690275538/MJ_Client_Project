@@ -9,7 +9,7 @@ namespace AssemblyCSharp
 
 		public List<PlayerBackVO> playerItems;
 
-		public RoomCreateVo roomvo;
+		public RoomVO roomvo;
 
 		public GamePlayBackVO ()
 		{

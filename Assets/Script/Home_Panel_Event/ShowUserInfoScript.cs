@@ -43,7 +43,7 @@ public class ShowUserInfoScript : MonoBehaviour {
 			//下载完成，保存图片到路径filePath
 			try {
 				texture2D = www.texture;
-				byte[] bytes = texture2D.EncodeToPNG();
+//				byte[] bytes = texture2D.EncodeToPNG();
 				//将图片赋给场景上的Sprite
 				Sprite tempSp = Sprite.Create(texture2D, new Rect(0,0,texture2D.width,texture2D.height),new Vector2(0,0));
 				headIcon.sprite = tempSp;

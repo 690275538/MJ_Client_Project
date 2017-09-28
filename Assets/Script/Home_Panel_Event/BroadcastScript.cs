@@ -32,9 +32,9 @@ public class BroadcastScript : MonoBehaviour {
 	//	List<string> notices = new List<string> ();
 		if (noticeList != null)
 		{
-			GlobalDataScript.noticeMegs = new List<string> ();
+			GlobalData.noticeMegs = new List<string> ();
 			for (int i=0 ;i<noticeList.Length ;i++){
-				GlobalDataScript.noticeMegs .Add (noticeList[i]);
+				GlobalData.noticeMegs .Add (noticeList[i]);
 			}
 			if (CommonEvent.getInstance ().DisplayBroadcast != null) {
 				CommonEvent.getInstance ().DisplayBroadcast ();

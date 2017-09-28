@@ -34,7 +34,7 @@ public class FinalOverGame: MonoBehaviour
 		
 
 	private void finalGameOverCallBack(ClientResponse response){
-		GlobalDataScript.finalGameEndVo = JsonMapper.ToObject<FinalGameEndVo> (response.message);
+		GlobalData.finalGameEndVo = JsonMapper.ToObject<FinalGameEndVo> (response.message);
 	
 
 	/*
@@ -53,18 +53,18 @@ public class FinalOverGame: MonoBehaviour
 
 	//	GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ().closeDialog ();
 
- 		if (GlobalDataScript.singalGameOverList.Count > 0) {
-            for (int i = 0; i < GlobalDataScript.singalGameOverList.Count; i++)
+ 		if (GlobalData.singalGameOverList.Count > 0) {
+            for (int i = 0; i < GlobalData.singalGameOverList.Count; i++)
             {
                 //GlobalDataScript.singalGameOverList [i].GetComponent<GameOverScript> ().closeDialog ();
-                Destroy(GlobalDataScript.singalGameOverList[i].GetComponent<GameOverScript>());
-                Destroy(GlobalDataScript.singalGameOverList[i]);
+                Destroy(GlobalData.singalGameOverList[i].GetComponent<GameOverScript>());
+                Destroy(GlobalData.singalGameOverList[i]);
             }
             //int count = GlobalDataScript.singalGameOverList.Count;
             //for (int i = 0; i < count; i++) {
             //	GlobalDataScript.singalGameOverList.RemoveAt (0);
             //}
-            GlobalDataScript.singalGameOverList.Clear();
+            GlobalData.singalGameOverList.Clear();
         }
 			
 		CommonEvent.getInstance ().closeGamePanel ();
@@ -72,7 +72,7 @@ public class FinalOverGame: MonoBehaviour
 
 	private void  loadPerfab(string perfabName ,int openFlag){
 		GameObject obj= PrefabManage.loadPerfab (perfabName);
-		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,GlobalDataScript.roomAvatarVoList,null,GlobalDataScript.hupaiResponseVo.validMas);
+		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,GlobalData.roomAvatarVoList,null,GlobalData.hupaiResponseVo.validMas);
 		obj.transform.SetSiblingIndex (2);
 	}
 }

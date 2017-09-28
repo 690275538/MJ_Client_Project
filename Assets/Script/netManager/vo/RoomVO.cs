@@ -3,12 +3,14 @@
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class RoomCreateVo
+	public class RoomVO
 	{
+		public GameType roomType;
+		public int roomId;
+
+
 		public  bool hong;
 		public int ma;
-		public int roomId;
-		public GameType roomType;
 		/**局数**/
 		public int roundNumber;
 		public bool sevenDouble;
@@ -17,7 +19,7 @@ namespace AssemblyCSharp
 		public string name;
 		public bool addWordCard;
 		public int magnification;
-		public RoomCreateVo()
+		public RoomVO()
 		{
 
 		}

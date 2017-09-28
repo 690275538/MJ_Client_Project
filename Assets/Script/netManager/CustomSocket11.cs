@@ -83,7 +83,7 @@ namespace AssemblyCSharp
 					MemoryStream ms = new MemoryStream(m_receiveBuffer);
 					BinaryReader buffers = new BinaryReader(ms, UTF8Encoding.Default);
 					byte flag = buffers.ReadByte();
-					int lens = ReadInt(buffers.ReadBytes(4));
+					/*int lens = */ReadInt(buffers.ReadBytes(4));
 					int headcode = ReadInt(buffers.ReadBytes(4));
 					int status = ReadInt(buffers.ReadBytes(4));
 					short messageLen = ReadShort(buffers.ReadBytes(2));

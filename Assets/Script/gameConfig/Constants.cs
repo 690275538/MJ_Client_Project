@@ -11,5 +11,11 @@ namespace AssemblyCSharp
 		HUA_SHUI=2,
 		GI_PING_HU=3
 	}
+	public enum SceneType{
+		LOGIN,
+		HOME,
+		GAME,
+		SCORE
+	}
 }
 

@@ -84,7 +84,7 @@ public class SignalOverItemScript : MonoBehaviour {
 
 		paiArray = itemData.paiArray;
 		huFlagImg.SetActive (false);
-		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == GlobalDataScript.mainUuid) {
+		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == GlobalData.mainUuid) {
 			GenzhuangFlag.SetActive (true);
 		} else {
 			GenzhuangFlag.SetActive (false);
@@ -341,10 +341,10 @@ public class SignalOverItemScript : MonoBehaviour {
 			}
 		}
 
-		if (GlobalDataScript.roomVo.roomType == GameType.HUA_SHUI) {
+		if (GlobalData.roomVO.roomType == GameType.HUA_SHUI) {
 			itemTemp = Instantiate (Resources.Load ("Prefab/Image_yu")) as GameObject;
 			itemTemp.transform.parent = paiArrayPanel.transform;
-			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalDataScript.roomVo.xiaYu);
+			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalData.roomVO.xiaYu);
 			itemTemp.transform.localScale =  Vector3.one;
 			itemTemp.transform.localPosition = new Vector3 (20*36f, 0, 0);
 		}

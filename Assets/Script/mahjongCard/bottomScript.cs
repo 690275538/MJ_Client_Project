@@ -38,7 +38,7 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
     public void OnDrag(PointerEventData eventData)
     {
-        if (GlobalDataScript.isDrag)
+        if (GlobalData.isDrag)
         {
 			dragFlag = true;
             GetComponent<RectTransform>().pivot.Set(0, 0);
@@ -49,7 +49,7 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-		if (GlobalDataScript.isDrag) {
+		if (GlobalData.isDrag) {
 			if (selected == false) {
 				selected = true;
 				oldPosition = transform.localPosition;
@@ -62,7 +62,7 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerUp(PointerEventData eventData)
     {
-		if (GlobalDataScript.isDrag) {
+		if (GlobalData.isDrag) {
 			if (transform.localPosition.y > -122f) {
 				sendObjectToCallBack ();
 			} else {

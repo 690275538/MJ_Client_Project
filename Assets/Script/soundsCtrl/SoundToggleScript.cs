@@ -20,13 +20,13 @@ public class SoundToggleScript : MonoBehaviour {
 	public void openClick(){
 		openBtn.SetActive(false);
 		closeBtn.SetActive(true);
-		GlobalDataScript.soundToggle = true;
+		GlobalData.soundToggle = true;
 	}
 
 	public void closeClick(){
 		openBtn.SetActive(true);
 		closeBtn.SetActive(false);
-		GlobalDataScript.soundToggle = false;
+		GlobalData.soundToggle = false;
 
 	}
 

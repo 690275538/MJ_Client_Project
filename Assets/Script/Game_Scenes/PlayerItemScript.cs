@@ -1,9 +1,24 @@
-﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
+﻿using System.Collections;
+using System.Collections.Generic;
 using AssemblyCSharp;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerItemScript : MonoBehaviour {
+
+	static List<string> messageBoxContents = new List<string>();
+	static void initMessageBox(){
+		if (messageBoxContents.Count == 0) {
+			messageBoxContents.Add ("不要吵了，专心玩游戏！");
+			messageBoxContents.Add ("不要走，决战到天亮");
+			messageBoxContents.Add ("大家好，很高兴见到各位");
+			messageBoxContents.Add ("和你合作真是太愉快了");
+			messageBoxContents.Add ("快点啊，等得你花儿都谢了!");
+			messageBoxContents.Add ("你的牌打得也太好了");
+			messageBoxContents.Add ("交个朋友吧");
+			messageBoxContents.Add ("下次再玩吧，我要走了");
+		}
+	}
 
 	public Image headerIcon;
 	public Image bankerImg;
@@ -132,7 +147,7 @@ public class PlayerItemScript : MonoBehaviour {
 	public void showChatMessage(int index){
 		showTime = 200;
 		index = index - 1001;
-		chatMessage.text = GlobalDataScript.messageBoxContents[index];
+		chatMessage.text = messageBoxContents[index];
 		chatPaoPao.SetActive (true);
 	}
 

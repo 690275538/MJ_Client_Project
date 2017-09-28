@@ -28,7 +28,7 @@ public class CustomSocket{
 
 	private int disConnectCount = 0; 
 
-	public static bool hasStartTimer = false;
+	bool hasStartTimer = false;
 	public bool isConnected = false;
 
 	private static CustomSocket _instance;
@@ -150,7 +150,8 @@ public class CustomSocket{
 
 			}
 
-		}catch(Exception ex){
+		}catch(Exception e){
+			Debug.Log(e.ToString());
 			showMessageTip ("服务器已断开连接，请重新登录");
 			isConnected = false;
 			SocketEventHandle.getInstance ().noticeDisConect ();
@@ -187,6 +188,7 @@ public class CustomSocket{
         {
             //设置标志,连接服务端失败!
             Debug.Log(ex.ToString());
+			TipsManager.getInstance().setTips ("服务器连接失败，请稍后重连");
 		//	tcpclient.BeginConnect(APIS.socketUrl, 1101, new AsyncCallback(ConnectCallback), tcpclient);
 
 

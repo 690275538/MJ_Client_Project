@@ -24,7 +24,7 @@ public class SoundCtrl  {
 	}
 
 	public void playSound(int cardPoint,int sex){
-		if (GlobalDataScript.soundToggle) {
+		if (GlobalData.soundToggle) {
 			string path = "Sounds/";
 			if (sex == 1) {
 				path += "boy/" + (cardPoint + 1);
@@ -43,7 +43,7 @@ public class SoundCtrl  {
 	}
 
 	public void playMessageBoxSound(int codeIndex){
-		if(GlobalDataScript.soundToggle){
+		if(GlobalData.soundToggle){
 			string path = "Sounds/other/"+codeIndex;
 			AudioClip temp = (AudioClip)soudHash[path];
 			if(temp == null){
@@ -65,7 +65,7 @@ public class SoundCtrl  {
 		audioS.clip = temp;
 		audioS.loop = true;
 		audioS.Play ();
-		if (GlobalDataScript.soundToggle) {
+		if (GlobalData.soundToggle) {
 			audioS.mute = false;
 		} else {
 			audioS.mute = true;

@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.IO;
 using System.Text;
+using UnityEngine;
 
 namespace AssemblyCSharp
 {
@@ -23,8 +24,9 @@ namespace AssemblyCSharp
 					socket.BeginReceive(m_receiveBuffer, 0, m_receiveBuffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), null);
 				}
 			} catch (ArgumentNullException e) {
+				Debug.Log(e.ToString());
 			} catch (SocketException e) {
-
+				Debug.Log(e.ToString());
 			}
 		}
 
@@ -63,7 +65,7 @@ namespace AssemblyCSharp
 				MemoryStream ms = new MemoryStream(m_receiveBuffer);
 				BinaryReader buffers = new BinaryReader(ms, UTF8Encoding.Default);
 				byte flag = buffers.ReadByte();
-				int lens = ReadInt(buffers.ReadBytes(4));
+				/*int lens = */ReadInt(buffers.ReadBytes(4));
 				int headcode = ReadInt(buffers.ReadBytes(4));
 				int status = ReadInt(buffers.ReadBytes(4));
 				short messageLen = ReadShort(buffers.ReadBytes(2));

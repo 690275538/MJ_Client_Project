@@ -14,7 +14,7 @@ namespace AssemblyCSharp
 		}
 
 		public void serviceErrorNotice(ClientResponse response){
-			TipsManagerScript.getInstance().setTips(response.message);
+			TipsManager.getInstance().setTips(response.message);
 		}
 	}
 }

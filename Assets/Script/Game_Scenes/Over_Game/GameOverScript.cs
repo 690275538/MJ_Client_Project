@@ -51,7 +51,7 @@ public class GameOverScript : MonoBehaviour {
 	private List<int> mValidMas;
 
 	/**0表示打开单局结束模板，1表示全局结束模板**/
-	private int mDispalyFlag;
+//	private int mDispalyFlag;
 
 	private string picPath;//图片存储路径
 
@@ -73,10 +73,10 @@ public class GameOverScript : MonoBehaviour {
 	 */ 
 	public void setDisplaContent(int dispalyFlag,List<AvatarVO> personList,string allMas,List<int> validMas){
 		mAvatarvoList = personList;
-		mDispalyFlag = dispalyFlag;
+//		mDispalyFlag = dispalyFlag;
 		mValidMas = validMas; 
 		initRoomBaseInfo ();
-		jushuText.text = "局数：" + (GlobalDataScript.totalTimes - GlobalDataScript.surplusTimes) + "/" + GlobalDataScript.totalTimes;
+		jushuText.text = "局数：" + (GlobalData.totalTimes - GlobalData.surplusTimes) + "/" + GlobalData.totalTimes;
 		if (dispalyFlag == 0) {
 			allMasList = new List<List<int>> ();
 			mas_0 = new List<int> ();
@@ -88,7 +88,7 @@ public class GameOverScript : MonoBehaviour {
 			continueGame.SetActive (true);
 			shareFinalButton.SetActive (false);
 			closeButton.transform.gameObject.SetActive (false);
-			if (GlobalDataScript.surplusTimes == 0 || GlobalDataScript.isOverByPlayer) {
+			if (GlobalData.surplusTimes == 0 || GlobalData.isOverByPlayer) {
 				shareSiganlButton.GetComponent<Image> ().color =Color.white;
 			} else {
 				shareSiganlButton.GetComponent<Image> ().color = new Color32 (200, 200, 200, 128); 
@@ -119,13 +119,13 @@ public class GameOverScript : MonoBehaviour {
 			paiList = new List<string> (paiArray);
 			paiList.RemoveAt(0);
 			int referIndex = getIndex (int.Parse(uuid));
-			List<int> temp = new List<int> (); 
+//			List<int> temp = new List<int> (); 
 
 		int resultIndex=0;
 		for (int i = 0; i < paiList.Count; i++) {
 			int cardPoint =int.Parse(paiList [i]);
 			int positionIndex = (cardPoint + 1) % 9;
-			string resultPonsition ="";
+//			string resultPonsition ="";
 				if (cardPoint != 31) {
 					switch (positionIndex) {
 					case 1:
@@ -204,12 +204,12 @@ public class GameOverScript : MonoBehaviour {
 
 	private void initRoomBaseInfo(){
 		timeText.text=DateTime.Now.ToString("yyyy-MM-dd");
-		roomNoText.text = "房间号：" + GlobalDataScript.roomVo.roomId;
-		if (GlobalDataScript.roomVo.roomType == GameType.ZHUAN_ZHUAN) {//转转麻将
+		roomNoText.text = "房间号：" + GlobalData.roomVO.roomId;
+		if (GlobalData.roomVO.roomType == GameType.ZHUAN_ZHUAN) {//转转麻将
 			title.text = "转转麻将";
-		} else if (GlobalDataScript.roomVo.roomType == GameType.HUA_SHUI) {//划水麻将
+		} else if (GlobalData.roomVO.roomType == GameType.HUA_SHUI) {//划水麻将
 			title.text = "划水麻将";
-		} else if (GlobalDataScript.roomVo.roomType == GameType.GI_PING_HU) {
+		} else if (GlobalData.roomVO.roomType == GameType.GI_PING_HU) {
 			title.text = "鸡平胡";
 		}
 
@@ -246,13 +246,13 @@ public class GameOverScript : MonoBehaviour {
 */
 
 	private void setFinalContent(){
-		GlobalDataScript.finalGameEndVo.totalInfo [0].setIsWiner (true);
-		GlobalDataScript.finalGameEndVo.totalInfo [0].setIsPaoshou (true);
-		int topScore = GlobalDataScript.finalGameEndVo.totalInfo [0].scores;
-		int topPaoshou =  GlobalDataScript.finalGameEndVo.totalInfo[0].dianpao;
+		GlobalData.finalGameEndVo.totalInfo [0].setIsWiner (true);
+		GlobalData.finalGameEndVo.totalInfo [0].setIsPaoshou (true);
+		int topScore = GlobalData.finalGameEndVo.totalInfo [0].scores;
+		int topPaoshou =  GlobalData.finalGameEndVo.totalInfo[0].dianpao;
 
-		int uuid0= GlobalDataScript.finalGameEndVo.totalInfo [0].uuid;
-		int owerUuid = GlobalDataScript.finalGameEndVo.theowner;
+		int uuid0= GlobalData.finalGameEndVo.totalInfo [0].uuid;
+		int owerUuid = GlobalData.finalGameEndVo.theowner;
 
 		Account account0 = getAcount (uuid0);
 
@@ -260,51 +260,51 @@ public class GameOverScript : MonoBehaviour {
 
 		string iconstr = account0.headicon;
 		string nickName = account0.nickname;
-		GlobalDataScript.finalGameEndVo.totalInfo [0].setIcon (iconstr);
-		GlobalDataScript.finalGameEndVo.totalInfo [0].setNickname (nickName);
+		GlobalData.finalGameEndVo.totalInfo [0].setIcon (iconstr);
+		GlobalData.finalGameEndVo.totalInfo [0].setNickname (nickName);
 		if (owerUuid == uuid0) {
-			GlobalDataScript.finalGameEndVo.totalInfo [0].setIsMain (true);
+			GlobalData.finalGameEndVo.totalInfo [0].setIsMain (true);
 		} else {
-			GlobalDataScript.finalGameEndVo.totalInfo [0].setIsMain (false);
+			GlobalData.finalGameEndVo.totalInfo [0].setIsMain (false);
 		}
 	//	GlobalDataScript.finalGameEndVo.totalInfo [0].setIsMain (avatarVO0.main);
 		int lastTopIndex = 0;
 		int lastPaoshouIndex = 0;
-		if (GlobalDataScript.finalGameEndVo != null && GlobalDataScript.finalGameEndVo.totalInfo.Count > 0) {
+		if (GlobalData.finalGameEndVo != null && GlobalData.finalGameEndVo.totalInfo.Count > 0) {
 			
-			for (int i = 1; i < GlobalDataScript.finalGameEndVo.totalInfo.Count; i++) {
-				if (topScore < GlobalDataScript.finalGameEndVo.totalInfo [i].scores) {
-					GlobalDataScript.finalGameEndVo.totalInfo [lastTopIndex].setIsWiner (false);
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setIsWiner (true);
+			for (int i = 1; i < GlobalData.finalGameEndVo.totalInfo.Count; i++) {
+				if (topScore < GlobalData.finalGameEndVo.totalInfo [i].scores) {
+					GlobalData.finalGameEndVo.totalInfo [lastTopIndex].setIsWiner (false);
+					GlobalData.finalGameEndVo.totalInfo [i].setIsWiner (true);
 					lastTopIndex = i;
-					topScore = GlobalDataScript.finalGameEndVo.totalInfo[i].scores;
+					topScore = GlobalData.finalGameEndVo.totalInfo[i].scores;
 				}
-				if (topPaoshou < GlobalDataScript.finalGameEndVo.totalInfo [i].dianpao && !GlobalDataScript.finalGameEndVo.totalInfo [i].getIsWiner()) {
-					topPaoshou =GlobalDataScript.finalGameEndVo.totalInfo[i].dianpao;
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setIsPaoshou (true);
-					GlobalDataScript.finalGameEndVo.totalInfo [lastPaoshouIndex].setIsPaoshou (false);
+				if (topPaoshou < GlobalData.finalGameEndVo.totalInfo [i].dianpao && !GlobalData.finalGameEndVo.totalInfo [i].getIsWiner()) {
+					topPaoshou =GlobalData.finalGameEndVo.totalInfo[i].dianpao;
+					GlobalData.finalGameEndVo.totalInfo [i].setIsPaoshou (true);
+					GlobalData.finalGameEndVo.totalInfo [lastPaoshouIndex].setIsPaoshou (false);
 					lastPaoshouIndex = i;
 				}
 			
 
-				int uuid = GlobalDataScript.finalGameEndVo.totalInfo [i].uuid;
+				int uuid = GlobalData.finalGameEndVo.totalInfo [i].uuid;
 				Account account = getAcount (uuid);
 				if (account != null) {
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setIcon (account.headicon);
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setNickname (account.nickname);
+					GlobalData.finalGameEndVo.totalInfo [i].setIcon (account.headicon);
+					GlobalData.finalGameEndVo.totalInfo [i].setNickname (account.nickname);
 
 				}
 				if (owerUuid == uuid) {
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setIsMain (true);
+					GlobalData.finalGameEndVo.totalInfo [i].setIsMain (true);
 				} else {
-					GlobalDataScript.finalGameEndVo.totalInfo [i].setIsMain (false);
+					GlobalData.finalGameEndVo.totalInfo [i].setIsMain (false);
 				}
 
 
 			}
 
-			for (int i = 0; i < GlobalDataScript.finalGameEndVo.totalInfo.Count; i++) {
-				FinalGameEndItemVo itemdata = GlobalDataScript.finalGameEndVo.totalInfo [i];
+			for (int i = 0; i < GlobalData.finalGameEndVo.totalInfo.Count; i++) {
+				FinalGameEndItemVo itemdata = GlobalData.finalGameEndVo.totalInfo [i];
 				GameObject itemTemp = Instantiate (Resources.Load("Prefab/Panel_Final_Item")) as GameObject;
 				itemTemp.transform.parent = finalEndPanel.transform;
 				itemTemp.transform.localScale = Vector3.one;
@@ -319,9 +319,9 @@ public class GameOverScript : MonoBehaviour {
 	private void setSignalContent(){
 
 
-		if (GlobalDataScript.hupaiResponseVo != null && GlobalDataScript.hupaiResponseVo.avatarList.Count > 0) {
-			for (int i = 0; i < GlobalDataScript.hupaiResponseVo.avatarList.Count; i++) {
-				HupaiResponseItem itemdata = GlobalDataScript.hupaiResponseVo.avatarList [i];
+		if (GlobalData.hupaiResponseVo != null && GlobalData.hupaiResponseVo.avatarList.Count > 0) {
+			for (int i = 0; i < GlobalData.hupaiResponseVo.avatarList.Count; i++) {
+				HupaiResponseItem itemdata = GlobalData.hupaiResponseVo.avatarList [i];
 				if (allMasList != null && allMasList.Count != 0) {
 					itemdata.setMaPoints (allMasList[i]);
 				}
@@ -343,18 +343,18 @@ public class GameOverScript : MonoBehaviour {
 	}
 
 	public void reStratGame(){
-		if (GlobalDataScript.isOverByPlayer) {
-			TipsManagerScript.getInstance ().setTips ("房间已解散，不能重新开始游戏");
+		if (GlobalData.isOverByPlayer) {
+			TipsManager.getInstance ().setTips ("房间已解散，不能重新开始游戏");
 			return;
 		}
 
-		if (GlobalDataScript.surplusTimes > 0) {
+		if (GlobalData.surplusTimes > 0) {
 			CustomSocket.getInstance ().sendMsg (new GameReadyRequest ());
 			CommonEvent.getInstance ().readyGame ();
 			closeDialog ();
 
 		} else {
-			TipsManagerScript.getInstance ().setTips ("游戏局数已经用完，无法重新开始游戏");
+			TipsManager.getInstance ().setTips ("游戏局数已经用完，无法重新开始游戏");
 		}
 
 	}
@@ -371,15 +371,15 @@ public class GameOverScript : MonoBehaviour {
 		Destroy (self.continueGame);
 		Destroy (self.shareFinalButton);
 
-		if (GlobalDataScript.singalGameOverList!=null && GlobalDataScript.singalGameOverList.Count > 0) {
-			for (int i = 0; i < GlobalDataScript.singalGameOverList.Count; i++) {
+		if (GlobalData.singalGameOverList!=null && GlobalData.singalGameOverList.Count > 0) {
+			for (int i = 0; i < GlobalData.singalGameOverList.Count; i++) {
 				//GlobalDataScript.singalGameOverList [i].GetComponent<GameOverScript> ().closeDialog ();
-				Destroy(GlobalDataScript.singalGameOverList[i].GetComponent<GameOverScript>());
-				Destroy (GlobalDataScript.singalGameOverList [i]);
+				Destroy(GlobalData.singalGameOverList[i].GetComponent<GameOverScript>());
+				Destroy (GlobalData.singalGameOverList [i]);
 			}
-			int count = GlobalDataScript.singalGameOverList.Count;
+			int count = GlobalData.singalGameOverList.Count;
 			for (int i = 0; i < count; i++) {
-				GlobalDataScript.singalGameOverList.RemoveAt (0);
+				GlobalData.singalGameOverList.RemoveAt (0);
 			}
 		}
 
@@ -389,27 +389,27 @@ public class GameOverScript : MonoBehaviour {
 	}
 
 	public void doShare(){
-		GlobalDataScript.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChat);
+		GlobalData.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChat);
 	}
 
 	public void openFinalOverPanl(){
-		if ( GlobalDataScript.finalGameEndVo !=null && GlobalDataScript.finalGameEndVo.totalInfo !=null && GlobalDataScript.finalGameEndVo.totalInfo.Count>0) {
+		if ( GlobalData.finalGameEndVo !=null && GlobalData.finalGameEndVo.totalInfo !=null && GlobalData.finalGameEndVo.totalInfo.Count>0) {
 			GameObject obj = PrefabManage.loadPerfab ("prefab/Panel_Game_Over");
-			obj.GetComponent<GameOverScript> ().setDisplaContent (1, GlobalDataScript.roomAvatarVoList, null, GlobalDataScript.hupaiResponseVo.validMas);
+			obj.GetComponent<GameOverScript> ().setDisplaContent (1, GlobalData.roomAvatarVoList, null, GlobalData.hupaiResponseVo.validMas);
 			obj.transform.SetSiblingIndex (2);
 
-			if (GlobalDataScript.singalGameOverList.Count > 0) {
-				for (int i = 0; i < GlobalDataScript.singalGameOverList.Count; i++)
+			if (GlobalData.singalGameOverList.Count > 0) {
+				for (int i = 0; i < GlobalData.singalGameOverList.Count; i++)
 				{
 					//GlobalDataScript.singalGameOverList [i].GetComponent<GameOverScript> ().closeDialog ();
-					Destroy(GlobalDataScript.singalGameOverList[i].GetComponent<GameOverScript>());
-					Destroy(GlobalDataScript.singalGameOverList[i]);
+					Destroy(GlobalData.singalGameOverList[i].GetComponent<GameOverScript>());
+					Destroy(GlobalData.singalGameOverList[i]);
 				}
 				//int count = GlobalDataScript.singalGameOverList.Count;
 				//for (int i = 0; i < count; i++) {
 				//	GlobalDataScript.singalGameOverList.RemoveAt (0);
 				//}
-				GlobalDataScript.singalGameOverList.Clear();
+				GlobalData.singalGameOverList.Clear();
 			}
 			if (CommonEvent.getInstance ().closeGamePanel != null) {
 				CommonEvent.getInstance ().closeGamePanel ();

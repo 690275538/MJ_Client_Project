@@ -26,7 +26,6 @@ namespace AssemblyCSharp
 		}
 
 		public void setUI(FinalGameEndItemVo itemData){
-			string owerFlag = (itemData.getIsMain ()) ? "(房主)" : "";
 			if (itemData.getIsMain ()) {
 				mainImgFlag.SetActive (true);
 			} else {
@@ -59,7 +58,7 @@ namespace AssemblyCSharp
 			yield return www;
 			//下载完成，保存图片到路径filePath
 			texture2D = www.texture;
-			byte[] bytes = texture2D.EncodeToPNG();
+//			byte[] bytes = texture2D.EncodeToPNG();
 
 			//将图片赋给场景上的Sprite
 			Sprite tempSp = Sprite.Create(texture2D, new Rect(0,0,texture2D.width,texture2D.height),new Vector2(0,0));

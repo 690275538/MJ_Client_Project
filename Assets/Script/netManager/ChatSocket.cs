@@ -152,7 +152,7 @@ public class ChatSocket{
 			{
 				try
 				{
-					IAsyncResult ar = stream.BeginRead(state.buffer, 0, StateObject.BufferSize,
+					stream.BeginRead(state.buffer, 0, StateObject.BufferSize,
 						new AsyncCallback(TCPReadCallBack), state);
 
 				}

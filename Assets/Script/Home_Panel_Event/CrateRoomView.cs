@@ -5,7 +5,6 @@ using AssemblyCSharp;
 using System.Collections.Generic;
 using System;
 using LitJson;
-using UnityEngine.SceneManagement;
 
 
 public class CrateRoomView : MonoBehaviour {
@@ -30,7 +29,7 @@ public class CrateRoomView : MonoBehaviour {
 
 	private int roomCardCount;//房卡数
 	private GameObject gameSence;
-	private RoomCreateVo sendVo;//创建房间的信息
+	private RoomVO roomVO;//创建房间的信息
 
 
 	public GameObject giPingHuBt;
@@ -38,19 +37,20 @@ public class CrateRoomView : MonoBehaviour {
 	public GameObject huaShuiBt;
 	public GameObject closeBt;
 	void Start () {
-		switchSetting (GameType.GI_PING_HU);
+		initUI ();
+
 		SocketEventHandle.getInstance ().CreateRoomCallBack += onCreateRoomCallback;
 
+
+	}
+	void initUI(){
 		giPingHuBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_GiPingHu);
 		zzBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_ZhuanZhuan);
 		huaShuiBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_Hua_Shui);
 		closeBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_Close);
+		switchSetting (GameType.GI_PING_HU);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 	private void onClickBtn_GiPingHu(){
 		switchSetting (GameType.GI_PING_HU);
 	}
@@ -105,12 +105,12 @@ public class CrateRoomView : MonoBehaviour {
 			}
 		}
 
-		sendVo = new RoomCreateVo ();
-		sendVo.roomType = GameType.GI_PING_HU;
+		roomVO = new RoomVO ();
+		roomVO.roomType = GameType.GI_PING_HU;
 
-		sendVo.magnification = maCount;
+		roomVO.magnification = maCount;
 
-		createRoom (sendVo,roomCardNum);
+		createRoom (roomVO,roomCardNum);
 
 	}
 
@@ -144,15 +144,15 @@ public class CrateRoomView : MonoBehaviour {
 				break;
 			}
 		}
-		sendVo = new RoomCreateVo ();
-		sendVo.roomType = GameType.ZHUAN_ZHUAN;
+		roomVO = new RoomVO ();
+		roomVO.roomType = GameType.ZHUAN_ZHUAN;
 
-		sendVo.ma = maCount;
-		sendVo.ziMo = isZimo?1:0;
-		sendVo.hong = hasHong;
-		sendVo.sevenDouble = isSevenDoube;
+		roomVO.ma = maCount;
+		roomVO.ziMo = isZimo?1:0;
+		roomVO.hong = hasHong;
+		roomVO.sevenDouble = isSevenDoube;
 
-		createRoom (sendVo,roomCardNum);
+		createRoom (roomVO,roomCardNum);
 
 	}
 
@@ -181,15 +181,15 @@ public class CrateRoomView : MonoBehaviour {
 			}
 		}
 
-		sendVo = new RoomCreateVo ();
-		sendVo.roomType = GameType.HUA_SHUI;
+		roomVO = new RoomVO ();
+		roomVO.roomType = GameType.HUA_SHUI;
 
-		sendVo.xiaYu = maCount;
-		sendVo.ziMo = isZimo?1:0;
-		sendVo.addWordCard = isFengpai;
-		sendVo.sevenDouble = true;
+		roomVO.xiaYu = maCount;
+		roomVO.ziMo = isZimo?1:0;
+		roomVO.addWordCard = isFengpai;
+		roomVO.sevenDouble = true;
 
-		createRoom (sendVo,roomCardNum);
+		createRoom (roomVO,roomCardNum);
 	}
 	private int costRoomCardNum(List<Toggle> list){
 		for (int i = 0; i < list.Count; i++) {
@@ -200,13 +200,13 @@ public class CrateRoomView : MonoBehaviour {
 		}
 		return 1;
 	}
-	private void createRoom(RoomCreateVo roomVO,int roomCardNum){
-		if (GlobalDataScript.loginResponseData.account.roomcard >= roomCardNum) {
-			sendVo.roundNumber = roomCardNum * 8;
+	private void createRoom(RoomVO roomVO,int roomCardNum){
+		if (GlobalData.myAvatarVO.account.roomcard >= roomCardNum) {
+			roomVO.roundNumber = roomCardNum * 8;
 			string sendmsgstr = JsonMapper.ToJson (roomVO);
 			CustomSocket.getInstance ().sendMsg (new CreateRoomRequest (sendmsgstr));
 		} else {
-			TipsManagerScript.getInstance ().setTips ("你的房卡数量不足，不能创建房间");
+			TipsManager.getInstance ().setTips ("你的房卡数量不足，不能创建房间");
 		}
 	}
 	public void onCreateRoomCallback(ClientResponse response){
@@ -214,23 +214,19 @@ public class CrateRoomView : MonoBehaviour {
 		if (response.status == 1) {
 			
 			int roomid = Int32.Parse(response.message);
-			sendVo.roomId = roomid;
-			GlobalDataScript.roomVo = sendVo;
-			GlobalDataScript.loginResponseData.roomId = roomid;
-			//GlobalDataScript.loginResponseData.isReady = true;
-			GlobalDataScript.loginResponseData.main = true;
-			GlobalDataScript.loginResponseData.isOnLine = true;
+			roomVO.roomId = roomid;
+			GlobalData.roomVO = roomVO;
+			GlobalData.myAvatarVO.roomId = roomid;
+			GlobalData.myAvatarVO.main = true;
+			GlobalData.myAvatarVO.isOnLine = true;
+			SceneManager.getInstance ().changeToScene (SceneType.GAME);
 
-			//SceneManager.LoadSceneAsync(1);
-
-			GlobalDataScript.gamePlayPanel = PrefabManage.loadPerfab ("Prefab/Panel_GamePlay");
-
-			GlobalDataScript.gamePlayPanel.GetComponent<MyMahjongScript> ().createRoomAddAvatarVO (GlobalDataScript.loginResponseData);
+			SceneManager.getInstance().CurScenePanel.GetComponent<MyMahjongScript> ().createRoomAddAvatarVO (GlobalData.myAvatarVO);
 		
 			onClickBtn_Close ();
 
 		} else {
-			TipsManagerScript.getInstance ().setTips (response.message);
+			TipsManager.getInstance ().setTips (response.message);
 		}
 	}
 

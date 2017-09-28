@@ -15,7 +15,7 @@ namespace AssemblyCSharp
 		public byte[] ChatSound;
 		public int totelLenght;
 		public List<int> userList;
-		public int myUUid;
+		public int myUUid=0;
 
 		public ChatRequest ()
 		{
@@ -59,7 +59,7 @@ namespace AssemblyCSharp
 				if (ChatSound != null) {
 					Len += ChatSound.Length+4;
 				}
-				if (myUUid != null && myUUid != 0) {
+				if (myUUid != 0) {
 					Len += 4;
 				}
 				binaryWriter.Write(Flag); //写入协议一级标志，占1个字节
@@ -72,7 +72,7 @@ namespace AssemblyCSharp
 					}
 
 				}
-				if(myUUid != null && myUUid != 0){
+				if(myUUid != 0){
 					binaryWriter.Write (WriterInt(myUUid));
 				}
 				if(ChatSound != null && ChatSound.Length >0){

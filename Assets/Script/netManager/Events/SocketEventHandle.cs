@@ -105,7 +105,7 @@ namespace AssemblyCSharp
 		private void dispatchHandle(ClientResponse response){
 			switch(response.headCode){
 			case APIS.CLOSE_RESPONSE:
-				TipsManagerScript.getInstance ().setTips ("服务器关闭了");
+				TipsManager.getInstance ().setTips ("服务器关闭了");
 				CustomSocket.getInstance ().closeSocket ();
 				break;
 			case APIS.LOGIN_RESPONSE:
@@ -288,7 +288,7 @@ namespace AssemblyCSharp
 				}
 				break;
 			case APIS.TIP_MESSAGE:
-				TipsManagerScript.getInstance ().setTips (response.message);
+				TipsManager.getInstance ().setTips (response.message);
 				break;
 			case APIS.OTHER_TELE_LOGIN:
 				if (otherTeleLogin != null) {
@@ -309,6 +309,7 @@ namespace AssemblyCSharp
 			isDisconnet = true;
 		}
 
+		//排除了在initConfigScript 中的
 		public void clearListener(){
 			if (CreateRoomCallBack != null) {
 				CreateRoomCallBack = null;

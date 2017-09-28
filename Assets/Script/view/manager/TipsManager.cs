@@ -2,24 +2,25 @@
 using System.Collections;
 using DG.Tweening;
 
-public class TipsManagerScript {
+public class TipsManager  {
 
-	private static TipsManagerScript _instance;
-	public Transform parent;
-	public TipsManagerScript(){
+	private static TipsManager _instance;
 
-	}
-
-	public static TipsManagerScript getInstance(){
+	public static TipsManager getInstance(){
 		if (_instance == null) {
-			_instance = new TipsManagerScript ();
+			_instance = new TipsManager ();
 		}
 		return _instance;
 	}
 
+	/** Stage Transform **/
+	Transform parent;
+	public void init(Transform parent){
+		this.parent = parent;
+	}
 	public void setTips(string str){
 		GameObject temp = GameObject.Instantiate (Resources.Load ("Prefab/TipPanel") as GameObject);
-		temp.transform.parent = parent;
+		temp.transform.parent = GlobalData.getInstance().Stage.transform;
 		temp.transform.localScale = Vector3.one;
 		temp.transform.localPosition =new Vector3 (0,-300);
 		temp.GetComponent<TipPanelScript> ().setText (str);

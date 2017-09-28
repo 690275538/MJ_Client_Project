@@ -71,7 +71,7 @@ public class UpdateScript{
 				string note = versionTemp.note;
 				downloadPath = versionTemp.url;
 
-				TipsManagerScript.getInstance ().loadDialog ("发现新版本软件",note,onSureClick,onCancle);
+				TipsManager.getInstance ().loadDialog ("发现新版本软件",note,onSureClick,onCancle);
 			}
 		}
 	}

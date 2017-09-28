@@ -39,14 +39,14 @@ public class LotteryPanelScript : MonoBehaviour
 		SocketEventHandle.getInstance ().giftResponse += giftResponse;
 		CommonEvent.getInstance ().prizeCountChange += prizeCountChange;	
 		CustomSocket.getInstance ().sendMsg (new GetGiftRequest ("0"));
-	    choujiangNum.text = GlobalDataScript.loginResponseData.account.prizecount+"";
+	    choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
 
 	}
 
 
 	private void prizeCountChange(){
-		TipsManagerScript.getInstance ().setTips ("您的抽奖次数已经更新");
-		choujiangNum.text = GlobalDataScript.loginResponseData.account.prizecount+"";
+		TipsManager.getInstance ().setTips ("您的抽奖次数已经更新");
+		choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
 	}
 
 	public class Drawl{
@@ -111,7 +111,7 @@ public class LotteryPanelScript : MonoBehaviour
 		callBack = true;
 		JsonData data = JsonMapper.ToObject<JsonData> (response.message);
 		if (int.Parse(data ["type"].ToString())== 2) {
-			TipsManagerScript.getInstance ().setTips ("抽奖活动暂时没有开放，3秒后将关闭对话框");
+			TipsManager.getInstance ().setTips ("抽奖活动暂时没有开放，3秒后将关闭对话框");
 			Invoke ("closeDialog",3f);
 		} else {
 			try
@@ -127,9 +127,10 @@ public class LotteryPanelScript : MonoBehaviour
 
 				}
 			}catch (Exception e){
-				if (GlobalDataScript.loginResponseData.account.prizecount > 0) {
-					GlobalDataScript.loginResponseData.account.prizecount--;
-					choujiangNum.text = GlobalDataScript.loginResponseData.account.prizecount+"";
+				Debug.Log(e.ToString());
+				if (GlobalData.myAvatarVO.account.prizecount > 0) {
+					GlobalData.myAvatarVO.account.prizecount--;
+					choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
 				}
 				Drawl returndata = JsonMapper.ToObject<Drawl> (response.message);
 				StopIndex = returndata.data;
@@ -152,7 +153,7 @@ public class LotteryPanelScript : MonoBehaviour
 	}
 
 	public void shareToWeChat(){
-		GlobalDataScript.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChatMoments);
+		GlobalData.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChatMoments);
 	}
 
 	/***
@@ -167,13 +168,13 @@ public class LotteryPanelScript : MonoBehaviour
 
 	public void startTurn(){
 		MyDebug.Log ("sssssssssssssssssss");
-	    if (GlobalDataScript.loginResponseData.account.prizecount > 0)
+	    if (GlobalData.myAvatarVO.account.prizecount > 0)
 	    {
 		    CustomSocket.getInstance ().sendMsg (new GetGiftRequest ("1"));
         }
 	    else
 	    {
-	        TipsManagerScript.getInstance().setTips("对不起，抽奖次数不足");
+	        TipsManager.getInstance().setTips("对不起，抽奖次数不足");
 	    }
     }
 

@@ -214,7 +214,7 @@ namespace AssemblyCSharp
 		}
 
 		public bool test(List<int> paiList){
-			int xiaohu = 0;//小胡数
+//			int xiaohu = 0;//小胡数
 			int dahu = 0;//大胡数
 			int result = checkSevenDouble (paiList);
 			if (result == 0) {

@@ -78,7 +78,7 @@ public class EnterRoomScript : MonoBehaviour{
 	public void sureRoomNumber(){
 		if (inputChars.Count != 6) {
 			MyDebug.Log ("请先完整输入房间号码！");
-			TipsManagerScript.getInstance ().setTips ("请先完整输入房间号码！");
+			TipsManager.getInstance ().setTips ("请先完整输入房间号码！");
 			return;
 		}
 
@@ -95,26 +95,26 @@ public class EnterRoomScript : MonoBehaviour{
 		MyDebug.Log (response);
 
 		if (response.status == 1) {
-			GlobalDataScript.roomJoinResponseData = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
-			GlobalDataScript.roomVo.addWordCard = GlobalDataScript.roomJoinResponseData.addWordCard;
-			GlobalDataScript.roomVo.hong = GlobalDataScript.roomJoinResponseData.hong;
-			GlobalDataScript.roomVo.ma = GlobalDataScript.roomJoinResponseData.ma;
-			GlobalDataScript.roomVo.name = GlobalDataScript.roomJoinResponseData.name;
-			GlobalDataScript.roomVo.roomId = GlobalDataScript.roomJoinResponseData.roomId;
-			GlobalDataScript.roomVo.roomType = GlobalDataScript.roomJoinResponseData.roomType;
-			GlobalDataScript.roomVo.roundNumber = GlobalDataScript.roomJoinResponseData.roundNumber;
-			GlobalDataScript.roomVo.sevenDouble = GlobalDataScript.roomJoinResponseData.sevenDouble;
-			GlobalDataScript.roomVo.xiaYu = GlobalDataScript.roomJoinResponseData.xiaYu;
-			GlobalDataScript.roomVo.ziMo = GlobalDataScript.roomJoinResponseData.ziMo;
-			GlobalDataScript.roomVo.magnification = GlobalDataScript.roomJoinResponseData.magnification;
-			GlobalDataScript.surplusTimes = GlobalDataScript.roomJoinResponseData.roundNumber;
-			GlobalDataScript.loginResponseData.roomId = GlobalDataScript.roomJoinResponseData.roomId;
-			//loadPerfab("Prefab/Panel_GamePlay");
-			GlobalDataScript.gamePlayPanel = PrefabManage.loadPerfab ("Prefab/Panel_GamePlay");
-			GlobalDataScript.gamePlayPanel.GetComponent<MyMahjongScript> ().joinToRoom (GlobalDataScript.roomJoinResponseData.playerList);
+			GlobalData.roomJoinResponseData = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
+			GlobalData.roomVO.addWordCard = GlobalData.roomJoinResponseData.addWordCard;
+			GlobalData.roomVO.hong = GlobalData.roomJoinResponseData.hong;
+			GlobalData.roomVO.ma = GlobalData.roomJoinResponseData.ma;
+			GlobalData.roomVO.name = GlobalData.roomJoinResponseData.name;
+			GlobalData.roomVO.roomId = GlobalData.roomJoinResponseData.roomId;
+			GlobalData.roomVO.roomType = GlobalData.roomJoinResponseData.roomType;
+			GlobalData.roomVO.roundNumber = GlobalData.roomJoinResponseData.roundNumber;
+			GlobalData.roomVO.sevenDouble = GlobalData.roomJoinResponseData.sevenDouble;
+			GlobalData.roomVO.xiaYu = GlobalData.roomJoinResponseData.xiaYu;
+			GlobalData.roomVO.ziMo = GlobalData.roomJoinResponseData.ziMo;
+			GlobalData.roomVO.magnification = GlobalData.roomJoinResponseData.magnification;
+			GlobalData.surplusTimes = GlobalData.roomJoinResponseData.roundNumber;
+			GlobalData.myAvatarVO.roomId = GlobalData.roomJoinResponseData.roomId;
+
+			SceneManager.getInstance ().changeToScene (SceneType.GAME);
+			SceneManager.getInstance().CurScenePanel.GetComponent<MyMahjongScript> ().joinToRoom (GlobalData.roomJoinResponseData.playerList);
 			closeDialog ();
 		} else {
-			TipsManagerScript.getInstance ().setTips (response.message);
+			TipsManager.getInstance ().setTips (response.message);
 		}
 
 	}
@@ -123,11 +123,11 @@ public class EnterRoomScript : MonoBehaviour{
 
 	private void  loadPerfab(string perfabName){
 		GameObject panelCreateDialog = Instantiate (Resources.Load(perfabName)) as GameObject;
-		panelCreateDialog.transform.parent = GlobalDataScript.getInstance ().canvsTransfrom;;
+		panelCreateDialog.transform.parent = GlobalData.getInstance ().Root.transform;;
 		panelCreateDialog.transform.localScale = Vector3.one;
 		//panelCreateDialog.transform.localPosition = new Vector3 (200f,150f);
 		panelCreateDialog.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
 		panelCreateDialog.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
-		panelCreateDialog.GetComponent<MyMahjongScript> ().joinToRoom (GlobalDataScript.roomJoinResponseData.playerList);
+		panelCreateDialog.GetComponent<MyMahjongScript> ().joinToRoom (GlobalData.roomJoinResponseData.playerList);
 	}
 }

@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public MicInputRequest (List<int> _userList, byte[] sound)
 		{
 			headCode = APIS.MicInput_Request;
-			myUUid = GlobalDataScript.loginResponseData.account.uuid;
+			myUUid = GlobalData.myAvatarVO.account.uuid;
 			userList = _userList;
 			ChatSound = sound;
 		}

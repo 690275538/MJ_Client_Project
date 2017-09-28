@@ -16,11 +16,9 @@ public class DebugPanelScript : MonoBehaviour {
 	private List<SocketForDebugPanel> socketList;                   
 	private List<AvatarVO> avatarList;
 	public List<int> userList;
-	private Hashtable ava_socket; 
 	void Start () {
 		socketList = new List<SocketForDebugPanel> ();
 		avatarList = new List<AvatarVO> ();
-		ava_socket = new Hashtable ();
 	}
 	
 	// Update is called once per frame
@@ -73,12 +71,12 @@ public class DebugPanelScript : MonoBehaviour {
 
     public void checkOnClick()
     {
-        int cardPoint = Int32.Parse( cardPointInput.text);
+//        int cardPoint = Int32.Parse( cardPointInput.text);
     }
 
     public void checkGangClick2()
     {
-        int cardPoint = Int32.Parse(CardPointInput2.text);
+//        int cardPoint = Int32.Parse(CardPointInput2.text);
     }
 
 	public void StartRecord()  {
