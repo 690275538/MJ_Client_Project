@@ -9,15 +9,16 @@ using System.Threading;
 
 public class InitializationConfigScritp : MonoBehaviour {
 //	static InitializationConfigScritp instance;
-
+	SocketEventHandle eventCenter;
 	void Start () {
 //		instance = this;
-		MicroPhoneInput.getInstance ();
-		GameObject root = GameObject.Find ("container") as GameObject;
+		GameObject root = GameObject.Find ("RootContainer") as GameObject;
 		GameObject login = GameObject.Find ("Panel_Login_View") as GameObject;
 		GlobalData.getInstance ().init (gameObject,root,login);
 
+		eventCenter = SocketEventHandle.getInstance ();
 
+		MicroPhoneInput.getInstance ();
 		CustomSocket.getInstance ().Connect ();
 		ChatSocket.getInstance ().Connect ();
 		SoundCtrl.getInstance ();
@@ -28,12 +29,14 @@ public class InitializationConfigScritp : MonoBehaviour {
 		//heartbeatTimer ();
 		heartbeatThread();
 	}
-
-   void	Awake(){
-		SocketEventHandle.getInstance().disConnetNotice += disConnetNotice;
+	void FixedUpdate(){
+		eventCenter.FixedUpdate ();
+	}
+	void Awake(){
+		SocketEventHandle.getInstance ().disConnetNotice += disConnetNotice;
 		SocketEventHandle.getInstance ().hostUpdateDrawResponse += hostUpdateDrawResponse;
 		SocketEventHandle.getInstance ().otherTeleLogin += otherTeleLogin;
-		SocketEventHandle.getInstance().serviceErrorNotice += serviceErrorNotice;
+		SocketEventHandle.getInstance ().serviceErrorNotice += serviceErrorNotice;
 	}
 
 	public void serviceErrorNotice(ClientResponse response){

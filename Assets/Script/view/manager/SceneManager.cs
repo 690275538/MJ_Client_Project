@@ -50,7 +50,6 @@ namespace AssemblyCSharp
 			switch (type) {
 			case SceneType.HOME:
 				newScenePanel = loadPerfab ("Prefab/Panel_Home_View");
-				GlobalData.homePanel = newScenePanel;
 				break;
 			case SceneType.LOGIN:
 				newScenePanel = loadPerfab ("Prefab/Panel_Login_View");

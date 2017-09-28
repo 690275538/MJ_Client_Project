@@ -132,7 +132,24 @@ public class MyMahjongScript : MonoBehaviour ,ISceneView
 	}
 	public void close (object data = null)
 	{
-		exitOrDissoliveRoom ();
+		GlobalData.myAvatarVO.resetData ();//复位房间数据
+		GlobalData.roomVO.roomId = 0;
+		GlobalData.soundToggle = true;
+		clean ();
+		removeListener ();
+
+		SoundCtrl.getInstance ().playBGM ();
+
+
+		while(playerItems.Count >0){
+			PlayerItemScript item = playerItems [0];
+			playerItems.RemoveAt (0);
+			item.clean ();
+			Destroy (item.gameObject);
+			Destroy (item);
+		}
+		Destroy (this);
+		Destroy (gameObject);
 	}
 	#endregion
 
@@ -2082,31 +2099,9 @@ public class MyMahjongScript : MonoBehaviour ,ISceneView
 	}
 
 	public void exitOrDissoliveRoom(){
-		GlobalData.myAvatarVO.resetData ();//复位房间数据
-		GlobalData.myAvatarVO.roomId = 0;//复位房间数据
-		GlobalData.roomVO.roomId = 0;
-		GlobalData.soundToggle = true;
-		clean ();
-		removeListener ();
+		SceneManager.getInstance ().changeToScene (SceneType.HOME);
 
-		SoundCtrl.getInstance ().playBGM ();
-		if (GlobalData.homePanel != null) {
-			GlobalData.homePanel.SetActive (true);
-			GlobalData.homePanel.transform.SetSiblingIndex (1);
-		} else {
-			GlobalData.homePanel=PrefabManage.loadPerfab ("Prefab/Panel_Home");
-			GlobalData.homePanel.transform.SetSiblingIndex (1);
-		}
 
-		while(playerItems.Count >0){
-			PlayerItemScript item = playerItems [0];
-			playerItems.RemoveAt (0);
-			item.clean ();
-			Destroy (item.gameObject);
-			Destroy (item);
-		}
-		Destroy (this);
-		Destroy (gameObject);
 	}
 
 	public void gameReadyNotice(ClientResponse response){

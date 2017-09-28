@@ -7,9 +7,8 @@ namespace AssemblyCSharp
 	/// <summary>
 	/// 消息分发类
 	/// </summary>
-	public class SocketEventHandle:MonoBehaviour
+	public class SocketEventHandle
 	{
-		private static SocketEventHandle _instance;
 
 		public  delegate void ServerCallBackEvent (ClientResponse response);
 		public  delegate void ServerDisconnectCallBackEvent ();
@@ -70,24 +69,16 @@ namespace AssemblyCSharp
 			callBackResponseList = new List<ClientResponse> ();
 		}
 
-		void Start(){
-			SocketEventHandle.getInstance ();
-		}
-
+	
+		private static SocketEventHandle _instance;
 		public static SocketEventHandle getInstance(){
 			if (_instance == null) {
-				GameObject temp = new GameObject ();
-                _instance = temp.AddComponent<SocketEventHandle>();
-//                _instance = new SocketEventHandle();
+                _instance = new SocketEventHandle();
 			}
 			return _instance;
 		}
 
-		void Update () {
-			
-		}
-
-		void FixedUpdate(){
+		public void FixedUpdate(){
 			while(callBackResponseList.Count >0){
 				ClientResponse response = callBackResponseList [0];
 				callBackResponseList.RemoveAt (0);

@@ -38,8 +38,6 @@ public class GlobalData
 //	public static Dictionary<int, Account > palyerBaseInfo = new Dictionary<int, Account> (); 
 
 
-	public static GameObject homePanel;//主界面
-
 	/**麻将剩余局数**/
 	public static int surplusTimes ;
 	/**总局数**/
@@ -72,7 +70,7 @@ public class GlobalData
 
 
 	private GameObject stage;
-	/**UI stage**/
+	/** UI Stage **/
 	public GameObject Stage {
 		get {
 			return stage;
@@ -81,7 +79,7 @@ public class GlobalData
 
 
 	private GameObject root;
-	/**game root inside the stage**/
+	/** Game Root inside the Stage **/
 	public GameObject Root {
 		get {
 			return root;
