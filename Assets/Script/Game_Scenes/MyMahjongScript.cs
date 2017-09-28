@@ -2093,10 +2093,6 @@ public class MyMahjongScript : MonoBehaviour ,ISceneView
 
 	}
 
-	private void cancle1(){
-		dissoliveRoomType = "2";
-		doDissoliveRoomRequest ();
-	}
 
 	public void exitOrDissoliveRoom(){
 		SceneManager.getInstance ().changeToScene (SceneType.HOME);
