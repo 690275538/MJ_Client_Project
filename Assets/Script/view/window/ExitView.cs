@@ -6,7 +6,7 @@ public class ExitView: MonoBehaviour {
 
 
 	public void exit(){
-		CustomSocket.getInstance().sendMsg(new LoginRequest());
+		GameManager.getInstance().Server.requset(new LoginRequest());
 		Application.Quit ();
 
 	}
