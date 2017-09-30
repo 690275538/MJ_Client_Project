@@ -8,36 +8,24 @@ using System.Threading;
 
 
 public class UIStage : MonoBehaviour {
-//	static InitializationConfigScritp instance;
-	SocketEventHandle eventCenter;
 
 	private GameManager gameMgr;
 
 	void Start () {
-//		instance = this;
+		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 		GameObject root = GameObject.Find ("RootContainer") as GameObject;
 		GameObject login = GameObject.Find ("Panel_Login_View") as GameObject;
-		GlobalData.getInstance ().init (gameObject,root,login);
 
-		eventCenter = SocketEventHandle.getInstance ();
-
-
-		MicroPhoneInput.getInstance ();
-
-		ChatSocket.getInstance ().Connect ();
-		SoundCtrl.getInstance ();
-
-		UpdateScript update = new UpdateScript ();
-		StartCoroutine (update.updateCheck ());
-		Screen.sleepTimeout = SleepTimeout.NeverSleep;
 
 
 		gameMgr = GameManager.getInstance ();
+		gameMgr.init (this,root,login);
 		gameMgr.Server.connect ();
 	}
 	void FixedUpdate(){
-		gameMgr.FixedUpdate ();
-		eventCenter.FixedUpdate ();
+		if (gameMgr != null )
+			gameMgr.FixedUpdate ();
+
 	}
 
 

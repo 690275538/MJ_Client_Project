@@ -50,7 +50,7 @@ public class ZhuMaScript : MonoBehaviour {
 
 	private string getDirection(int index){
 		 
-		int selfIndex = getIndex (GlobalData.myAvatarVO.account.uuid);
+		int selfIndex = getIndex (GlobalData.getInstance().myAvatarVO.account.uuid);
 		int ratio = selfIndex - index;
 		if (ratio == 0) {
 			return DirectionEnum.Bottom;

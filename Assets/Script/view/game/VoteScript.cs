@@ -48,16 +48,23 @@ public class VoteScript : MonoBehaviour {
 
 	private void addListener(){
 		
-		SocketEventHandle.getInstance().dissoliveRoomResponse += dissoliveRoomResponse;
-
+		GameManager.getInstance ().Server.onResponse += onResponse;
 	}
 	public void removeListener(){
-		SocketEventHandle.getInstance().dissoliveRoomResponse -= dissoliveRoomResponse;
+		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.DISSOLIVE_ROOM_RESPONSE:
+			dissoliveRoomResponse(response);
+			break;
+		}
+	}
 	public  void iniUI( string sponsor,List<AvatarVO> avatarVOList){
 		
-		if (GlobalData.myAvatarVO.account.nickname == sponsor) {
+		if (GlobalData.getInstance().myAvatarVO.account.nickname == sponsor) {
 			okButton.transform.gameObject.SetActive (false);
 			cancleButton.transform.gameObject.SetActive (false);
 		}
@@ -97,7 +104,7 @@ public class VoteScript : MonoBehaviour {
 		if (dissoliveRoomResponseVo.type == "1") {
 			playerList [getPlayerIndex (plyerName)].changeResult ("同意");
 		} else if (dissoliveRoomResponseVo.type == "2") {
-			GlobalData.isonApplayExitRoomstatus = false;
+			GlobalData.isDissoliving = false;
 			playerList [getPlayerIndex (plyerName)].changeResult ("拒绝");
 			disagreeCount += 1;
 			if (disagreeCount >= 2) {
@@ -118,7 +125,7 @@ public class VoteScript : MonoBehaviour {
 
 	private void  doDissoliveRoomRequest(){
 		DissoliveRoomRequestVo dissoliveRoomRequestVo = new DissoliveRoomRequestVo ();
-		dissoliveRoomRequestVo.roomId = GlobalData.myAvatarVO.roomId;
+		dissoliveRoomRequestVo.roomId = GlobalData.getInstance().roomVO.roomId;
 		dissoliveRoomRequestVo.type = dissolveType;
 		string sendMsg = JsonMapper.ToJson (dissoliveRoomRequestVo);
 		GameManager.getInstance().Server.requset(new DissoliveRoomRequest(sendMsg));

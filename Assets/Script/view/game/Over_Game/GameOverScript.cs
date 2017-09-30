@@ -76,7 +76,7 @@ public class GameOverScript : MonoBehaviour {
 //		mDispalyFlag = dispalyFlag;
 		mValidMas = validMas; 
 		initRoomBaseInfo ();
-		jushuText.text = "局数：" + (GlobalData.totalTimes - GlobalData.surplusTimes) + "/" + GlobalData.totalTimes;
+		jushuText.text = "局数：" + (GlobalData.getInstance().roomVO.roundNumber - GlobalData.getInstance().remainRoundCount) + "/" + GlobalData.getInstance().roomVO.roundNumber;
 		if (dispalyFlag == 0) {
 			allMasList = new List<List<int>> ();
 			mas_0 = new List<int> ();
@@ -88,7 +88,7 @@ public class GameOverScript : MonoBehaviour {
 			continueGame.SetActive (true);
 			shareFinalButton.SetActive (false);
 			closeButton.transform.gameObject.SetActive (false);
-			if (GlobalData.surplusTimes == 0 || GlobalData.isOverByPlayer) {
+			if (GlobalData.getInstance().remainRoundCount == 0 || GlobalData.isOverByPlayer) {
 				shareSiganlButton.GetComponent<Image> ().color =Color.white;
 			} else {
 				shareSiganlButton.GetComponent<Image> ().color = new Color32 (200, 200, 200, 128); 
@@ -204,12 +204,12 @@ public class GameOverScript : MonoBehaviour {
 
 	private void initRoomBaseInfo(){
 		timeText.text=DateTime.Now.ToString("yyyy-MM-dd");
-		roomNoText.text = "房间号：" + GlobalData.roomVO.roomId;
-		if (GlobalData.roomVO.roomType == GameType.ZHUAN_ZHUAN) {//转转麻将
+		roomNoText.text = "房间号：" + GlobalData.getInstance().roomVO.roomId;
+		if (GlobalData.getInstance().roomVO.roomType == GameType.ZHUAN_ZHUAN) {//转转麻将
 			title.text = "转转麻将";
-		} else if (GlobalData.roomVO.roomType == GameType.HUA_SHUI) {//划水麻将
+		} else if (GlobalData.getInstance().roomVO.roomType == GameType.HUA_SHUI) {//划水麻将
 			title.text = "划水麻将";
-		} else if (GlobalData.roomVO.roomType == GameType.GI_PING_HU) {
+		} else if (GlobalData.getInstance().roomVO.roomType == GameType.GI_PING_HU) {
 			title.text = "鸡平胡";
 		}
 
@@ -348,9 +348,10 @@ public class GameOverScript : MonoBehaviour {
 			return;
 		}
 
-		if (GlobalData.surplusTimes > 0) {
+		if (GlobalData.getInstance().remainRoundCount > 0) {
 			GameManager.getInstance().Server.requset (new GameReadyRequest ());
-			CommonEvent.getInstance ().readyGame ();
+			//TODO 这个后面要补一下 gameview.markselfReadyGame
+//			CommonEvent.getInstance ().readyGame (); 
 			closeDialog ();
 
 		} else {
@@ -389,13 +390,13 @@ public class GameOverScript : MonoBehaviour {
 	}
 
 	public void doShare(){
-		GlobalData.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChat);
+		GameManager.getInstance().WechatAPI.shareAchievementToWeChat (PlatformType.WeChat);
 	}
 
 	public void openFinalOverPanl(){
 		if ( GlobalData.finalGameEndVo !=null && GlobalData.finalGameEndVo.totalInfo !=null && GlobalData.finalGameEndVo.totalInfo.Count>0) {
 			GameObject obj = PrefabManage.loadPerfab ("prefab/Panel_Game_Over");
-			obj.GetComponent<GameOverScript> ().setDisplaContent (1, GlobalData.roomAvatarVoList, null, GlobalData.hupaiResponseVo.validMas);
+			obj.GetComponent<GameOverScript> ().setDisplaContent (1, GlobalData.getInstance().playerList, null, GlobalData.hupaiResponseVo.validMas);
 			obj.transform.SetSiblingIndex (2);
 
 			if (GlobalData.singalGameOverList.Count > 0) {
@@ -411,9 +412,9 @@ public class GameOverScript : MonoBehaviour {
 				//}
 				GlobalData.singalGameOverList.Clear();
 			}
-			if (CommonEvent.getInstance ().closeGamePanel != null) {
-				CommonEvent.getInstance ().closeGamePanel ();
-			}
+
+			GlobalData.getInstance ().resetDataForNewRoom ();
+			SceneManager.getInstance ().changeToScene (SceneType.HOME);
 
 		}
 

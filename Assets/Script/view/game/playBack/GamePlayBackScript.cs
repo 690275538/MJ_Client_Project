@@ -920,7 +920,7 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	private void getMyIndex(){
 		for(int i=0;i<aa.playerItems.Count;i++){
-			if(aa.playerItems [i].uuid == GlobalData.myAvatarVO.account.uuid){
+			if(aa.playerItems [i].uuid == GlobalData.getInstance().myAvatarVO.account.uuid){
 				myIndex =  i;
 			}
 		}

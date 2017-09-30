@@ -9,10 +9,10 @@ using System.Xml;
  */
 using System;
 
-public class UpdateScript{
+public class UpdateHelper{
 	
 
-	private ServiceVersionVo serviceVersionVo = new ServiceVersionVo();
+	private ServiceVersionVO serviceVersionVo = new ServiceVersionVO();
 	private string currentVersion = Application.version;//当前软件版本号
 
 	private string serverVersion ;//服务器上软件版本号
@@ -26,27 +26,31 @@ public class UpdateScript{
 		WWW www = new WWW (APIS.UPDATE_INFO_JSON_URL);
 		yield return www;
 		byte[] buffer = www.bytes;
-		string returnxml = System.Text.Encoding.UTF8.GetString (buffer);
-		MyDebug.Log ("returnxml  =  "+returnxml);
-		XmlDocument xmlDoc = new XmlDocument();
-		xmlDoc.LoadXml(returnxml);
-		XmlNodeList nodeList = xmlDoc.SelectNodes ("versions/version");
-		foreach(XmlNode xmlNodeVersion in nodeList){
-			Version123 temp = new Version123();
-			temp.title = xmlNodeVersion.SelectSingleNode ("title").InnerText;
-			temp.url = xmlNodeVersion.SelectSingleNode ("url").InnerText;
-			temp.note = xmlNodeVersion.SelectSingleNode ("note").InnerText;
-			temp.version = xmlNodeVersion.SelectSingleNode ("versionname").InnerText;
-			XmlElement xe =(XmlElement) xmlNodeVersion;
-			if (xe.GetAttribute ("id") == "ios") {
-				serviceVersionVo.ios = temp; 
-				serviceVersionVo.ios.url += "l=zh&mt=8";
-			} else if (xe.GetAttribute ("id") == "android") {
-				serviceVersionVo.Android = temp;
+
+		if (! string.IsNullOrEmpty(www.error)) {
+			string returnxml = System.Text.Encoding.UTF8.GetString (buffer);
+			MyDebug.Log ("returnxml  =  " + returnxml);
+			XmlDocument xmlDoc = new XmlDocument ();
+			xmlDoc.LoadXml (returnxml);
+			XmlNodeList nodeList = xmlDoc.SelectNodes ("versions/version");
+			foreach (XmlNode xmlNodeVersion in nodeList) {
+				Version123 temp = new Version123 ();
+				temp.title = xmlNodeVersion.SelectSingleNode ("title").InnerText;
+				temp.url = xmlNodeVersion.SelectSingleNode ("url").InnerText;
+				temp.note = xmlNodeVersion.SelectSingleNode ("note").InnerText;
+				temp.version = xmlNodeVersion.SelectSingleNode ("versionname").InnerText;
+				XmlElement xe = (XmlElement)xmlNodeVersion;
+				if (xe.GetAttribute ("id") == "ios") {
+					serviceVersionVo.ios = temp; 
+					serviceVersionVo.ios.url += "l=zh&mt=8";
+				} else if (xe.GetAttribute ("id") == "android") {
+					serviceVersionVo.Android = temp;
+				}
 			}
+			compareVersion ();
+		} else {
+			TipsManager.getInstance ().setTips ("更新文件加载失败");
 		}
-		compareVersion ();
-	
 	}
 
 	//对比版本虚

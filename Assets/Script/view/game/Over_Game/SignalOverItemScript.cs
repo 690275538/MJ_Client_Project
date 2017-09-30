@@ -341,10 +341,10 @@ public class SignalOverItemScript : MonoBehaviour {
 			}
 		}
 
-		if (GlobalData.roomVO.roomType == GameType.HUA_SHUI) {
+		if (GlobalData.getInstance().roomVO.roomType == GameType.HUA_SHUI) {
 			itemTemp = Instantiate (Resources.Load ("Prefab/Image_yu")) as GameObject;
 			itemTemp.transform.parent = paiArrayPanel.transform;
-			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalData.roomVO.xiaYu);
+			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalData.getInstance().roomVO.xiaYu);
 			itemTemp.transform.localScale =  Vector3.one;
 			itemTemp.transform.localPosition = new Vector3 (20*36f, 0, 0);
 		}

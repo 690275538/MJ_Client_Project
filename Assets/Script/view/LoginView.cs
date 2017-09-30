@@ -66,12 +66,12 @@ public class LoginView : MonoBehaviour, ISceneView {
 			return;
 		}
 
-		GlobalData.reinitData ();//初始化界面数据
+		GlobalData.getInstance().reinitData ();//初始化界面数据
 		if (agreeToggle.isOn) {
 			//GlobalDataScript.getInstance ().wechatOperate.login ();//TODO 
 			//watingPanel.SetActive(true);
 			if (uinInput.text != "" ) {
-				GlobalData.getInstance ().wechatOperate.testLogin (uinInput.text);
+				GameManager.getInstance().WechatAPI.testLogin (uinInput.text);
 				watingPanel.SetActive(true);
 			}else{
 				TipsManager.getInstance ().setTips ("请先输入QQ号");
@@ -99,8 +99,8 @@ public class LoginView : MonoBehaviour, ISceneView {
 		SoundCtrl.getInstance ().playBGM ();
 		if (response.status == 1) {
 			
-			GlobalData.myAvatarVO = JsonMapper.ToObject<AvatarVO> (response.message);
-			ChatSocket.getInstance ().sendMsg (new LoginChatRequest (GlobalData.myAvatarVO.account.uuid));
+			GlobalData.getInstance().myAvatarVO = JsonMapper.ToObject<AvatarVO> (response.message);
+			ChatSocket.getInstance ().sendMsg (new LoginChatRequest (GlobalData.getInstance().myAvatarVO.account.uuid));
 
 			SceneManager.getInstance ().changeToScene (SceneType.HOME);
 
@@ -114,17 +114,10 @@ public class LoginView : MonoBehaviour, ISceneView {
 		watingPanel.SetActive(false);
 
 
-		GlobalData.reEnterRoomData = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
-
-		for (int i = 0; i < GlobalData.reEnterRoomData.playerList.Count; i++) {
-			AvatarVO itemData =	GlobalData.reEnterRoomData.playerList [i];
-			if (itemData.account.openid == GlobalData.myAvatarVO.account.openid) {
-				GlobalData.myAvatarVO.account.uuid = itemData.account.uuid;
-				ChatSocket.getInstance ().sendMsg (new LoginChatRequest(GlobalData.myAvatarVO.account.uuid));
-				break;
-			}
-		}
-
+		RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
+		GameManager.getInstance ().DataMgr.updateRoomVO (vo);
+		GlobalData.getInstance ().isReEnter = true;
+		ChatSocket.getInstance ().sendMsg (new LoginChatRequest(GlobalData.getInstance().myAvatarVO.account.uuid));
 		SceneManager.getInstance ().changeToScene (SceneType.GAME);
 	
 	}

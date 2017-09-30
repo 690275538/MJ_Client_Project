@@ -66,13 +66,13 @@ public class FinalOverGame: MonoBehaviour
             //}
             GlobalData.singalGameOverList.Clear();
         }
-			
-		CommonEvent.getInstance ().closeGamePanel ();
+		GlobalData.getInstance ().resetDataForNewRoom ();
+		SceneManager.getInstance ().changeToScene (SceneType.HOME);
 	}
 
 	private void  loadPerfab(string perfabName ,int openFlag){
 		GameObject obj= PrefabManage.loadPerfab (perfabName);
-		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,GlobalData.roomAvatarVoList,null,GlobalData.hupaiResponseVo.validMas);
+		obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag,GlobalData.getInstance().playerList,null,GlobalData.hupaiResponseVo.validMas);
 		obj.transform.SetSiblingIndex (2);
 	}
 }

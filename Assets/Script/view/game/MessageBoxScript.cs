@@ -4,7 +4,7 @@ using DG.Tweening;
 using AssemblyCSharp;
 
 public class MessageBoxScript : MonoBehaviour {
-	MyMahjongScript myMaj;
+	GameView myMaj;
 	// Use this for initialization
 	void Start () {
 		SocketEventHandle.getInstance ().messageBoxNotice += messageBoxNotice;
@@ -17,9 +17,9 @@ public class MessageBoxScript : MonoBehaviour {
 
 	public void btnClick(int index){
 		SoundCtrl.getInstance ().playMessageBoxSound (index);
-		GameManager.getInstance().Server.requset (new MessageBoxRequest(index,GlobalData.myAvatarVO.account.uuid));
+		GameManager.getInstance().Server.requset (new MessageBoxRequest(index,GlobalData.getInstance().myAvatarVO.account.uuid));
 		if (myMaj == null) {
-			myMaj = SceneManager.getInstance ().CurScenePanel.GetComponent<MyMahjongScript> ();
+			myMaj = SceneManager.getInstance ().CurScenePanel.GetComponent<GameView> ();
 		}
 		if (myMaj != null) {
 			myMaj.playerItems [0].showChatMessage (index);

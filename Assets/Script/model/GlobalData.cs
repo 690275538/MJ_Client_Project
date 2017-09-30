@@ -10,8 +10,14 @@ using System.Text;
 
 public class GlobalData
 {
+	public delegate void Change();
+	public event Change noticeChange;
+	public event Change prizeCountChange;
+
 	private static GlobalData _instance;
-	public static GlobalData getInstance(){
+
+	public static GlobalData getInstance ()
+	{
 		if (_instance == null) {
 			_instance = new GlobalData ();
 		}
@@ -19,31 +25,14 @@ public class GlobalData
 	}
 
 	/**是否到自己出牌**/
-    public static bool isDrag = false;
-	/**登陆返回数据**/
-	public static AvatarVO myAvatarVO;
-	/**加入房间返回数据**/
-	public static RoomJoinResponseVo roomJoinResponseData;
-	/**房间游戏规则信息**/
-	public static RoomVO roomVO = new RoomVO ();
+	public static bool isDrag = false;
 	/**单局游戏结束服务器返回数据**/
 	public static HupaiResponseVo hupaiResponseVo;
 	/**全局游戏结束服务器返回数据**/
 	public static FinalGameEndVo finalGameEndVo;
 
 	public static int mainUuid;
-	/**房间成员信息**/
-	public static List<AvatarVO> roomAvatarVoList;
 
-//	public static Dictionary<int, Account > palyerBaseInfo = new Dictionary<int, Account> (); 
-
-
-	/**麻将剩余局数**/
-	public static int surplusTimes ;
-	/**总局数**/
-	public static int totalTimes;
-	/**重新加入房间的数据**/
-	public static RoomJoinResponseVo reEnterRoomData;
 
 	/// <summary>
 	/// 声音开关
@@ -53,7 +42,7 @@ public class GlobalData
 	/// <summary>
 	/// 单局结算面板
 	/// </summary>
-	public static List<GameObject> singalGameOverList = new List<GameObject>();
+	public static List<GameObject> singalGameOverList = new List<GameObject> ();
 
 
 
@@ -62,87 +51,96 @@ public class GlobalData
 	/// 抽奖数据
 	/// </summary>
 	public static List<LotteryData> lotteryDatas;
-	public static bool isonApplayExitRoomstatus = false;//是否处于申请解散房间状态
-	public static bool isOverByPlayer = false;//是否由用用户选择退出而退出的游戏
-	public static LoginVo loginVo;//登录数据
-	public static List<String> noticeMegs = new List<string>();
+
+
+	/**是否处于申请解散房间状态**/
+	public static bool isDissoliving = false;
+	/**是否由用用户选择退出而退出的游戏**/
+	public static bool isOverByPlayer = false;
 
 
 
-	private GameObject stage;
-	/** UI Stage **/
-	public GameObject Stage {
-		get {
-			return stage;
+	/**房间游戏规则信息**/
+	public RoomVO roomVO;
+	/**玩家个人信息**/
+	public AvatarVO myAvatarVO;
+	/**其他玩家个人信息**/
+	public List<AvatarVO> playerList;
+
+	/**重返房间**/
+	public bool isReEnter = false;
+
+	/**麻将剩余局数**/
+	public int remainRoundCount = 0;
+
+	/**游戏公告**/
+	List<String> noticeMsgs = new List<string> ();
+	public List<String> NoticeMsgs{
+		get{
+			return noticeMsgs;
 		}
+		set{
+			noticeMsgs = value;
+			if (noticeChange != null) {
+				noticeChange ();
+			}
+		}
+
 	}
 
 
-	private GameObject root;
-	/** Game Root inside the Stage **/
-	public GameObject Root {
-		get {
-			return root;
+	public int PrizeCount{
+		get{
+			if (myAvatarVO == null)
+				return 0;
+			return myAvatarVO.account.prizecount;
 		}
+		set{
+			if (myAvatarVO != null) {
+				myAvatarVO.account.prizecount = value;
+				if (prizeCountChange != null) {
+					prizeCountChange ();
+				}
+			} else {
+				Debug.Log ("数据下发时机错误");
+			}
+		}
+
 	}
 
-	/**微信接口**/
-	public WechatOperateScript wechatOperate;
+	/**游戏状态**/
+	public GameStatus gameStatus;
+
 	/**
 	 * 重新初始化数据
 	*/
-	public static void reinitData(){
-		isDrag = false;
-		myAvatarVO = null;
-		roomJoinResponseData = null;
-		roomVO=new RoomVO(); 
-		hupaiResponseVo = null;
-		finalGameEndVo = null;
-		roomAvatarVoList = null;
-		surplusTimes = 0;
-		totalTimes = 0;
-		reEnterRoomData = null;
-		singalGameOverList =   new List<GameObject>();
-		lotteryDatas = null;
-		isonApplayExitRoomstatus = false;
-		isOverByPlayer = false;
-		loginVo = null;
-	}
-
-
-	public void init(GameObject stage,GameObject root,GameObject login){
-		
-		this.stage = stage;
-		this.root = root;
-		wechatOperate = stage.GetComponent<WechatOperateScript>();
-
-		TipsManager.getInstance ().init (stage.transform);
-		SceneManager.getInstance ().init (root.transform,login);
-	}
-
-
-	public string getIpAddress()
+	public void reinitData ()
 	{
-		string tempip = "";
-//		try
-//		{
-//			WebRequest wr = WebRequest.Create("http://1212.ip138.com/ic.asp");
-//			Stream s = wr.GetResponse().GetResponseStream();
-//			StreamReader sr = new StreamReader(s, Encoding.Default);
-//			string all = sr.ReadToEnd(); //读取网站的数据
-//
-//			int start = all.IndexOf("[")+1;
-//		    int end = all.IndexOf("]");
-//		    int count = end-start;
-//			tempip = all.Substring(start,count);
-//			sr.Close();
-//			s.Close();
-//		}
-//		catch
-//		{
-//		}
-		return tempip;
+		roomVO = new RoomVO (); 
+		myAvatarVO = null;
+		playerList = null;
+		isReEnter = false;
+		remainRoundCount = 0;
+		gameStatus = GameStatus.UNDEFINED;
+
+		isDrag = false;
+		finalGameEndVo = null;
+		singalGameOverList = new List<GameObject> ();
+		lotteryDatas = null;
+		isDissoliving = false;
+		isOverByPlayer = false;
 	}
+	public void resetDataForNewRoom()
+	{
+		roomVO = new RoomVO (); 
+		playerList = null;
+		isReEnter = false;
+
+		gameStatus = GameStatus.UNDEFINED;
+	}
+
+
+
 
 
 

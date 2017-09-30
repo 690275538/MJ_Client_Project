@@ -23,5 +23,11 @@ namespace AssemblyCSharp
 		CONNECTING,
 		CONNECTED
 	}
+	public enum GameStatus{
+		UNDEFINED,
+		READYING,
+		GAMING
+
+	}
 }
 

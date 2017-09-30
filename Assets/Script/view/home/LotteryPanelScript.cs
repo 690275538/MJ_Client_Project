@@ -37,16 +37,16 @@ public class LotteryPanelScript : MonoBehaviour
 	void Start ()
 	{
 		SocketEventHandle.getInstance ().giftResponse += giftResponse;
-		CommonEvent.getInstance ().prizeCountChange += prizeCountChange;	
+		GlobalData.getInstance ().prizeCountChange += prizeCountChange;
 		GameManager.getInstance().Server.requset (new GetGiftRequest ("0"));
-	    choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
+	    choujiangNum.text = GlobalData.getInstance().myAvatarVO.account.prizecount+"";
 
 	}
 
 
 	private void prizeCountChange(){
 		TipsManager.getInstance ().setTips ("您的抽奖次数已经更新");
-		choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
+		choujiangNum.text = GlobalData.getInstance().myAvatarVO.account.prizecount+"";
 	}
 
 	public class Drawl{
@@ -128,9 +128,9 @@ public class LotteryPanelScript : MonoBehaviour
 				}
 			}catch (Exception e){
 				Debug.Log(e.ToString());
-				if (GlobalData.myAvatarVO.account.prizecount > 0) {
-					GlobalData.myAvatarVO.account.prizecount--;
-					choujiangNum.text = GlobalData.myAvatarVO.account.prizecount+"";
+				if (GlobalData.getInstance().myAvatarVO.account.prizecount > 0) {
+					GlobalData.getInstance().myAvatarVO.account.prizecount--;
+					choujiangNum.text = GlobalData.getInstance().myAvatarVO.account.prizecount+"";
 				}
 				Drawl returndata = JsonMapper.ToObject<Drawl> (response.message);
 				StopIndex = returndata.data;
@@ -153,7 +153,7 @@ public class LotteryPanelScript : MonoBehaviour
 	}
 
 	public void shareToWeChat(){
-		GlobalData.getInstance ().wechatOperate.shareAchievementToWeChat (PlatformType.WeChatMoments);
+		GameManager.getInstance().WechatAPI.shareAchievementToWeChat (PlatformType.WeChatMoments);
 	}
 
 	/***
@@ -168,7 +168,7 @@ public class LotteryPanelScript : MonoBehaviour
 
 	public void startTurn(){
 		MyDebug.Log ("sssssssssssssssssss");
-	    if (GlobalData.myAvatarVO.account.prizecount > 0)
+	    if (GlobalData.getInstance().myAvatarVO.account.prizecount > 0)
 	    {
 		    GameManager.getInstance().Server.requset (new GetGiftRequest ("1"));
         }

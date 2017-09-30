@@ -201,7 +201,7 @@ public class CrateRoomView : MonoBehaviour {
 		return 1;
 	}
 	private void createRoom(RoomVO roomVO,int roomCardNum){
-		if (GlobalData.myAvatarVO.account.roomcard >= roomCardNum) {
+		if (GlobalData.getInstance().myAvatarVO.account.roomcard >= roomCardNum) {
 			roomVO.roundNumber = roomCardNum * 8;
 			string sendmsgstr = JsonMapper.ToJson (roomVO);
 			GameManager.getInstance().Server.requset (new CreateRoomRequest (sendmsgstr));
@@ -215,13 +215,19 @@ public class CrateRoomView : MonoBehaviour {
 			
 			int roomid = Int32.Parse(response.message);
 			roomVO.roomId = roomid;
-			GlobalData.roomVO = roomVO;
-			GlobalData.myAvatarVO.roomId = roomid;
-			GlobalData.myAvatarVO.main = true;
-			GlobalData.myAvatarVO.isOnLine = true;
+			GlobalData.getInstance().roomVO = roomVO;
+			GlobalData.getInstance().myAvatarVO.main = true;
+			GlobalData.getInstance().myAvatarVO.isOnLine = true;
+
+			GlobalData.getInstance ().remainRoundCount = roomVO.roundNumber;
+
+			List<AvatarVO> avatarList = new List<AvatarVO> ();
+			avatarList.Add (GlobalData.getInstance ().myAvatarVO);
+			GlobalData.getInstance ().playerList = avatarList;
+
 			SceneManager.getInstance ().changeToScene (SceneType.GAME);
 
-			SceneManager.getInstance().CurScenePanel.GetComponent<MyMahjongScript> ().createRoomAddAvatarVO (GlobalData.myAvatarVO);
+			SceneManager.getInstance().CurScenePanel.GetComponent<GameView> ().joinToRoom (GlobalData.getInstance ().playerList);
 		
 			onClickBtn_Close ();
 

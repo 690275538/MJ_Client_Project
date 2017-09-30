@@ -4,16 +4,18 @@ using System.Collections;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
+namespace AssemblyCSharp
+{
 public class UI_MicPhoneScript : MonoBehaviour
 {
     public float WholeTime=10f;
     public GameObject InputGameObject;
     private Boolean btnDown = false;
     public GameObject circle;
-	public MyMahjongScript myScript;
+	public GameView myScript;
 	void Start ()
 	{
+			
 	}
 		
     // Update is called once per frame
@@ -63,10 +65,11 @@ public class UI_MicPhoneScript : MonoBehaviour
 	private List<int> getUserList(){
 		List<int> userList = new List<int> ();
 		for(int i=0;i<myScript.avatarList.Count;i++){
-			if (myScript.avatarList [i].account.uuid != GlobalData.myAvatarVO.account.uuid) {
+			if (myScript.avatarList [i].account.uuid != GlobalData.getInstance().myAvatarVO.account.uuid) {
 				userList.Add (myScript.avatarList[i].account.uuid);
 			}
 		}
 		return userList;
 	}
+}
 }

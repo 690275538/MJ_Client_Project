@@ -3,11 +3,11 @@
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class ServiceVersionVo
+	public class ServiceVersionVO
 	{
 		public Version123 ios;
 		public Version123 Android;
-		public ServiceVersionVo ()
+		public ServiceVersionVO ()
 		{
 			
 		}

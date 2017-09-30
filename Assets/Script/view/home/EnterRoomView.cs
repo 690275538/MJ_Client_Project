@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System;
 using LitJson;
 
-public class EnterRoomScript : MonoBehaviour{
+public class EnterRoomView : MonoBehaviour{
 
 
 	public Button button_sure,button_delete;//确认删除按钮
@@ -95,23 +95,11 @@ public class EnterRoomScript : MonoBehaviour{
 		MyDebug.Log (response);
 
 		if (response.status == 1) {
-			GlobalData.roomJoinResponseData = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
-			GlobalData.roomVO.addWordCard = GlobalData.roomJoinResponseData.addWordCard;
-			GlobalData.roomVO.hong = GlobalData.roomJoinResponseData.hong;
-			GlobalData.roomVO.ma = GlobalData.roomJoinResponseData.ma;
-			GlobalData.roomVO.name = GlobalData.roomJoinResponseData.name;
-			GlobalData.roomVO.roomId = GlobalData.roomJoinResponseData.roomId;
-			GlobalData.roomVO.roomType = GlobalData.roomJoinResponseData.roomType;
-			GlobalData.roomVO.roundNumber = GlobalData.roomJoinResponseData.roundNumber;
-			GlobalData.roomVO.sevenDouble = GlobalData.roomJoinResponseData.sevenDouble;
-			GlobalData.roomVO.xiaYu = GlobalData.roomJoinResponseData.xiaYu;
-			GlobalData.roomVO.ziMo = GlobalData.roomJoinResponseData.ziMo;
-			GlobalData.roomVO.magnification = GlobalData.roomJoinResponseData.magnification;
-			GlobalData.surplusTimes = GlobalData.roomJoinResponseData.roundNumber;
-			GlobalData.myAvatarVO.roomId = GlobalData.roomJoinResponseData.roomId;
+			RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
+			GameManager.getInstance ().DataMgr.updateRoomVO (vo);
 
 			SceneManager.getInstance ().changeToScene (SceneType.GAME);
-			SceneManager.getInstance().CurScenePanel.GetComponent<MyMahjongScript> ().joinToRoom (GlobalData.roomJoinResponseData.playerList);
+			SceneManager.getInstance().CurScenePanel.GetComponent<GameView> ().joinToRoom (vo.playerList);
 			closeDialog ();
 		} else {
 			TipsManager.getInstance ().setTips (response.message);

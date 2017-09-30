@@ -55,7 +55,7 @@ namespace AssemblyCSharp
 				newScenePanel = loadPerfab ("Prefab/Panel_Login_View");
 				break;
 			case SceneType.GAME:
-				newScenePanel = loadPerfab ("Prefab/Panel_GamePlay");
+				newScenePanel = loadPerfab ("Prefab/Panel_Game_View");
 				break;
 			}
 			newScenePanel.GetComponent<ISceneView> ().open ();

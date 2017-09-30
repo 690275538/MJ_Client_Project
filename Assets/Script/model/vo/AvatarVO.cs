@@ -9,11 +9,10 @@ namespace AssemblyCSharp
 	{
 		public Account account;
 
-		//public int cardIndex; 
 		public bool isOnLine;
 		public bool isReady;
 		public bool main;
-		public int roomId;
+//		public int roomId;
 		public int[] chupais;//出牌
 		public int commonCards;//剩余牌数
 		public int[][] paiArray;
@@ -25,11 +24,9 @@ namespace AssemblyCSharp
 		}
 
 		public void resetData(){
-		//	cardIndex = 0;
 			isOnLine = false;
 			isReady = false;
 			main = false;
-			roomId = 0;
 		}
 	}
 }

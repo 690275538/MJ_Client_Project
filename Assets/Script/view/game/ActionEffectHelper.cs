@@ -2,7 +2,8 @@
 using System.Collections;
 using UnityEngine.UI;
 
-
+namespace AssemblyCSharp
+{
 public class ActionEffectHelper : MonoBehaviour {
 
 	public GameObject chiEffect;
@@ -17,7 +18,7 @@ public class ActionEffectHelper : MonoBehaviour {
 	public GameObject chiBtn;
 	public GameObject passBtn;
 
-	public void addListener(MyMahjongScript host){
+	public void addListener(GameView host){
 		huBtn.GetComponent<Button> ().onClick.AddListener (host.myHuBtnClick);
 		gangBtn.GetComponent<Button> ().onClick.AddListener (host.myGangBtnClick);
 		pengBtn.GetComponent<Button> ().onClick.AddListener (host.myPengBtnClick);
@@ -97,4 +98,5 @@ public enum ActionType{
 	CHI,
 	HU,
 	LIUJU
+}
 }

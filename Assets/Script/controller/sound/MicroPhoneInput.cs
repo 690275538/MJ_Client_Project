@@ -55,7 +55,7 @@ public class MicroPhoneInput : MonoBehaviour {
 				Debug.Log("device name = " + deviceStr);  
 			}  
 
-			m_instance= GlobalData.getInstance ().Stage.AddComponent<MicroPhoneInput>();  
+			m_instance= GameManager.getInstance ().Stage.AddComponent<MicroPhoneInput>();  
 		}  
 		return m_instance;  
 	}  
