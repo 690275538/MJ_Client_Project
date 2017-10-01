@@ -126,7 +126,7 @@ public class ZhuMaScript : MonoBehaviour {
         for (int i = 0; i < mapaiList.Count; i++) {
 			GameObject itemTemp =  Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_B")) as GameObject;
             int cardPoint = int.Parse(mapaiList[i]);
-            itemTemp.GetComponent<TopAndBottomCardScript>().setPoint(cardPoint);
+            itemTemp.GetComponent<PutoutCardView>().setPoint(cardPoint);
             itemTemp.transform.parent = mapaiContaner.transform;
 			itemTemp.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
 			itemTemp.transform.localPosition = new Vector3 (leftMargin +i* 70f, 0, 0);
@@ -197,7 +197,7 @@ public class ZhuMaScript : MonoBehaviour {
 					imgB.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_B")) as GameObject;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 				itemTemp.transform.parent = bottomContaner.transform;
 				itemTemp.transform.localScale = Vector3.one;
 				itemTemp.transform.localPosition = new Vector3 (-149f+startPositionB  * 60f,0f, 0);
@@ -208,7 +208,7 @@ public class ZhuMaScript : MonoBehaviour {
 					imgL.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_L")) as GameObject;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 				itemTemp.transform.parent = leftContaner.transform;
 				itemTemp.transform.localScale = new Vector3(2.0f,2.0f,1.0f);
 				itemTemp.transform.localPosition = new Vector3 (0, 140f-startPositionL*50f, 0);
@@ -220,7 +220,7 @@ public class ZhuMaScript : MonoBehaviour {
 					imgR.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_R")) as GameObject;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 				itemTemp.transform.parent = rightContaner.transform;
 				itemTemp.transform.localScale = new Vector3(2.0f,2.0f,1.0f);
 				itemTemp.transform.localPosition = new Vector3 (0f, -140f+startPositionR*50f, 0);
@@ -232,7 +232,7 @@ public class ZhuMaScript : MonoBehaviour {
 					imgT.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_B")) as GameObject;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 				itemTemp.transform.parent = topContaner.transform;
 				itemTemp.transform.localScale = new Vector3(1.0f,1.0f,1.0f);
 				itemTemp.transform.localPosition = new Vector3 (149f-startPositionT * 60f, 0, 0);

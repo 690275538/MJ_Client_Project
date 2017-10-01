@@ -29,5 +29,12 @@ namespace AssemblyCSharp
 		GAMING
 
 	}
+	public enum Direction{
+		B,
+		R,
+		T,
+		L
+	}
+
 }
 

@@ -300,7 +300,7 @@ GameObject:
   - 222: {fileID: 22266242}
   - 114: {fileID: 11492518}
   m_Layer: 5
-  m_Name: Image_hu
+  m_Name: Img_Hu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,7 +389,7 @@ GameObject:
   - 222: {fileID: 22287288}
   - 114: {fileID: 11471362}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text_Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,7 +406,7 @@ GameObject:
   - 222: {fileID: 22241842}
   - 114: {fileID: 11438668}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Img_Coins_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -765,7 +765,7 @@ GameObject:
   - 222: {fileID: 22276790}
   - 114: {fileID: 11438200}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text_chat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -921,7 +921,7 @@ GameObject:
   - 222: {fileID: 22255268}
   - 114: {fileID: 11459092}
   m_Layer: 5
-  m_Name: Image_offline
+  m_Name: Img_Offline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1511,7 +1511,7 @@ GameObject:
   - 222: {fileID: 22245050}
   - 114: {fileID: 11479572}
   m_Layer: 5
-  m_Name: readyImg
+  m_Name: Img_Ready
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1717,7 +1717,7 @@ GameObject:
   - 222: {fileID: 22282772}
   - 114: {fileID: 11419246}
   m_Layer: 5
-  m_Name: bankerImg
+  m_Name: Img_Banker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1924,7 +1924,7 @@ GameObject:
   - 222: {fileID: 22237606}
   - 114: {fileID: 11460780}
   m_Layer: 5
-  m_Name: Coins
+  m_Name: Text_Coins
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2164,7 +2164,7 @@ GameObject:
   - 222: {fileID: 22227770}
   - 114: {fileID: 11405326}
   m_Layer: 5
-  m_Name: chatBg
+  m_Name: Bg_Chat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2646,7 +2646,7 @@ GameObject:
   - 114: {fileID: 11471152}
   - 95: {fileID: 9515084}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: Img_Speak_Icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3260,11 +3260,11 @@ MonoBehaviour:
   nameText: {fileID: 11471362}
   readyImg: {fileID: 11479572}
   scoreText: {fileID: 11460780}
-  dir: 4c
+  dir: L
   chatAction: {fileID: 198322}
   offlineImage: {fileID: 11459092}
   chatMessage: {fileID: 11438200}
-  chatPaoPao: {fileID: 183258}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 115558}
 --- !u!114 &11409670
 MonoBehaviour:
@@ -3691,7 +3691,7 @@ MonoBehaviour:
   chatAction: {fileID: 0}
   offlineImage: {fileID: 0}
   chatMessage: {fileID: 0}
-  chatPaoPao: {fileID: 0}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 0}
 --- !u!114 &11417398
 MonoBehaviour:
@@ -4781,11 +4781,11 @@ MonoBehaviour:
   nameText: {fileID: 11472228}
   readyImg: {fileID: 11458268}
   scoreText: {fileID: 11409964}
-  dir: 42
+  dir: B
   chatAction: {fileID: 149850}
   offlineImage: {fileID: 11481974}
   chatMessage: {fileID: 11406716}
-  chatPaoPao: {fileID: 188280}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 137574}
 --- !u!114 &11440070
 MonoBehaviour:
@@ -5519,7 +5519,7 @@ MonoBehaviour:
   chatAction: {fileID: 0}
   offlineImage: {fileID: 0}
   chatMessage: {fileID: 0}
-  chatPaoPao: {fileID: 0}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 0}
 --- !u!114 &11455196
 MonoBehaviour:
@@ -6744,7 +6744,7 @@ MonoBehaviour:
   chatAction: {fileID: 0}
   offlineImage: {fileID: 0}
   chatMessage: {fileID: 0}
-  chatPaoPao: {fileID: 0}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 0}
 --- !u!114 &11474954
 MonoBehaviour:
@@ -6817,7 +6817,7 @@ MonoBehaviour:
   chatAction: {fileID: 0}
   offlineImage: {fileID: 0}
   chatMessage: {fileID: 0}
-  chatPaoPao: {fileID: 0}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 0}
 --- !u!114 &11477048
 MonoBehaviour:
@@ -6835,11 +6835,11 @@ MonoBehaviour:
   nameText: {fileID: 11498648}
   readyImg: {fileID: 11431432}
   scoreText: {fileID: 11467786}
-  dir: 54
+  dir: T
   chatAction: {fileID: 158478}
   offlineImage: {fileID: 11436634}
   chatMessage: {fileID: 11494724}
-  chatPaoPao: {fileID: 178182}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 196348}
 --- !u!114 &11477396
 MonoBehaviour:
@@ -7762,11 +7762,11 @@ MonoBehaviour:
   nameText: {fileID: 11483354}
   readyImg: {fileID: 11401196}
   scoreText: {fileID: 11450672}
-  dir: 52
+  dir: R
   chatAction: {fileID: 185354}
   offlineImage: {fileID: 11417506}
   chatMessage: {fileID: 11411068}
-  chatPaoPao: {fileID: 139262}
+  chatMc: {fileID: 0}
   HuFlag: {fileID: 122934}
 --- !u!114 &11490482
 MonoBehaviour:

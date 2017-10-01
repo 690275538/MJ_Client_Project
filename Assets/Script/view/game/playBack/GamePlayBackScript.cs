@@ -89,9 +89,9 @@ public class GamePlayBackScript : MonoBehaviour {
 					for (int b = 0; b < tempPai [a]; b++) {
 						temp = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[i], parentList [i], Vector3.one);
 						if (pathDirString [i] == DirectionEnum.Left || pathDirString [i] == DirectionEnum.Right) {
-							temp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (a);
+							temp.GetComponent<PutoutCardView> ().setLefAndRightPoint (a);
 						} else {
-							temp.GetComponent<TopAndBottomCardScript> ().setPoint (a);
+							temp.GetComponent<PutoutCardView> ().setPoint (a);
 						}
 
 						if (i == 1) {
@@ -195,19 +195,19 @@ public class GamePlayBackScript : MonoBehaviour {
 		switch (avaIndex) {
 		case 0:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_B", parentList [avaIndex], new Vector3(520,0));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			break;
 		case 1:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_R", parentList [avaIndex], new Vector3(0,250));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 			break;
 		case 2:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_T", parentList [avaIndex], new Vector3(-260,0));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			break;
 		case 3:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_L", parentList [avaIndex], new Vector3(0,-190));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 			break;
 		}
 
@@ -219,19 +219,19 @@ public class GamePlayBackScript : MonoBehaviour {
 		switch (avaIndex) {
 		case 0:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_B", parentList [avaIndex], new Vector3(520,0));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			break;
 		case 1:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_R", parentList [avaIndex], new Vector3(0,250));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 			break;
 		case 2:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_T", parentList [avaIndex], new Vector3(-260,0));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			break;
 		case 3:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_L", parentList [avaIndex], new Vector3(0,-190));
-			tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 			break;
 		}
 
@@ -248,13 +248,13 @@ public class GamePlayBackScript : MonoBehaviour {
 	private void outCard(int avaIndex,int cardPoint){
 		List<GameObject> tempCardObjs = handerCardList[avaIndex];
 		GameObject lastCard = tempCardObjs [tempCardObjs.Count - 1];
-		int lastPoint = lastCard.GetComponent<TopAndBottomCardScript> ().getPoint ();
+		int lastPoint = lastCard.GetComponent<PutoutCardView> ().getPoint ();
 		if (cardPoint == lastPoint) {
 			tempCardObjs.Remove (lastCard);
 			Destroy (lastCard);
 		} else {
 			for(int i=0;i<tempCardObjs.Count;i++){
-				int tempPoint = tempCardObjs [i].GetComponent<TopAndBottomCardScript> ().getPoint ();
+				int tempPoint = tempCardObjs [i].GetComponent<PutoutCardView> ().getPoint ();
 				if (tempPoint == cardPoint) {
 					GameObject removeItem = tempCardObjs [i];
 					tempCardObjs.RemoveAt (i);
@@ -298,7 +298,7 @@ public class GamePlayBackScript : MonoBehaviour {
 		tempGameObject.name = "putOutCard";
 		tempGameObject.transform.localScale = Vector3.one;
 
-		tempGameObject.GetComponent<TopAndBottomCardScript>().setPoint(cardPoint);
+		tempGameObject.GetComponent<PutoutCardView>().setPoint(cardPoint);
 		ThrowBottom (cardPoint,curAvatarIndex);
 		Destroy(tempGameObject, 1f);
 	}
@@ -310,9 +310,9 @@ public class GamePlayBackScript : MonoBehaviour {
 	private void paiSort(List<GameObject> lists,int avaIndex){
 		GameObject tempObject = lists[lists.Count-1];
 		lists.Remove (tempObject);
-		int lastPoint = tempObject.GetComponent<TopAndBottomCardScript> ().getPoint ();
+		int lastPoint = tempObject.GetComponent<PutoutCardView> ().getPoint ();
 		for(int i=0;i<lists.Count;i++){
-			int curPoint = lists [i].GetComponent<TopAndBottomCardScript> ().getPoint ();
+			int curPoint = lists [i].GetComponent<PutoutCardView> ().getPoint ();
 			if (lastPoint <= curPoint) {
 				lists.Insert (i,tempObject);
 				return;
@@ -442,10 +442,10 @@ public class GamePlayBackScript : MonoBehaviour {
 		GameObject tempObj = null;
 		tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[avaIndex], parentList [avaIndex], Vector3.one);
 		if (pathDirString [avaIndex] == DirectionEnum.Left || pathDirString [avaIndex] == DirectionEnum.Right) {
-			tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 
 		} else {
-			tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 
 		}
 
@@ -473,7 +473,7 @@ public class GamePlayBackScript : MonoBehaviour {
 	/// <param name="cardPoint">Card point.</param>
 	private void removeFromList(List<GameObject> lists,int cardPoint){
 		for (int i = 0; i < lists.Count; i++) {
-			int indexPoint = lists [i].GetComponent<TopAndBottomCardScript> ().getPoint ();
+			int indexPoint = lists [i].GetComponent<PutoutCardView> ().getPoint ();
 			if (indexPoint == cardPoint) {
 				GameObject temp = lists[i];
 				lists.RemoveAt (i);
@@ -548,9 +548,9 @@ public class GamePlayBackScript : MonoBehaviour {
 		temp = createGameObjectAndReturn (path,outparentList[avaIndex],poisVector3);
 		temp.transform.localScale = Vector3.one;
 		if (avaIndex == 1 || avaIndex == 3) {
-			temp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (index);
+			temp.GetComponent<PutoutCardView> ().setLefAndRightPoint (index);
 		} else {
-			temp.GetComponent<TopAndBottomCardScript>().setPoint(index);
+			temp.GetComponent<PutoutCardView>().setPoint(index);
 		}
 
 		//temp.transform.SetAsLastSibling();
@@ -571,7 +571,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			List<GameObject> temptableList = tableCardList[i];
 			if (temptableList.Count > 0) {
 				GameObject temp = temptableList[temptableList.Count - 1];
-				int tempPoint = temp.GetComponent<TopAndBottomCardScript> ().getPoint ();
+				int tempPoint = temp.GetComponent<PutoutCardView> ().getPoint ();
 				if (tempPoint == cardPoint) {
 					temptableList.Remove (temp);
 					GameObject.Destroy (temp);
@@ -584,7 +584,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			for (int i = 0; i < tempCardList.Count; i++)//消除其他的人牌碰牌长度
 			{
 				GameObject temp = tempCardList [i];
-				if(cardPoint == temp.GetComponent<TopAndBottomCardScript>().getPoint()){
+				if(cardPoint == temp.GetComponent<PutoutCardView>().getPoint()){
 					tempCardList.Remove(temp);
 					Destroy(temp);
 					num++;
@@ -607,23 +607,23 @@ public class GamePlayBackScript : MonoBehaviour {
 				switch (avaIndex)
 				{
 					case 0:
-						obj.GetComponent<TopAndBottomCardScript>().setPoint(cardPoint);
+						obj.GetComponent<PutoutCardView>().setPoint(cardPoint);
 						tempvector3 = new Vector3(-380 + pengGangLists[avaIndex].Count*200 + i*60,0);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
 					case 1:
-					obj.GetComponent<TopAndBottomCardScript>().setLefAndRightPoint(cardPoint);
+					obj.GetComponent<PutoutCardView>().setLefAndRightPoint(cardPoint);
 						tempvector3 = new Vector3(0, -116 + pengGangLists[avaIndex].Count*90 + i*26f);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						obj.transform.SetSiblingIndex(0);
 						break;
 					case 2:
-						obj.GetComponent<TopAndBottomCardScript>().setPoint(cardPoint);
+						obj.GetComponent<PutoutCardView>().setPoint(cardPoint);
 						tempvector3 = new Vector3(231 - pengGangLists[avaIndex].Count*120f + i*37, 0, 0);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
 					case 3:
-						obj.GetComponent<TopAndBottomCardScript>().setLefAndRightPoint(cardPoint);
+						obj.GetComponent<PutoutCardView>().setLefAndRightPoint(cardPoint);
 						tempvector3 = new Vector3(0, 142 - pengGangLists[avaIndex].Count*90f - i*26f, 0);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
@@ -660,7 +660,7 @@ public class GamePlayBackScript : MonoBehaviour {
 					for (int i = 0; i < tempCardList.Count; i++)//消除其他的人牌碰牌长度
 					{
 						GameObject temp = tempCardList [i];
-						if(cardPoint == temp.GetComponent<TopAndBottomCardScript>().getPoint()){
+						if(cardPoint == temp.GetComponent<PutoutCardView>().getPoint()){
 							tempCardList.Remove(temp);
 							Destroy(temp);
 						}
@@ -674,7 +674,7 @@ public class GamePlayBackScript : MonoBehaviour {
 				for (int i = 0; i < tempCardList.Count; i++)//消除其他的人牌碰牌长度
 				{
 					GameObject temp = tempCardList [i];
-					if(cardPoint == temp.GetComponent<TopAndBottomCardScript>().getPoint()){
+					if(cardPoint == temp.GetComponent<PutoutCardView>().getPoint()){
 						tempCardList.Remove(temp);
 						Destroy(temp);
 						num++;
@@ -706,9 +706,9 @@ public class GamePlayBackScript : MonoBehaviour {
 					}
 					GameObject obj = createGameObjectAndReturn (path, pengGangParentList [avaIndex], tempvector3);
 					if (avaIndex == 1 || avaIndex == 3) {
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 					} else {
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 					}
 
 					obj.transform.localScale = Vector3.one;
@@ -740,7 +740,7 @@ public class GamePlayBackScript : MonoBehaviour {
 						List<GameObject> temptableList = tableCardList[i];
 						if (temptableList.Count > 0) {
 							GameObject temp = temptableList[temptableList.Count - 1];
-							int tempPoint = temp.GetComponent<TopAndBottomCardScript> ().getPoint ();
+							int tempPoint = temp.GetComponent<PutoutCardView> ().getPoint ();
 							if (tempPoint == cardPoint) {
 								temptableList.Remove (temp);
 								GameObject.Destroy (temp);
@@ -756,26 +756,26 @@ public class GamePlayBackScript : MonoBehaviour {
 			List<List<GameObject>> curList = pengGangLists[avaIndex];
 			for (int i = 0; i < curList.Count; i++) {
 				GameObject tempobj = curList [i] [0];
-				int tempPoint = tempobj.GetComponent<TopAndBottomCardScript> ().getPoint ();
+				int tempPoint = tempobj.GetComponent<PutoutCardView> ().getPoint ();
 				if (tempPoint == cardPoint) {
 					GameObject obj = createGameObjectAndReturn (path, pengGangParentList [avaIndex], tempvector3);
 
 					obj.transform.localScale = Vector3.one;
 					switch (avaIndex) {
 					case 0:
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 						obj.transform.localPosition = new Vector3 (tempobj.transform.localPosition.x+60,24);
 						break;
 					case 1:
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 						obj.transform.localPosition = new Vector3 (0, tempobj.transform.localPosition.y + 37);
 						break;
 					case 2:
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 						obj.transform.localPosition = new Vector3 (tempobj.transform.localPosition.x+37, 17);
 						break;
 					case 3:
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 						obj.transform.localPosition = new Vector3 (0,tempobj.transform.localPosition.y - 17, 0);
 						break;
 					}
@@ -804,9 +804,9 @@ public class GamePlayBackScript : MonoBehaviour {
 			GameObject tempObj = null;
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[avaIndex], parentList [avaIndex], Vector3.one);
 			if (avaIndex == 1 || avaIndex == 3) {
-				tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+				tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 			} else {
-				tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+				tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			}
 		
 			handerCardList [avaIndex].Add (tempObj);
@@ -823,9 +823,9 @@ public class GamePlayBackScript : MonoBehaviour {
 				GameObject tempObj = null;
 				tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_" + pathDirString [avaIndex], parentList [avaIndex], Vector3.one);
 				if (avaIndex == 1 || avaIndex == 3) {
-					tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+					tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 				} else {
-					tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+					tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 				}
 				handerCardList [avaIndex].Add (tempObj);
 				paiSort (handerCardList [avaIndex], avaIndex);
@@ -846,9 +846,9 @@ public class GamePlayBackScript : MonoBehaviour {
 					GameObject tempObj = null;
 					tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_" + pathDirString [avaIndex], parentList [avaIndex], Vector3.one);
 					if (avaIndex == 1 || avaIndex == 3) {
-						tempObj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardPoint);
+						tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
 					} else {
-						tempObj.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
+						tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 					}
 
 					handerCardList [avaIndex].Add (tempObj);

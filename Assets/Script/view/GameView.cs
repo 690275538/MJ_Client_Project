@@ -23,7 +23,7 @@ namespace AssemblyCSharp
 		public List<Transform> parentList;
 		public List<Transform> outparentList;
 		public List<GameObject> dirGameList;
-		public List<PlayerItemScript> playerItems;
+		public List<PlayerItemView> playerItems;
 		public Text LeavedCastNumText;
 //剩余牌的张数
 		public Text LeavedRoundNumText;
@@ -55,9 +55,7 @@ namespace AssemblyCSharp
 		private List<List<GameObject>> PengGangList_T;
 		private List<List<GameObject>> PengGangList_R;
 		private List<List<int>> mineList;
-		private int gangKind;
 		private int otherGangType;
-		private GameObject cardOnTable;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -68,19 +66,11 @@ namespace AssemblyCSharp
 		/// </summary>
 		private int bankerId;
 		private int curDirIndex;
-		/// <summary>
-		/// 打出来的牌
-		/// </summary>
-		private GameObject putOutCard;
 
 
 		private int otherMoCardPoint;
-		private GameObject Pointertemp;
-		private int putOutCardPoint = -1;
-//打出的牌
-		private int putOutCardPointAvarIndex = -1;
-//最后一个打出牌的人的index
-		private string outDir;
+
+		private int putOutCardPoint = -1;//打出的牌
 		private int SelfAndOtherPutoutCard = -1;
 		/// <summary>
 		/// 当前摸的牌
@@ -121,6 +111,8 @@ namespace AssemblyCSharp
 		private UIHelper _uiHelper;
 		private DissoliveHelper _dissoliveHlpr;
 		private ActionEffectHelper _actionHlpr;
+
+		private GamingData _data;
 		public DissoliveHelper DissoliveHlpr {
 			get {
 				return _dissoliveHlpr;
@@ -146,7 +138,7 @@ namespace AssemblyCSharp
 
 
 			while (playerItems.Count > 0) {
-				PlayerItemScript item = playerItems [0];
+				PlayerItemView item = playerItems [0];
 				playerItems.RemoveAt (0);
 				item.clean ();
 				Destroy (item.gameObject);
@@ -167,6 +159,7 @@ namespace AssemblyCSharp
 		public GameView(){
 			_uiHelper = new UIHelper ();
 			_dissoliveHlpr = new DissoliveHelper ();
+			_data = new GamingData();
 		}
 		void Start ()
 		{
@@ -266,9 +259,11 @@ namespace AssemblyCSharp
 			case APIS.Game_FollowBander_Notice://跟庄
 				gameFollowBanderNotice(response);
 				break;
-				
+			default:
+				return;	
 
 			}
+			Debug.Log ("下发：" + response.headCode.ToString ("x8") + " " + response.message);
 
 		}
 
@@ -419,22 +414,17 @@ namespace AssemblyCSharp
 
 		private void otherPickCardAndCreate (int avatarIndex)
 		{
-			//getDirection (avatarIndex);
 			int myIndex = getMyIndexFromList ();
 			int seatIndex = avatarIndex - myIndex;
 			if (seatIndex < 0) {
 				seatIndex = 4 + seatIndex;
 			}
 			curDirString = playerItems [seatIndex].dir;
-			//SetDirGameObjectAction ();
-			otherMoPaiCreateGameObject (curDirString);
-		}
 
-		public void otherMoPaiCreateGameObject (string dir)
-		{
+
 			Vector3 tempVector3 = new Vector3 (0, 0);
 			//Transform tempParent = null;
-			switch (dir) {
+			switch (curDirString) {
 			case DirectionEnum.Top://上
 			//tempParent = topParent.transform;
 				tempVector3 = new Vector3 (-273, 0f);
@@ -450,9 +440,9 @@ namespace AssemblyCSharp
 				break;
 			}
 
-			String path = "prefab/card/Bottom_" + dir;
+			String path = "prefab/card/Bottom_" + curDirString;
 			MyDebug.Log ("path  = " + path);
-			otherPickCardItem = createGameObjectAndReturn (path, parentList [getIndexByDir (dir)], tempVector3);//实例化当前摸的牌
+			otherPickCardItem = createGameObjectAndReturn (path, parentList [getIndexByDir (curDirString)], tempVector3);//实例化当前摸的牌
 			otherPickCardItem.transform.localScale = Vector3.one;//原大小
 
 		}
@@ -686,7 +676,6 @@ namespace AssemblyCSharp
 			JsonData json = JsonMapper.ToObject (response.message);
 			int cardPoint = (int)json ["cardIndex"];
 			int curAvatarIndex = (int)json ["curAvatarIndex"];
-			putOutCardPointAvarIndex = getIndexByDir (getDirection (curAvatarIndex));
 			MyDebug.Log ("otherPickCard avatarIndex = " + curAvatarIndex);
 			useForGangOrPengOrChi = cardPoint;
 			if (otherPickCardItem != null) {
@@ -713,35 +702,17 @@ namespace AssemblyCSharp
 		{
 			MyDebug.Log ("put out cardPoint" + cardPoint);
 			SoundCtrl.getInstance ().playSound (cardPoint, avatarList [curAvatarIndex].account.sex);
-			Vector3 tempVector3 = new Vector3 (0, 0);
 
-			outDir = getDirection (curAvatarIndex);
-			switch (outDir) {
-			case DirectionEnum.Top: //上
-				tempVector3 = new Vector3 (0, 130f);
-				break;
-			case DirectionEnum.Left: //左
-				tempVector3 = new Vector3 (-370, 0f);
-				break;
-			case DirectionEnum.Right: //右
-				tempVector3 = new Vector3 (420f, 0f);
-				break;
-			case DirectionEnum.Bottom:
-				tempVector3 = new Vector3 (0, -100f);
-				break;
-			}
-
-			GameObject tempGameObject = createGameObjectAndReturn ("Prefab/card/PutOutCard", parentList [0], tempVector3);
-			tempGameObject.name = "putOutCard";
-			tempGameObject.transform.localScale = Vector3.one;
-			tempGameObject.GetComponent<TopAndBottomCardScript> ().setPoint (cardPoint);
 			putOutCardPoint = cardPoint;
 			SelfAndOtherPutoutCard = cardPoint;
-			putOutCard = tempGameObject;
-			destroyPutOutCard (cardPoint);
-			if (putOutCard != null) {
-				Destroy (putOutCard, 1f);
-			}
+
+			_uiHelper.addPutoutCard (cardPoint, _data.toGameDir (curAvatarIndex), parentList [0]);
+
+			_uiHelper.lastCardOnTable = _uiHelper.addCardToTable (cardPoint, _data.toGameDir(curAvatarIndex), tableCardList, outparentList);
+
+			_uiHelper.addPointer (_uiHelper.lastCardOnTable);
+
+
 		}
 
 
@@ -767,21 +738,21 @@ namespace AssemblyCSharp
 				}
 				if (myselfIndex == avatarIndex) {
 					if (i == 0) {
-						MyDebug.Log ("getDirection == R");
+						//MyDebug.Log ("getDirection == R");
 						curDirIndex = 1;
 						return DirectionEnum.Right;
 					} else if (i == 1) {
-						MyDebug.Log ("getDirection == T");
+						//MyDebug.Log ("getDirection == T");
 						curDirIndex = 2;
 						return DirectionEnum.Top;
 					} else {
-						MyDebug.Log ("getDirection == L");
+						//MyDebug.Log ("getDirection == L");
 						curDirIndex = 3;
 						return DirectionEnum.Left;
 					}
 				}
 			}
-			MyDebug.Log ("getDirection == B");
+			//MyDebug.Log ("getDirection == B");
 			curDirIndex = 0;
 			return DirectionEnum.Bottom;
 		}
@@ -798,48 +769,6 @@ namespace AssemblyCSharp
 			dirGameList [getIndexByDir (curDirString)].SetActive (true);
 		}
 
-		public void ThrowBottom (int index)//
-		{
-			GameObject temp = null;
-			String path = "";
-			Vector3 poisVector3 = Vector3.one;
-
-			if (outDir == DirectionEnum.Bottom) {
-				path = "Prefab/ThrowCard/TopAndBottomCard";
-				poisVector3 = new Vector3 (-261 + tableCardList [0].Count % 14 * 37, (int)(tableCardList [0].Count / 14) * 67f);
-				GlobalData.isDrag = false;
-			} else if (outDir == DirectionEnum.Right) {
-				path = "Prefab/ThrowCard/ThrowCard_R";
-				poisVector3 = new Vector3 ((int)(-tableCardList [1].Count / 13 * 54f), -180f + tableCardList [1].Count % 13 * 28);
-			} else if (outDir == DirectionEnum.Top) {
-				path = "Prefab/ThrowCard/TopAndBottomCard";
-				poisVector3 = new Vector3 (289f - tableCardList [2].Count % 14 * 37, -(int)(tableCardList [2].Count / 14) * 67f);
-			} else if (outDir == DirectionEnum.Left) {
-				path = "Prefab/ThrowCard/ThrowCard_L";
-				poisVector3 = new Vector3 (tableCardList [3].Count / 13 * 54f, 152f - tableCardList [3].Count % 13 * 28);
-				//     parenTransform = leftOutParent;
-			}
-
-			temp = createGameObjectAndReturn (path, outparentList [curDirIndex], poisVector3);
-			temp.transform.localScale = Vector3.one;
-			if (outDir == DirectionEnum.Right || outDir == DirectionEnum.Left) {
-				temp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (index);
-			} else {
-				temp.GetComponent<TopAndBottomCardScript> ().setPoint (index);
-			}
-
-			cardOnTable = temp;
-			//temp.transform.SetAsLastSibling();
-			tableCardList [getIndexByDir (outDir)].Add (temp);
-			if (outDir == DirectionEnum.Right) {
-				temp.transform.SetSiblingIndex (0);
-			}
-			//丢牌上
-			//顶针下
-			cardOnTable = temp;
-			setPointGameObject (temp);
-		}
-
 		public void otherPeng (ClientResponse response)//其他人碰牌
 		{
 			UpateTimeReStart ();
@@ -850,10 +779,8 @@ namespace AssemblyCSharp
 			SetDirGameObjectAction ();
 			_actionHlpr.pengGangHuEffectCtrl (ActionType.PENG);
 			SoundCtrl.getInstance ().playSoundByAction ("peng", avatarList [cardVo.avatarId].account.sex);
-			if (cardOnTable != null) {
-				reSetOutOnTabelCardPosition (cardOnTable);
-				Destroy (cardOnTable);
-			}
+
+			_uiHelper.removeCardFromTable ();
 
 
 			if (curDirString == DirectionEnum.Bottom) {  //==============================================自己碰牌
@@ -902,7 +829,7 @@ namespace AssemblyCSharp
 				case DirectionEnum.Right:
 					for (int i = 0; i < 3; i++) {
 						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardVo.cardPoint);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardVo.cardPoint);
 						tempvector3 = new Vector3 (0, -122 + PengGangList_R.Count * 95 + i * 26f);
 						//+ new Vector3(0, i * 26, 0);
 						obj.transform.parent = pengGangParenTransformR.transform;
@@ -915,7 +842,7 @@ namespace AssemblyCSharp
 				case DirectionEnum.Top:
 					for (int i = 0; i < 3; i++) {
 						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (cardVo.cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardVo.cardPoint);
 						tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + i * 37, 0, 0);
 						obj.transform.parent = pengGangParenTransformT.transform;
 						obj.transform.localScale = Vector3.one;
@@ -926,7 +853,7 @@ namespace AssemblyCSharp
 				case DirectionEnum.Left:
 					for (int i = 0; i < 3; i++) {
 						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (cardVo.cardPoint);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardVo.cardPoint);
 						tempvector3 = new Vector3 (0, 122 - PengGangList_L.Count * 95f - i * 26f, 0);
 						obj.transform.parent = pengGangParenTransformL.transform;
 						obj.transform.localScale = Vector3.one;
@@ -948,7 +875,7 @@ namespace AssemblyCSharp
 				GameObject obj1 = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 					                 pengGangParenTransformB.transform,
 					                 new Vector3 (-370 + PengGangCardList.Count * 190 + j * 60f, 0));
-				obj1.GetComponent<TopAndBottomCardScript> ().setPoint (putOutCardPoint);
+				obj1.GetComponent<PutoutCardView> ().setPoint (putOutCardPoint);
 				obj1.transform.localScale = Vector3.one;
 				templist.Add (obj1);
 			}
@@ -1011,17 +938,15 @@ namespace AssemblyCSharp
 				//创建杠牌，当玩家碰牌牌组里面的无碰牌，才创建
 
 				if (otherGangType == 0) {
-					if (cardOnTable != null) {
-						reSetOutOnTabelCardPosition (cardOnTable);
-						Destroy (cardOnTable);
-					}
+					_uiHelper.removeCardFromTable ();
+
 					for (int i = 0; i < 4; i++) { //实例化其他人杠牌
 						GameObject obj1 = Instantiate (Resources.Load (path)) as GameObject;
 
 
 						switch (curDirString) {
 						case DirectionEnum.Right:
-							obj1.GetComponent< TopAndBottomCardScript > ().setLefAndRightPoint (otherGangCard);
+							obj1.GetComponent< PutoutCardView > ().setLefAndRightPoint (otherGangCard);
 							if (i == 3) {
 								tempvector3 = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
 								obj1.transform.parent = pengGangParenTransformR.transform;
@@ -1033,7 +958,7 @@ namespace AssemblyCSharp
 
 							break;
 						case DirectionEnum.Top:
-							obj1.GetComponent< TopAndBottomCardScript > ().setPoint (otherGangCard);
+							obj1.GetComponent< PutoutCardView > ().setPoint (otherGangCard);
 							if (i == 3) {
 								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 20f);
 							} else {
@@ -1043,7 +968,7 @@ namespace AssemblyCSharp
 							obj1.transform.parent = pengGangParenTransformT.transform;
 							break;
 						case DirectionEnum.Left:
-							obj1.GetComponent< TopAndBottomCardScript > ().setLefAndRightPoint (otherGangCard);
+							obj1.GetComponent< PutoutCardView > ().setLefAndRightPoint (otherGangCard);
 							if (i == 3) {
 								tempvector3 = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f);
 							} else {
@@ -1072,7 +997,7 @@ namespace AssemblyCSharp
 							obj2.transform.parent = pengGangParenTransformR.transform;
 							if (j == 3) {
 								tempvector3 = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
-								obj2.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (otherGangCard);
+								obj2.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
 
 							} else {
 								tempvector3 = new Vector3 (0, -122 + PengGangList_R.Count * 95 + j * 28);
@@ -1083,7 +1008,7 @@ namespace AssemblyCSharp
 							obj2.transform.parent = pengGangParenTransformT.transform;
 							if (j == 3) {
 								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 10f);
-								obj2.GetComponent<TopAndBottomCardScript> ().setPoint (otherGangCard);
+								obj2.GetComponent<PutoutCardView> ().setPoint (otherGangCard);
 							} else {
 								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + j * 37, 0f);
 							}
@@ -1093,7 +1018,7 @@ namespace AssemblyCSharp
 							obj2.transform.parent = pengGangParenTransformL.transform;
 							if (j == 3) {
 								tempvector3 = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f, 0);
-								obj2.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (otherGangCard);
+								obj2.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
 							} else {
 								tempvector3 = new Vector3 (0, 122 - PengGangList_L.Count * 95 - j * 28f, 0);
 							}
@@ -1124,20 +1049,20 @@ namespace AssemblyCSharp
 				case DirectionEnum.Top:
 					objTemp.transform.parent = pengGangParenTransformT.transform;
 					tempvector3 = new Vector3 (251 - gangIndex * 120f + 37f, 20f);
-					objTemp.GetComponent<TopAndBottomCardScript> ().setPoint (otherGangCard);
+					objTemp.GetComponent<PutoutCardView> ().setPoint (otherGangCard);
 					PengGangList_T [gangIndex].Add (objTemp);
 					break;
 				case DirectionEnum.Left:
 					objTemp.transform.parent = pengGangParenTransformL.transform;
 					tempvector3 = new Vector3 (0f, 122 - gangIndex * 95f - 26f, 0);
-					objTemp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (otherGangCard);
+					objTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
 
 					PengGangList_L [gangIndex].Add (objTemp);
 					break;
 				case DirectionEnum.Right:
 					objTemp.transform.parent = pengGangParenTransformR.transform;
 					tempvector3 = new Vector3 (0f, -122 + gangIndex * 95f + 26f);
-					objTemp.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (otherGangCard);
+					objTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
 
 					PengGangList_R [gangIndex].Add (objTemp);
 					break;
@@ -1202,7 +1127,7 @@ namespace AssemblyCSharp
 			for (int i = 0; i < jugeList.Count; i++) {
 
 				try {
-					if (jugeList [i] [0].GetComponent<TopAndBottomCardScript> ().getPoint () == cardPoint) {
+					if (jugeList [i] [0].GetComponent<PutoutCardView> ().getPoint () == cardPoint) {
 						return i;
 					}
 				} catch (Exception e) {
@@ -1216,18 +1141,6 @@ namespace AssemblyCSharp
 		}
 
 
-		private void setPointGameObject (GameObject parent)
-		{
-			if (parent != null) {
-				if (Pointertemp == null) {
-					Pointertemp = Instantiate (Resources.Load ("Prefab/Pointer")) as GameObject;
-				}
-				Pointertemp.transform.SetParent (parent.transform);
-				Pointertemp.transform.localScale = Vector3.one;
-				Pointertemp.transform.localPosition = new Vector3 (0f, parent.transform.GetComponent<RectTransform> ().sizeDelta.y / 2 + 10);
-			}
-		}
-//顶针实现
 		/// <summary>
 		/// 自己打出来的牌
 		/// </summary>
@@ -1247,44 +1160,12 @@ namespace AssemblyCSharp
 				Destroy (obj);
 				SetPosition (false);
 				createPutOutCardAndPlayAction (putOutCardPointTemp, getMyIndexFromList ());//讲拖出牌进行第一段动画的播放
-				outDir = DirectionEnum.Bottom;
 				//========================================================================
 				CardVO cardvo = new CardVO ();
 				cardvo.cardPoint = putOutCardPointTemp;
-				putOutCardPointAvarIndex = getIndexByDir (getDirection (getMyIndexFromList ()));
 				GameManager.getInstance ().Server.requset (new PutOutCardRequest (cardvo));
 			}
 
-		}
-
-		private void cardGotoTable () //动画第二段
-		{
-			MyDebug.Log ("==cardGotoTable=Invoke=====>");
-
-			if (outDir == DirectionEnum.Bottom) {
-				if (putOutCard != null) {
-					putOutCard.transform.DOLocalMove (new Vector3 (-261f + tableCardList [0].Count * 39, -133f), 0.4f);
-					putOutCard.transform.DOScale (new Vector3 (0.5f, 0.5f), 0.4f);
-				}
-			} else if (outDir == DirectionEnum.Right) {
-				if (putOutCard != null) {
-					putOutCard.transform.DOLocalRotate (new Vector3 (0, 0, 95), 0.4f);
-					putOutCard.transform.DOLocalMove (new Vector3 (448f, -140f + tableCardList [1].Count * 28), 0.4f);
-					putOutCard.transform.DOScale (new Vector3 (0.5f, 0.5f), 0.4f);
-				}
-			} else if (outDir == DirectionEnum.Top) {
-				if (putOutCard != null) {
-					putOutCard.transform.DOLocalMove (new Vector3 (250f - tableCardList [2].Count * 39, 173f), 0.4f);
-					putOutCard.transform.DOScale (new Vector3 (0.5f, 0.5f), 0.4f);
-				}
-			} else if (outDir == DirectionEnum.Left) {
-				if (putOutCard != null) {
-					putOutCard.transform.DOLocalRotate (new Vector3 (0, 0, -95), 0.4f);
-					putOutCard.transform.DOLocalMove (new Vector3 (-364f, 160f - tableCardList [3].Count * 28), 0.4f);
-					putOutCard.transform.DOScale (new Vector3 (0.5f, 0.5f), 0.4f);
-				}
-			}
-			Invoke ("destroyPutOutCard", 0.5f);
 		}
 
 		public void insertCardIntoList (GameObject item)//插入牌的方法
@@ -1318,20 +1199,6 @@ namespace AssemblyCSharp
 					handCardList [0] [i].transform.localPosition = new Vector3 (startX + i * 80f - 80f, -292f); //从左到右依次对齐
 				}
 			}
-		}
-
-		/// <summary>
-		/// 销毁出的牌，并且检测是否可以碰
-		/// </summary>
-		private void destroyPutOutCard (int cardPoint)
-		{
-			ThrowBottom (cardPoint);
-
-			if (outDir != DirectionEnum.Bottom) {
-				gangKind = 0;
-				//checkHuOrGangOrPengOrChi (Point,1);
-			}
-
 		}
 
 		void Update ()
@@ -1379,7 +1246,7 @@ namespace AssemblyCSharp
 
 		public void myChiBtnClick ()
 		{
-			GlobalData.isDrag = true;
+			GlobalData.isDrag = false;
 			UpateTimeReStart ();
 			CardVO cardvo = new CardVO ();
 			cardvo.cardPoint = putOutCardPoint;
@@ -1394,7 +1261,7 @@ namespace AssemblyCSharp
 		{
 			UpateTimeReStart ();
 			GangBackVO gangBackVo = JsonMapper.ToObject<GangBackVO> (response.message);
-			gangKind = gangBackVo.type;
+			int gangKind = gangBackVo.type;
 
 			if (gangBackVo.cardList.Count == 0) {
 
@@ -1405,15 +1272,8 @@ namespace AssemblyCSharp
 					//int gangpaiPonitTemp = gangBackVo.cardList [0];
 					if (getPaiInpeng (selfGangCardPoint, DirectionEnum.Bottom) == -1) {//杠牌不在碰牌数组以内，一定为别人打得牌
 
-						//销毁别人打的牌
-						if (putOutCard != null) {
-							Destroy (putOutCard);
-						}
-						if (cardOnTable != null) {
-							reSetOutOnTabelCardPosition (cardOnTable);
-							Destroy (cardOnTable);
 
-						}
+						_uiHelper.removeCardFromTable ();
 
 						//销毁手牌中的三张牌
 						int removeCount = 0;
@@ -1437,7 +1297,7 @@ namespace AssemblyCSharp
 						for (int i = 0; i < 4; i++) {
 							GameObject obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 								                pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.GetComponent<TopAndBottomCardScript> ().setPoint (selfGangCardPoint);
+							obj.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
 							obj.transform.localScale = Vector3.one;
 							if (i == 3) {
 
@@ -1465,7 +1325,7 @@ namespace AssemblyCSharp
 						//将杠牌放到对应位置
 						GameObject obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 							                pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + 0 * 60f, 0));
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (selfGangCardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
 						obj.transform.localScale = Vector3.one;
 						obj.transform.localPosition = new Vector3 (-310f + index * 190f, 24f);
 						PengGangCardList [index].Add (obj);
@@ -1503,7 +1363,7 @@ namespace AssemblyCSharp
 						} else if (i == 3) {
 							GameObject obj1 = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 								                 pengGangParenTransformB.transform, new Vector3 (-310f + PengGangCardList.Count * 190f, 24f));
-							obj1.GetComponent<TopAndBottomCardScript> ().setPoint (selfGangCardPoint);
+							obj1.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
 							tempGangList.Add (obj1);
 						}
 
@@ -1515,9 +1375,6 @@ namespace AssemblyCSharp
 
 			}
 			SetPosition (false);
-			// moPai();
-			//CardsNumChange();
-			//GlobalDataScript.isDrag = true;
 		}
 
 		/// <summary>
@@ -1577,9 +1434,7 @@ namespace AssemblyCSharp
 			}
 
 
-			if (putOutCard != null) {
-				Destroy (putOutCard);
-			}
+			_uiHelper.clean ();
 
 			if (pickCardItem != null) {
 				Destroy (pickCardItem);
@@ -1874,19 +1729,6 @@ namespace AssemblyCSharp
 			obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag, avatarList, allMas, GlobalData.hupaiResponseVo.validMas);
 		}
 
-		private void reSetOutOnTabelCardPosition (GameObject cardOnTable)
-		{
-			MyDebug.Log ("putOutCardPointAvarIndex===========:" + putOutCardPointAvarIndex);
-			if (putOutCardPointAvarIndex != -1) {
-				int objIndex = tableCardList [putOutCardPointAvarIndex].IndexOf (cardOnTable);
-				if (objIndex != -1) {
-					tableCardList [putOutCardPointAvarIndex].RemoveAt (objIndex);
-					return;
-				}
-			}
-
-		}
-
 		/***
 	 * 退出房间请求
 	 */
@@ -1974,14 +1816,19 @@ namespace AssemblyCSharp
 			//设置座位
 
 			avatarList = GlobalData.getInstance ().playerList;
+			AvatarVO myAVO = GlobalData.getInstance ().myAvatarVO;
 			for (int i = 0; i < avatarList.Count; i++) {
-				setSeat (avatarList [i]);
+				AvatarVO avo = avatarList [i];
+				setSeat (avo);
+				if (avo.account.uuid == myAVO.account.uuid || avo.account.openid == myAVO.account.openid) {
+					_data.setMyAvatarIndex (i);
+				}
 			}
 
 
-			int[][] selfPaiArray = avatarList [getMyIndexFromList ()].paiArray;
+			int[][] selfPaiArray = avatarList [_data.myIndex].paiArray;
 			if (selfPaiArray == null || selfPaiArray.Length == 0) {//游戏还没有开始
-			  
+				GlobalData.getInstance ().gameStatus = GameStatus.READYING;
 
 			} else {//牌局已开始
 				GlobalData.getInstance ().gameStatus = GameStatus.GAMING;
@@ -2050,17 +1897,15 @@ namespace AssemblyCSharp
 		/**显示打牌数据在桌面**/
 		private void displayTableCards ()
 		{
-			//List<int[]> chupaiList = new List<int[]> ();
 			for (int i = 0; i < avatarList.Count; i++) {
 				AvatarVO avo = avatarList [i];
 				int[] chupai = avo.chupais;
-				outDir = getDirection (getIndex (avo.account.uuid));
 				if (chupai != null && chupai.Length > 0) {
 					for (int j = 0; j < chupai.Length; j++) {
-						ThrowBottom (chupai [j]);
+						int cardpoint = chupai [j];
+						_uiHelper.addCardToTable (cardpoint, _data.toGameDir(i), tableCardList, outparentList);
 					}
 				}
-
 			}
 		}
 
@@ -2148,7 +1993,7 @@ namespace AssemblyCSharp
 						if (flag != 1) {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 								pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.GetComponent<TopAndBottomCardScript> ().setPoint (point);
+							obj.GetComponent<PutoutCardView> ().setPoint (point);
 							obj.transform.localScale = Vector3.one;
 						} else {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/gangBack",
@@ -2158,7 +2003,7 @@ namespace AssemblyCSharp
 					} else {
 						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
 							pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (point);
+						obj.GetComponent<PutoutCardView> ().setPoint (point);
 						obj.transform.localPosition = new Vector3 (-310f + PengGangCardList.Count * 190f, 24f);
 					}
 
@@ -2176,7 +2021,7 @@ namespace AssemblyCSharp
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_T",
 								pengGangParenTransformT.transform, new Vector3 (-370f + PengGangList_T.Count * 190f + i * 60f, 0));
 							obj.transform.parent = pengGangParenTransformT.transform;
-							obj.GetComponent<TopAndBottomCardScript> ().setPoint (point);
+							obj.GetComponent<PutoutCardView> ().setPoint (point);
 						} else {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_T",
 								pengGangParenTransformT.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
@@ -2187,7 +2032,7 @@ namespace AssemblyCSharp
 						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_T",
 							pengGangParenTransformT.transform, new Vector3 (-370f + PengGangList_T.Count * 190f + i * 60f, 0));
 					
-						obj.GetComponent<TopAndBottomCardScript> ().setPoint (point);
+						obj.GetComponent<PutoutCardView> ().setPoint (point);
 						obj.transform.localPosition = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 20f);
 
 					} 
@@ -2204,7 +2049,7 @@ namespace AssemblyCSharp
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_L",
 								pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
 							obj.transform.parent = pengGangParenTransformL.transform;
-							obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (point);
+							obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
 						} else {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_L&R",
 								pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
@@ -2213,7 +2058,7 @@ namespace AssemblyCSharp
 					} else {
 						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_L",
 							pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (point);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
 						obj.transform.localPosition = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f);
 
 					}
@@ -2231,7 +2076,7 @@ namespace AssemblyCSharp
 						if (flag != 1) {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_R",
 								pengGangParenTransformR.transform, new Vector3 (-370f + PengGangList_R.Count * 190f + i * 60f, 0));
-							obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (point);
+							obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
 							obj.transform.parent = pengGangParenTransformR.transform;
 						} else {
 							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_L&R",
@@ -2243,7 +2088,7 @@ namespace AssemblyCSharp
 					} else {
 						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_R",
 							pengGangParenTransformR.transform, new Vector3 (-370f + PengGangList_R.Count * 190f + i * 60f, 0));
-						obj.GetComponent<TopAndBottomCardScript> ().setLefAndRightPoint (point);
+						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
 						obj.transform.localPosition = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
 					}
 
@@ -2269,16 +2114,16 @@ namespace AssemblyCSharp
 			string dirstr = getDirection (index);
 			switch (dirstr) {
 			case DirectionEnum.Bottom:
-				playerItems [0].GetComponent<PlayerItemScript> ().setPlayerOffline ();
+				playerItems [0].GetComponent<PlayerItemView> ().setPlayerOffline ();
 				break;
 			case DirectionEnum.Right:
-				playerItems [1].GetComponent<PlayerItemScript> ().setPlayerOffline ();
+				playerItems [1].GetComponent<PlayerItemView> ().setPlayerOffline ();
 				break;
 			case DirectionEnum.Top:
-				playerItems [2].GetComponent<PlayerItemScript> ().setPlayerOffline ();
+				playerItems [2].GetComponent<PlayerItemView> ().setPlayerOffline ();
 				break;
 			case DirectionEnum.Left:
-				playerItems [3].GetComponent<PlayerItemScript> ().setPlayerOffline ();
+				playerItems [3].GetComponent<PlayerItemView> ().setPlayerOffline ();
 				break;
 		
 
@@ -2300,16 +2145,16 @@ namespace AssemblyCSharp
 			string dirstr = getDirection (index);
 			switch (dirstr) {
 			case DirectionEnum.Bottom:
-				playerItems [0].GetComponent<PlayerItemScript> ().setPlayerOnline ();
+				playerItems [0].GetComponent<PlayerItemView> ().setPlayerOnline ();
 				break;
 			case DirectionEnum.Right:
-				playerItems [1].GetComponent<PlayerItemScript> ().setPlayerOnline ();
+				playerItems [1].GetComponent<PlayerItemView> ().setPlayerOnline ();
 				break;
 			case DirectionEnum.Top:
-				playerItems [2].GetComponent<PlayerItemScript> ().setPlayerOnline ();
+				playerItems [2].GetComponent<PlayerItemView> ().setPlayerOnline ();
 				break;
 			case DirectionEnum.Left:
-				playerItems [3].GetComponent<PlayerItemScript> ().setPlayerOnline ();
+				playerItems [3].GetComponent<PlayerItemView> ().setPlayerOnline ();
 				break;
 
 			}
@@ -2378,7 +2223,6 @@ namespace AssemblyCSharp
 				curAvatarIndexTemp = int.Parse (returnJsonData ["curAvatarIndex"].ToString ());//当前打牌人的索引
 				putOffCardPointTemp = int.Parse (returnJsonData ["putOffCardPoint"].ToString ());//当前打得点数
 
-				putOutCardPointAvarIndex = getIndexByDir (getDirection (curAvatarIndexTemp));
 
 				putOutCardPoint = putOffCardPointTemp;//碰
 				//useForGangOrPengOrChi = putOutCardPoint;//杠
@@ -2386,10 +2230,10 @@ namespace AssemblyCSharp
 				SelfAndOtherPutoutCard = putOutCardPoint;
 				pickAvatarIndexTemp = int.Parse (returnJsonData ["pickAvatarIndex"].ToString ()); //当前摸牌牌人的索引
 
-				/**这句代码有可能引发catch  所以后面的 SelfAndOtherPutoutCard = currentCardPointTemp; 可能不执行**/
-				currentCardPointTemp = int.Parse (returnJsonData ["currentCardPoint"].ToString ());//当前摸得的点数  
-				SelfAndOtherPutoutCard = currentCardPointTemp; 
-
+				if(returnJsonData.Keys.Contains("currentCardPoint")){
+					currentCardPointTemp = int.Parse (returnJsonData ["currentCardPoint"].ToString ());//当前摸得的点数  
+					SelfAndOtherPutoutCard = currentCardPointTemp; 
+				}
 
 			} catch (Exception e) {
 				Debug.Log (e.ToString ());
@@ -2436,7 +2280,6 @@ namespace AssemblyCSharp
 
 			} else { //别人摸牌
 				curDirString = getDirection (pickAvatarIndexTemp);
-				//	otherMoPaiCreateGameObject (curDirString);
 				SetDirGameObjectAction ();
 			}
 
@@ -2451,8 +2294,8 @@ namespace AssemblyCSharp
 
 
 			} else {
-				cardOnTable = tableCardList [dirindex] [tableCardList [dirindex].Count - 1];
-				setPointGameObject (cardOnTable);
+				_uiHelper.lastCardOnTable = tableCardList [dirindex] [tableCardList [dirindex].Count - 1];
+				_uiHelper.addPointer (_uiHelper.lastCardOnTable);
 			}
 
 

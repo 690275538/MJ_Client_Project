@@ -234,7 +234,7 @@ public class SignalOverItemScript : MonoBehaviour {
 					itemTemp.transform.parent = paiArrayPanel.transform;
 				//	itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (itemgangData.cardPiont);
+					itemTemp.GetComponent<PutoutCardView> ().setPoint (itemgangData.cardPiont);
 					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*4)+j)*36f, 0, 0);
 
 				}
@@ -253,7 +253,7 @@ public class SignalOverItemScript : MonoBehaviour {
 					itemTemp.transform.parent = paiArrayPanel.transform;
 					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (int.Parse(cardPoint));
+					itemTemp.GetComponent<PutoutCardView> ().setPoint (int.Parse(cardPoint));
 
 					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*3)+j)*36f, 0, 0);
 
@@ -275,7 +275,7 @@ public class SignalOverItemScript : MonoBehaviour {
 					itemTemp.transform.parent = paiArrayPanel.transform;
 					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (int.Parse(itemgangData.cardPionts[j]));
+					itemTemp.GetComponent<PutoutCardView> ().setPoint (int.Parse(itemgangData.cardPionts[j]));
 
 					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*3)+j)*36f, 0, 0);
 
@@ -296,7 +296,7 @@ public class SignalOverItemScript : MonoBehaviour {
 					itemTemp.transform.parent = paiArrayPanel.transform;
 					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (i);
+					itemTemp.GetComponent<PutoutCardView> ().setPoint (i);
 
 					itemTemp.transform.localPosition = new Vector3 (startPosition+subPaiConut*36f, 0, 0);
 
@@ -316,7 +316,7 @@ public class SignalOverItemScript : MonoBehaviour {
 				itemTemp.transform.parent = paiArrayPanel.transform;
 				//itemTemp.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
 				itemTemp.transform.localScale = Vector3.one;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (hupaiObj.cardPiont);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (hupaiObj.cardPiont);
 				itemTemp.transform.localPosition = new Vector3 (startPosition, 0, 0);
 			}
 			startPosition = startPosition + 36f + 52f;
@@ -335,7 +335,7 @@ public class SignalOverItemScript : MonoBehaviour {
 				}
 
 				itemTemp.transform.parent = paiArrayPanel.transform;
-				itemTemp.GetComponent<TopAndBottomCardScript> ().setPoint (maPais[i]);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (maPais[i]);
 				itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 				itemTemp.transform.localPosition = new Vector3 ((20+i)*36f, 0, 0);
 			}

@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using AssemblyCSharp;
 
-public class TopAndBottomCardScript : MonoBehaviour {
+public class PutoutCardView : MonoBehaviour {
     private int cardPoint;
+	private List<GameObject> ownerList;
 
-    //=========================================
 	public Image cardImg;
-    // Use this for initialization
-    void Start () {
-	
-	}
 
-    // Update is called once per frame
-    void Update () {
-	
+	public void setOwnerList(List<GameObject> list){
+		ownerList = list;
+	}
+	public List<GameObject> getOwnerList(){
+		return ownerList;
 	}
 
     public void setPoint(int _cardPoint)
@@ -24,14 +24,17 @@ public class TopAndBottomCardScript : MonoBehaviour {
 
     }
 
+	public int getPoint()
+	{
+		return cardPoint;
+	}
+
+
+	//=========================================
 	public void setLefAndRightPoint(int _cardPoint){
 		cardPoint = _cardPoint;//设置所有牌指针
 		cardImg.sprite = Resources.Load("Cards/Left&Right/lr"+cardPoint,typeof(Sprite)) as Sprite;
 
 	}
 
-    public int getPoint()
-    {
-        return cardPoint;
-    }
 }

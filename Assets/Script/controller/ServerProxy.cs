@@ -62,7 +62,7 @@ namespace AssemblyCSharp
 				try {
 					onResponse (_cache [0]);
 				} catch (Exception e) {
-					Debug.Log ("命令出错：" + _cache [0].headCode.ToString ("X"));
+					Debug.Log ("命令出错：" + _cache [0].headCode.ToString ("x8") + " " + _cache [0].message);
 					Debug.Log (e.ToString ());
 				}
 				_cache.RemoveAt (0);
