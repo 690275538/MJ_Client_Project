@@ -111,9 +111,10 @@ public class SignalOverItemScript : MonoBehaviour {
 			for (int i = 0; i < gangtemps.Length; i++) {
 				string item = gangtemps [i];
 				GangpaiObj gangpaiObj = new GangpaiObj ();
-				gangpaiObj.uuid  =item.Split (new char[1]{':'})[0];
-				gangpaiObj.cardPiont =int.Parse( item.Split (new char[1]{':'})[1]);
-				gangpaiObj.type = item.Split (new char[1]{':'})[2];
+				string[] val = item.Split (new char[1]{ ':' });
+				gangpaiObj.uuid  =val[0];
+				gangpaiObj.cardPiont =int.Parse( val[1]);
+				gangpaiObj.type = val[2];
 				//增加判断是否为自己的杠牌的操作
 
 				paiArray [gangpaiObj.cardPiont] -= 4;

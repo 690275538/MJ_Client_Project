@@ -1,8 +1,10 @@
-﻿using System;
+﻿#define TEST
+using System;
 using UnityEngine;
 
 namespace AssemblyCSharp
 {
+	
 	public class GameManager
 	{
 		private static GameManager _instance;
@@ -39,14 +41,21 @@ namespace AssemblyCSharp
 			}
 		}
 
-
+		#if TEST
+		ServerProxyTest server;
+		public ServerProxyTest Server {
+			get {
+				return server;
+			}
+		}
+		#else
 		ServerProxy server;
 		public ServerProxy Server {
 			get {
 				return server;
 			}
 		}
-
+		#endif
 		DataManager dataMgr;
 		public DataManager DataMgr {
 			get {
@@ -58,8 +67,13 @@ namespace AssemblyCSharp
 		private UpdateHelper updateHelper;
 		public GameManager ()
 		{
+			#if TEST
+			server = new ServerProxyTest ();
+			server.init ();
+			#else
 			server = new ServerProxy ();
 			server.init ();
+			#endif
 			server.onDisconnect += disConnetNotice;
 			server.onResponse += onResponse;
 

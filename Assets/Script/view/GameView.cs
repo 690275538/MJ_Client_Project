@@ -20,8 +20,13 @@ namespace AssemblyCSharp
 		public Image headIconImg;
 		public int otherPengCard;
 		public int otherGangCard;
-		public List<Transform> parentList;
-		public List<Transform> outparentList;
+		public List<Transform> parentList; //过时
+		public List<Transform> outparentList; //过时
+
+		public List<Transform> PGCParents;
+		public List<Transform> HandParents;
+		public List<Transform> TableParents;
+
 		public List<GameObject> dirGameList;
 		public List<PlayerItemView> playerItems;
 		public Text LeavedCastNumText;
@@ -172,6 +177,8 @@ namespace AssemblyCSharp
 			_actionHlpr = gameObject.GetComponent<ActionEffectHelper> ();
 			_actionHlpr.addListener (this);
 
+			_data.init(this);
+			_uiHelper.init (_data);
 			_dissoliveHlpr.init (this);
 
 

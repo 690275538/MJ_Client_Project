@@ -19,6 +19,9 @@ namespace AssemblyCSharp
 		public NoticeView ()
 		{
 
+
+		}
+		void Start(){
 			randShowTime ();
 			timeFlag = true;
 		}

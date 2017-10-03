@@ -47,6 +47,7 @@ namespace AssemblyCSharp
 
 		public void requset (ClientRequest q)
 		{
+			Debug.Log("req: "+q.headCode.ToString ("x8")+" , "+q.messageContent);
 			_socket.sendMsg (q);
 		}
 
@@ -65,6 +66,8 @@ namespace AssemblyCSharp
 					Debug.Log ("命令出错：" + _cache [0].headCode.ToString ("x8") + " " + _cache [0].message);
 					Debug.Log (e.ToString ());
 				}
+
+				Debug.Log("res: "+_cache [0].headCode.ToString ("x8")+" , "+_cache [0].message);
 				_cache.RemoveAt (0);
 			}
 			if (_isDisconnet) {

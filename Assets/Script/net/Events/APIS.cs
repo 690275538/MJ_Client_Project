@@ -7,13 +7,20 @@ namespace AssemblyCSharp
 		public APIS ()
 		{
 		}
-		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
-		public const string chatSocketUrl = "whyzx.com";
-		public const string socketUrl = "whyzx.com";
-		public const string PIC_PATH = "http://whyzx.com:8080/";
-		public const string ImgUrl = "http://whyzx.com:8080/MaJiangManage/images";
-		public const string Download_URL = "http://whyzx.com:8080/downLoad/index.html";
+//		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/downloadad/update.xml";//服务器上最新的软件版本信息存储文件
+//		public const string chatSocketUrl = "whyzx.com";
+//		public const string socketUrl = "whyzx.com";
+//		public const string PIC_PATH = "http://whyzx.com:8080/";
+//		public const string ImgUrl = "http://whyzx.com:8080/MaJiangManage/images";
+//		public const string Download_URL = "http://whyzx.com:8080/downLoad/index.html";
 
+
+		public const string UPDATE_INFO_JSON_URL = "http://localhost:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+		public const string chatSocketUrl = "localhost";
+		public const string socketUrl = "localhost";
+		public const string PIC_PATH = "http://localhost:8080/";
+		public const string ImgUrl = "http://localhost:8080/MaJiangManage/images";
+		public const string Download_URL = "http://localhost:8080/downLoad/index.html";
 
 //		public const string UPDATE_INFO_JSON_URL = "http://10.66.214.195:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
 //		public const string chatSocketUrl = "10.66.214.195";
@@ -38,26 +45,32 @@ namespace AssemblyCSharp
         public const int CREATEROOM_RESPONSE = 0x00010;//创建房间返回吗
 
 		public const int STARTGAME_RESPONSE_NOTICE = 0x00012;//开始游戏
-		public const int PICKCARD_RESPONSE = 0x100004;//自己摸牌 
-		public const int OTHER_PICKCARD_RESPONSE_NOTICE = 0x100014;//别人摸牌通知
+
 
 		public const int ACTION_BUTTON_NOTICE =  0x100000;
 		public const int CHUPAI_REQUEST = 0x100001;//出牌请求
 		public const int CHUPAI_RESPONSE = 0x100002;//出牌通知
 
+		public const int PICKCARD_RESPONSE = 0x100004;//自己摸牌 
+
         public const int PENGPAI_REQUEST = 0x100005;//碰牌请求
         public const int PENGPAI_RESPONSE = 0x100006;//碰牌通知
+
         public const int GANGPAI_REQUEST = 0x100007;//杠牌请求
         public const int GANGPAI_RESPONSE = 0x100008;//杠牌返回
 	    public const int OTHER_GANGPAI_NOICE = 0x10a008;//杠牌通知
+
         public const int HUPAI_REQUEST = 0x100009;//胡牌请求
         public const int HUPAI_RESPONSE = 0x100010;//胡牌通知
-		public const int HUPAIALL_RESPONSE = 0x100110;//全局结束通知
-        public const int GAVEUP_REQUEST = 0x100015;//放弃（胡，杠，碰，吃）
-
 
 		public const int CHIPAI_REQUEST = 0x100011;//吃牌请求
 		public const int CHIPAI_RESPONSE = 0x100012;//吃牌通知
+
+		public const int OTHER_PICKCARD_RESPONSE_NOTICE = 0x100014;//别人摸牌通知
+        public const int GAVEUP_REQUEST = 0x100015;//放弃（胡，杠，碰，吃）
+
+
+		public const int HUPAIALL_RESPONSE = 0x100110;//全局结束通知
 
 		public const int BACK_LOGIN_REQUEST = 0x001001;//掉线后重新登录查询当前牌桌情况请求
 		public const int BACK_LOGIN_RESPONSE= 0x001002;//掉线后重新登录查询当前牌桌情况返回

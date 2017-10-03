@@ -56,20 +56,20 @@ public class SoundCtrl  {
 	}
 
 	public void playBGM(){
-		string path = "Sounds/mjBGM";
-		AudioClip temp = (AudioClip)soudHash[path];
-		if(temp == null){
-			temp = GameObject.Instantiate(Resources.Load (path)) as AudioClip;
-			soudHash.Add (path,temp);
-		}
-		audioS.clip = temp;
-		audioS.loop = true;
-		audioS.Play ();
-		if (GlobalData.soundToggle) {
-			audioS.mute = false;
-		} else {
-			audioS.mute = true;
-		}
+//		string path = "Sounds/mjBGM";
+//		AudioClip temp = (AudioClip)soudHash[path];
+//		if(temp == null){
+//			temp = GameObject.Instantiate(Resources.Load (path)) as AudioClip;
+//			soudHash.Add (path,temp);
+//		}
+//		audioS.clip = temp;
+//		audioS.loop = true;
+//		audioS.Play ();
+//		if (GlobalData.soundToggle) {
+//			audioS.mute = false;
+//		} else {
+//			audioS.mute = true;
+//		}
 	}
 
 	public void stopBGM(){

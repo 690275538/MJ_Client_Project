@@ -10,11 +10,15 @@ namespace AssemblyCSharp
 		private GameObject _pointerGO;
 		public GameObject lastCardOnTable;
 		public GameObject putOutCard;
+		private GamingData _data;
 
-		public UIHelper ()
+		public void init (GamingData data)
 		{
+			_data = data;
 		}
 
+
+		/**提示用，打出的牌，1秒后会自动销毁**/
 		public GameObject addPutoutCard(int cardPoint,Direction dir,Transform parent){
 			Vector3 position = new Vector3 (0, 0);
 
@@ -45,7 +49,7 @@ namespace AssemblyCSharp
 			putOutCard = card;
 			return card;
 		}
-
+		/**在牌上加指标**/
 		public void addPointer (GameObject parent)
 		{
 			if (parent != null) {
@@ -57,6 +61,7 @@ namespace AssemblyCSharp
 				_pointerGO.transform.localPosition = new Vector3 (0f, parent.transform.GetComponent<RectTransform> ().sizeDelta.y / 2 + 10);
 			}
 		}
+		/**往桌子上打出一张牌**/
 		public GameObject addCardToTable (int cardpoint, Direction dir, List<List<GameObject>> outChildren, List<Transform> outParents)//
 		{
 			GameObject card = null;
@@ -92,6 +97,7 @@ namespace AssemblyCSharp
 
 			return card;
 		}
+		/**把最后出的一张牌销毁，用于别人吃碰杠胡**/
 		public void removeCardFromTable(){
 			GameObject card = lastCardOnTable;
 			if (card != null) {
@@ -117,7 +123,7 @@ namespace AssemblyCSharp
 			return obj;
 		}
 
-			
+		/**清理游戏过程中产生的牌**/
 		public void clean(){
 			if (putOutCard != null) {
 				GameObject.Destroy (putOutCard);
@@ -132,7 +138,7 @@ namespace AssemblyCSharp
 
 
 
-
+		/**左上角显示房间规则**/
 		public void updateRule (Text tf)
 		{
 			RoomVO roomvo = GlobalData.getInstance ().roomVO;
