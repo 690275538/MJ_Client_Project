@@ -227,7 +227,6 @@ public class CrateRoomView : MonoBehaviour {
 
 			SceneManager.getInstance ().changeToScene (SceneType.GAME);
 
-			SceneManager.getInstance().CurScenePanel.GetComponent<GameView> ().joinToRoom (GlobalData.getInstance ().playerList);
 		
 			onClickBtn_Close ();
 

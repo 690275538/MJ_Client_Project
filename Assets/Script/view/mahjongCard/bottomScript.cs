@@ -14,8 +14,8 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public Image image;
     //
     public delegate void EventHandler(GameObject obj);
-    public event EventHandler onSendMessage;
-	public event EventHandler reSetPoisiton;
+    public event EventHandler onMyHandCardPutout;
+	public event EventHandler onMyHandCardSelectedChange;
 	public bool selected = false;
 
     // Use this for initialization
@@ -68,15 +68,15 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
 	private void sendObjectToCallBack(){
-		if (onSendMessage != null)     //发送消息
+		if (onMyHandCardPutout != null)     //发送消息
 		{
-			onSendMessage(gameObject);//发送当前游戏物体消息
+			onMyHandCardPutout(gameObject);//发送当前游戏物体消息
 		}
 	}
 
 	private void reSetPoisitonCallBack(){
-		if (reSetPoisiton != null) {
-			reSetPoisiton (gameObject);
+		if (onMyHandCardSelectedChange != null) {
+			onMyHandCardSelectedChange (gameObject);
 		}
 	}
 

@@ -67,8 +67,6 @@ public class GlobalData
 	/**其他玩家个人信息**/
 	public List<AvatarVO> playerList;
 
-	/**重返房间**/
-	public bool isReEnter = false;
 
 	/**麻将剩余局数**/
 	public int remainRoundCount = 0;
@@ -119,7 +117,6 @@ public class GlobalData
 		roomVO = new RoomVO (); 
 		myAvatarVO = null;
 		playerList = null;
-		isReEnter = false;
 		remainRoundCount = 0;
 		gameStatus = GameStatus.UNDEFINED;
 
@@ -134,7 +131,6 @@ public class GlobalData
 	{
 		roomVO = new RoomVO (); 
 		playerList = null;
-		isReEnter = false;
 
 		gameStatus = GameStatus.UNDEFINED;
 	}

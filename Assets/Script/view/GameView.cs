@@ -18,26 +18,31 @@ namespace AssemblyCSharp
 		public Text Number;
 		public Text roomRemark;
 		public Image headIconImg;
-		public int otherPengCard;
 		public int otherGangCard;
-		public List<Transform> parentList; //过时
-		public List<Transform> outparentList; //过时
+		public List<Transform> parentList;
+		//过时
+		public List<Transform> outparentList;
+		//过时
 
 		public List<Transform> PGCParents;
 		public List<Transform> HandParents;
 		public List<Transform> TableParents;
+		public List<PlayerItemView> PlayerItemViews;
 
 		public List<GameObject> dirGameList;
-		public List<PlayerItemView> playerItems;
 		public Text LeavedCastNumText;
-//剩余牌的张数
+		//剩余牌的张数
 		public Text LeavedRoundNumText;
-//剩余局数
+		//剩余局数
 		//public int StartRoundNum;
 		public Transform pengGangParenTransformB;
+//过时
 		public Transform pengGangParenTransformL;
+//过时
 		public Transform pengGangParenTransformR;
+//过时
 		public Transform pengGangParenTransformT;
+//过时
 		public List<AvatarVO> avatarList;
 		public Image centerTitle;
 		public Button inviteFriendButton;
@@ -53,42 +58,8 @@ namespace AssemblyCSharp
 		private int uuid;
 		private float timer = 0;
 		private int LeavedCardsNum;
-		private int MoPaiCardPoint;
-		private List<List<GameObject>> PengGangCardList;
-		//碰杠牌组
-		private List<List<GameObject>> PengGangList_L;
-		private List<List<GameObject>> PengGangList_T;
-		private List<List<GameObject>> PengGangList_R;
-		private List<List<int>> mineList;
-		private int otherGangType;
-		/// <summary>
-		/// 
-		/// </summary>
-		private int useForGangOrPengOrChi;
-		private int selfGangCardPoint;
-		/// <summary>
-		/// 庄家的索引
-		/// </summary>
-		private int bankerId;
-		private int curDirIndex;
 
 
-		private int otherMoCardPoint;
-
-		private int putOutCardPoint = -1;//打出的牌
-		private int SelfAndOtherPutoutCard = -1;
-		/// <summary>
-		/// 当前摸的牌
-		/// </summary>
-		private GameObject pickCardItem;
-		private GameObject otherPickCardItem;
-		/// <summary>
-		/// 当前的方向字符串
-		/// </summary>
-		private string curDirString = "B";
-
-		// Use this for initialization
-		private GameToolScript gameTool;
 		/**抓码动态面板**/
 		private GameObject zhuamaPanel;
 
@@ -97,12 +68,7 @@ namespace AssemblyCSharp
 		/// 手牌数组，0自己，1-右边。2-上边。3-左边
 		/// </summary>
 		public List<List<GameObject>> handCardList;
-		/// <summary>
-		/// 打在桌子上的牌
-		/// </summary>
-		public List<List<GameObject>> tableCardList;
-		/**后台传过来的杠牌**/
-		private string[] gangPaiList;
+//过时
 
 		/**所有的抓码数据字符串**/
 		private string allMas;
@@ -112,12 +78,18 @@ namespace AssemblyCSharp
 		/**是否为抢胡 游戏结束时需置为false**/
 		private bool isQiangHu = false;
 
-		private string passType = "";
 		private UIHelper _uiHelper;
 		private DissoliveHelper _dissoliveHlpr;
 		private ActionEffectHelper _actionHlpr;
 
 		private GamingData _data;
+
+		public GamingData Data {
+			get {
+				return	_data;
+			}
+		}
+
 		public DissoliveHelper DissoliveHlpr {
 			get {
 				return _dissoliveHlpr;
@@ -136,19 +108,17 @@ namespace AssemblyCSharp
 			GlobalData.getInstance ().myAvatarVO.resetData ();//复位房间数据
 			GlobalData.getInstance ().roomVO.roomId = 0;
 			GlobalData.soundToggle = true;
-			clean ();
+			_uiHelper.clean ();
 			removeListener ();
 
 			SoundCtrl.getInstance ().playBGM ();
 
 
-			while (playerItems.Count > 0) {
-				PlayerItemView item = playerItems [0];
-				playerItems.RemoveAt (0);
-				item.clean ();
-				Destroy (item.gameObject);
-				Destroy (item);
-			}
+			PlayerItemViews.Clear ();
+			PGCParents.Clear ();
+			HandParents.Clear ();
+			TableParents.Clear ();
+
 
 			if (zhuamaPanel != null) {
 				Destroy (zhuamaPanel.GetComponent<ZhuMaScript> ());
@@ -161,47 +131,48 @@ namespace AssemblyCSharp
 
 		#endregion
 
-		public GameView(){
+		public GameView ()
+		{
 			_uiHelper = new UIHelper ();
 			_dissoliveHlpr = new DissoliveHelper ();
-			_data = new GamingData();
+			_data = new GamingData ();
 		}
+
 		void Start ()
 		{
 			
 			SoundCtrl.getInstance ().stopBGM ();
 			//===========================================================================================
-			gameTool = new GameToolScript ();
 			versionText.text = "V" + Application.version;
 			//===========================================================================================
 			_actionHlpr = gameObject.GetComponent<ActionEffectHelper> ();
 			_actionHlpr.addListener (this);
 
-			_data.init(this);
-			_uiHelper.init (_data);
+			_data.init (this);
+			_uiHelper.init (_data, this);
 			_dissoliveHlpr.init (this);
 
 
 			addListener ();
-			initPanel ();
-			initArrayList ();
+			cleanTable ();
 
-			if (GlobalData.getInstance ().isReEnter) {
+			if (_data.isReEnter) {
+				_data.isReEnter = false;
 				reEnterRoom ();
-			} 
+			} else {
+				joinToRoom ();
+			}
 		}
 
-		void initPanel ()
+		void cleanTable ()
 		{
-			clean ();
+			_uiHelper.clean ();
 			_actionHlpr.cleanBtnShow ();
 		}
 
 		public void addListener ()
 		{
 			GameManager.getInstance ().Server.onResponse += onResponse;
-
-
 
 			SocketEventHandle.getInstance ().messageBoxNotice += messageBoxNotice;
 			SocketEventHandle.getInstance ().micInputNotice += micInputNotice;
@@ -215,11 +186,12 @@ namespace AssemblyCSharp
 			SocketEventHandle.getInstance ().messageBoxNotice -= messageBoxNotice;
 			SocketEventHandle.getInstance ().micInputNotice -= micInputNotice;
 		}
+
 		void onResponse (ClientResponse response)
 		{
 			switch (response.headCode) {
 			case APIS.STARTGAME_RESPONSE_NOTICE://开始游戏
-				startGame(response);
+				startGame (response);
 				break;
 			case APIS.PICKCARD_RESPONSE://自己摸牌
 				pickCard (response);
@@ -231,40 +203,40 @@ namespace AssemblyCSharp
 				otherPutOutCard (response);
 				break;
 			case APIS.JOIN_ROOM_NOICE:
-				otherUserJointRoom(response);
+				otherUserJointRoom (response);
 				break;
 			case APIS.PENGPAI_RESPONSE://碰牌回调
-				otherPeng(response);
+				onPeng (response);
 				break;
 			case APIS.GANGPAI_RESPONSE://杠牌回调
-				gangResponse(response);
+				onMyGang (response);
 				break;
 			case APIS.OTHER_GANGPAI_NOICE:
-				otherGang(response);
+				onOtherGang (response);
 				break;
 			case APIS.ACTION_BUTTON_NOTICE://碰杠行为按钮显示
-				onActionBtnNotice(response);
+				onActionBtnNotice (response);
 				break;
 			case APIS.HUPAI_RESPONSE://胡牌回调
-				hupaiCallBack(response);
+				hupaiCallBack (response);
 				break;
 			case APIS.OUT_ROOM_RESPONSE://退出房间回调
-				outRoomCallbak(response);
+				outRoomCallbak (response);
 				break;
 			case APIS.PrepareGame_MSG_RESPONSE://准备游戏通知返回
-				gameReadyNotice(response);
+				gameReadyNotice (response);
 				break;
 			case APIS.OFFLINE_NOTICE://离线通知
-				offlineNotice(response);
+				offlineNotice (response);
 				break;
 			case APIS.ONLINE_NOTICE://上线通知
-				onlineNotice(response);
+				onlineNotice (response);
 				break;
 			case APIS.RETURN_ONLINE_RESPONSE:
-				returnGameResponse(response);
+				returnGameResponse (response);
 				break;
 			case APIS.Game_FollowBander_Notice://跟庄
-				gameFollowBanderNotice(response);
+				gameFollowBanderNotice (response);
 				break;
 			default:
 				return;	
@@ -274,46 +246,7 @@ namespace AssemblyCSharp
 
 		}
 
-		private void initArrayList ()
-		{
-			mineList = new List<List<int>> ();
-			handCardList = new List<List<GameObject>> ();
-			tableCardList = new List<List<GameObject>> ();
-			for (int i = 0; i < 4; i++) {
-				handCardList.Add (new List<GameObject> ());
-				tableCardList.Add (new List<GameObject> ());
-			}
 
-			PengGangList_L = new List<List<GameObject>> ();
-			PengGangList_R = new List<List<GameObject>> ();
-			PengGangList_T = new List<List<GameObject>> ();
-			PengGangCardList = new List<List<GameObject>> ();
-
-
-		}
-
-
-		/// <summary>
-		/// Cards the select.
-		/// </summary>
-		/// <param name="obj">Object.</param>
-		public void cardSelect (GameObject obj)
-		{
-			List<GameObject> m = handCardList [0];
-			for (int i = 0; i < m.Count; i++) {
-				if (m [i] == null) {
-					m.RemoveAt (i);
-					i--;
-				} else {
-					m [i].transform.localPosition = new Vector3 (m [i].transform.localPosition.x, -292f); //从右到左依次对齐
-					m [i].transform.GetComponent<bottomScript> ().selected = false;
-				}
-			}
-			if (obj != null) {
-				obj.transform.localPosition = new Vector3 (obj.transform.localPosition.x, -272f);
-				obj.transform.GetComponent<bottomScript> ().selected = true;
-			}
-		}
 
 		/// <summary>
 		/// 开始游戏
@@ -322,39 +255,51 @@ namespace AssemblyCSharp
 		public void startGame (ClientResponse response)
 		{
 			//GlobalDataScript.surplusTimes -= 1;
-			StartGameVO sgvo = JsonMapper.ToObject<StartGameVO> (response.message);
-			bankerId = sgvo.bankerId;
+			StartGameVO svo = JsonMapper.ToObject<StartGameVO> (response.message);
+			_data.bankerIndex = svo.bankerId;
 			GlobalData.getInstance ().gameStatus = GameStatus.GAMING;
 			cleanGameplayUI ();
 			//开始游戏后不显示
 			MyDebug.Log ("startGame");
 			GlobalData.getInstance ().remainRoundCount--;
-			curDirString = getDirection (bankerId);
+
 			LeavedRoundNumText.text = GlobalData.getInstance ().remainRoundCount + "";//刷新剩余圈数
 			if (!isFirstOpen) {
-				_actionHlpr = gameObject.GetComponent<ActionEffectHelper> ();
-				initPanel ();
-				initArrayList ();
-				avatarList [bankerId].main = true;
+				isFirstOpen = false;
+				cleanTable ();
+				avatarList [_data.bankerIndex].main = true;
 			}
-			isFirstOpen = false;
+
 
 			GlobalData.finalGameEndVo = null;
-			GlobalData.mainUuid = avatarList [bankerId].account.uuid;
-			playerItems [curDirIndex].setbankImgEnable (true);
-			SetDirGameObjectAction ();
 			GlobalData.isOverByPlayer = false;
+			GlobalData.mainUuid = avatarList [_data.bankerIndex].account.uuid;
+			GlobalData.isDrag = _data.bankerIndex == _data.myIndex;
 
-			mineList = sgvo.paiArray;
+
+			_uiHelper.getBankerCGO ().PlayerItem.setbankImgEnable (true);
+			_uiHelper.setDirectPointer (_data.bankerIndex);
+
+			_data.paiArray = svo.paiArray;
 
 			UpateTimeReStart ();
+			_uiHelper.hideReadyIcon ();
+			//创建手牌
+			_uiHelper.addMyHandCards (_data.paiArray [0]);
+			_uiHelper.addOtherHandCards (Direction.L, 13);
+			_uiHelper.addOtherHandCards (Direction.R, 13);
+			_uiHelper.addOtherHandCards (Direction.T, 13);
+			//突出摸到的牌
+			if (_data.bankerIndex == _data.myIndex) {
+				_uiHelper.rangeMyHandCard (true);//设置位置
+				MyDebug.Log ("初始化数据自己为庄家");
+			} else {
+				_uiHelper.rangeMyHandCard (false);
+				_uiHelper.addPickCard (_data.bankerIndex);
+			}
+			//
+			_uiHelper.initRemainCardNum ();
 
-			setAllPlayerReadImgVisbleToFalse ();
-			initMyCardListAndOtherCard (13, 13, 13);
-
-			ShowLeavedCardsNumForInit ();
-
-			GlobalData.isDrag = curDirString == DirectionEnum.Bottom;
 		}
 
 		private void cleanGameplayUI ()
@@ -368,41 +313,6 @@ namespace AssemblyCSharp
 			_actionHlpr.liujuEffect.SetActive (false);
 		}
 
-
-		public void ShowLeavedCardsNumForInit ()
-		{
-			RoomVO roomCreateVo = GlobalData.getInstance ().roomVO;
-
-			bool hong = (bool)roomCreateVo.hong;
-			int RoomType = (int)roomCreateVo.roomType;
-			if (RoomType == 1) {//转转麻将
-				LeavedCardsNum = 108;
-				if (hong) {
-					LeavedCardsNum = 112;
-				}
-			} else if (RoomType == 2) {//划水麻将
-				LeavedCardsNum = 108;
-				if (roomCreateVo.addWordCard) {
-					LeavedCardsNum = 136;
-				}
-			} else if (RoomType == 3) {
-				LeavedCardsNum = 108;
-			}
-			LeavedCardsNum = LeavedCardsNum - 53;
-			LeavedCastNumText.text = (LeavedCardsNum) + "";
-
-
-		}
-
-		public void CardsNumChange ()
-		{
-			LeavedCardsNum--;
-			if (LeavedCardsNum < 0) {
-				LeavedCardsNum = 0;
-			}
-			LeavedCastNumText.text = LeavedCardsNum + "";
-		}
-
 		/// <summary>
 		/// 别人摸牌通知
 		/// </summary>
@@ -414,45 +324,11 @@ namespace AssemblyCSharp
 			//下一个摸牌人的索引
 			int avatarIndex = (int)json ["avatarIndex"];
 			MyDebug.Log ("otherPickCard avatarIndex = " + avatarIndex);
-			otherPickCardAndCreate (avatarIndex);
-			SetDirGameObjectAction ();
-			CardsNumChange ();
+			_uiHelper.addPickCard (avatarIndex);
+			_uiHelper.setDirectPointer (avatarIndex);
+			_uiHelper.updateRemainCardNum ();
 		}
 
-		private void otherPickCardAndCreate (int avatarIndex)
-		{
-			int myIndex = getMyIndexFromList ();
-			int seatIndex = avatarIndex - myIndex;
-			if (seatIndex < 0) {
-				seatIndex = 4 + seatIndex;
-			}
-			curDirString = playerItems [seatIndex].dir;
-
-
-			Vector3 tempVector3 = new Vector3 (0, 0);
-			//Transform tempParent = null;
-			switch (curDirString) {
-			case DirectionEnum.Top://上
-			//tempParent = topParent.transform;
-				tempVector3 = new Vector3 (-273, 0f);
-				break;
-			case DirectionEnum.Left://左
-			//tempParent = leftParent.transform;
-				tempVector3 = new Vector3 (0, -173f);
-
-				break;
-			case DirectionEnum.Right://右
-			//tempParent = rightParent.transform;
-				tempVector3 = new Vector3 (0, 183f);
-				break;
-			}
-
-			String path = "prefab/card/Bottom_" + curDirString;
-			MyDebug.Log ("path  = " + path);
-			otherPickCardItem = createGameObjectAndReturn (path, parentList [getIndexByDir (curDirString)], tempVector3);//实例化当前摸的牌
-			otherPickCardItem.transform.localScale = Vector3.one;//原大小
-
-		}
 
 		/// <summary>
 		/// 自己摸牌
@@ -463,16 +339,14 @@ namespace AssemblyCSharp
 
 			UpateTimeReStart ();
 			CardVO cardvo = JsonMapper.ToObject<CardVO> (response.message);
-			MoPaiCardPoint = cardvo.cardPoint;
-			MyDebug.Log ("摸牌" + MoPaiCardPoint);
-			SelfAndOtherPutoutCard = MoPaiCardPoint; 
-			useForGangOrPengOrChi = MoPaiCardPoint;
-			putCardIntoMineList (MoPaiCardPoint);
-			moPai ();
-			curDirString = DirectionEnum.Bottom;
-			SetDirGameObjectAction ();
-			CardsNumChange ();
-			//checkHuOrGangOrPengOrChi (MoPaiCardPoint,2);
+			int cardPoint = cardvo.cardPoint;
+			_data.pickIndex = _data.myIndex;
+			_data.pgcCardPoint = cardPoint;
+			MyDebug.Log ("摸牌:" + cardPoint);
+			putCardIntoMineList (cardPoint);
+			_uiHelper.addPickCard (_data.myIndex, cardvo.cardPoint);
+			_uiHelper.setDirectPointer (_data.myIndex);
+			_uiHelper.updateRemainCardNum ();
 			GlobalData.isDrag = true;
 		}
 
@@ -484,11 +358,7 @@ namespace AssemblyCSharp
 		{
 			GlobalData.isDrag = false;
 			string[] strs = response.message.Split (new char[1]{ ',' });
-			if (curDirString == DirectionEnum.Bottom) {
-				passType = "selfPickCard";
-			} else {
-				passType = "otherPickCard";
-			}
+
 
 			for (int i = 0; i < strs.Length; i++) {
 				if (strs [i].Equals ("hu")) {
@@ -497,7 +367,7 @@ namespace AssemblyCSharp
 				} else if (strs [i].Contains ("qianghu")) {
 				
 					try {
-						SelfAndOtherPutoutCard = int.Parse (strs [i].Split (new char[1]{ ':' }) [1]);
+						_data.pgcCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [1]);
 					} catch (Exception e) {
 						Debug.Log (e.ToString ());
 					}
@@ -506,170 +376,38 @@ namespace AssemblyCSharp
 					isQiangHu = true;
 				} else if (strs [i].Contains ("peng")) {
 					_actionHlpr.showBtn (ActionType.PENG);
-					putOutCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [2]);
+					_data.putoutPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [2]);
 
 
 				} else if (strs [i].Contains ("chi")) {
 					_actionHlpr.showBtn (ActionType.CHI);
-					putOutCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [2]);
+					_data.putoutPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [2]);
 				}
 				if (strs [i].Contains ("gang")) {
 				
 					_actionHlpr.showBtn (ActionType.GANG);
-					gangPaiList = strs [i].Split (new char[1]{ ':' });
+					string[] gangPaiList = strs [i].Split (new char[1]{ ':' });
 					List<string> gangPaiListTemp = gangPaiList.ToList ();
 					gangPaiListTemp.RemoveAt (0);
-					gangPaiList = gangPaiListTemp.ToArray ();
+
+					_data.gangPaiList = gangPaiListTemp.ToArray ();
 				}
 			}
 		}
 
-		private void initMyCardListAndOtherCard (int topCount, int leftCount, int rightCount)
-		{
-			for (int a = 0; a < mineList [0].Count; a++) {//我的牌13张
-				if (mineList [0] [a] > 0) {
-					for (int b = 0; b < mineList [0] [a]; b++) {
-						GameObject gob = Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
-
-						if (gob != null) {//
-							gob.transform.SetParent (parentList [0]);//设置父节点
-							gob.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
-							gob.GetComponent<bottomScript> ().onSendMessage += cardChange;//发送消息fd
-							gob.GetComponent<bottomScript> ().reSetPoisiton += cardSelect;
-							gob.GetComponent<bottomScript> ().setPoint (a);//设置指针          
-							SetPosition (false);
-							handCardList [0].Add (gob);//增加游戏对象
-						} else {
-							Debug.Log ("--> gob is null");//游戏对象为空
-						}
-					}
-
-				}
-			}
-
-			initOtherCardList (DirectionEnum.Left, leftCount);
-			initOtherCardList (DirectionEnum.Right, rightCount);
-			initOtherCardList (DirectionEnum.Top, topCount);
-
-			if (bankerId == getMyIndexFromList ()) {
-				SetPosition (true);//设置位置
-				MyDebug.Log ("初始化数据自己为庄家");
-
-			} else {
-				SetPosition (false);
-				otherPickCardAndCreate (bankerId);
-			}
-		}
-
-
-
-
-		private void setAllPlayerReadImgVisbleToFalse ()
-		{
-			for (int i = 0; i < playerItems.Count; i++) {
-				playerItems [i].readyImg.enabled = false;
-			}
-		}
-
-		private void setAllPlayerHuImgVisbleToFalse ()
-		{
-			for (int i = 0; i < playerItems.Count; i++) {
-				playerItems [i].setHuFlagHidde ();
-			}
-		}
-
-		/// <summary>
-		/// Gets the index by dir.
-		/// </summary>
-		/// <returns>The index by dir.</returns>
-		/// <param name="dir">Dir.</param>
-		private int getIndexByDir (string dir)
-		{
-			int result = 0;
-			switch (dir) {
-			case DirectionEnum.Top: //上
-				result = 2;
-				break;
-			case DirectionEnum.Left: //左
-				result = 3;
-				break;
-			case DirectionEnum .Right: //右
-				result = 1;
-				break;
-			case DirectionEnum.Bottom: //下
-				result = 0;
-				break;
-			}
-			return result;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="initDirection"></param>
-		private void initOtherCardList (string initDiretion, int count) //初始化
-		{
-			for (int i = 0; i < count; i++) {
-				GameObject temp = Instantiate (Resources.Load ("Prefab/card/Bottom_" + initDiretion)) as GameObject; //实例化当前牌
-				if (temp != null) { //有可能没牌了
-					temp.transform.SetParent (parentList [getIndexByDir (initDiretion)]); //父节点
-					temp.transform.localScale = Vector3.one;
-					switch (initDiretion) {
-
-					case DirectionEnum.Top: //上
-						temp.transform.localPosition = new Vector3 (-204 + 38 * i, 0); //位置   
-						handCardList [2].Add (temp);
-						temp.transform.localScale = Vector3.one; //原大小
-						break;
-					case DirectionEnum.Left: //左
-						temp.transform.localPosition = new Vector3 (0, -105 + i * 30); //位置   
-						temp.transform.SetSiblingIndex (0);
-						handCardList [3].Add (temp);
-						break;
-					case DirectionEnum.Right: //右
-						temp.transform.localPosition = new Vector3 (0, 119 - i * 30); //位置     
-						handCardList [1].Add (temp);
-						break;
-					}
-				}
-
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void moPai () //摸牌
-		{
-			pickCardItem = Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject; //实例化当前摸的牌
-			MyDebug.Log ("摸牌 === >> " + MoPaiCardPoint);
-			if (pickCardItem != null) { //有可能没牌了
-				pickCardItem.name = "pickCardItem";
-				pickCardItem.transform.SetParent (parentList [0]); //父节点
-				pickCardItem.transform.localScale = new Vector3 (1.1f, 1.1f, 1);//原大小
-				pickCardItem.transform.localPosition = new Vector3 (580f, -292f); //位置
-				pickCardItem.GetComponent<bottomScript> ().onSendMessage += cardChange; //发送消息
-				pickCardItem.GetComponent<bottomScript> ().reSetPoisiton += cardSelect;
-				pickCardItem.GetComponent<bottomScript> ().setPoint (MoPaiCardPoint); //得到索引
-				insertCardIntoList (pickCardItem);
-			}
-			MyDebug.Log ("moPai  goblist count === >> " + handCardList [0].Count);
-
-		}
 
 		public void putCardIntoMineList (int cardPoint)
 		{
-			if (mineList [0] [cardPoint] < 4) {
-				mineList [0] [cardPoint]++;
-
+			if (_data.paiArray [0] [cardPoint] < 4) {
+				_data.paiArray [0] [cardPoint]++;
 			}
 		}
 
 		public void pushOutFromMineList (int cardPoint)
 		{
 
-			if (mineList [0] [cardPoint] > 0) {
-				mineList [0] [cardPoint]--;
+			if (_data.paiArray [0] [cardPoint] > 0) {
+				_data.paiArray [0] [cardPoint]--;
 			}
 		}
 
@@ -683,20 +421,8 @@ namespace AssemblyCSharp
 			JsonData json = JsonMapper.ToObject (response.message);
 			int cardPoint = (int)json ["cardIndex"];
 			int curAvatarIndex = (int)json ["curAvatarIndex"];
-			MyDebug.Log ("otherPickCard avatarIndex = " + curAvatarIndex);
-			useForGangOrPengOrChi = cardPoint;
-			if (otherPickCardItem != null) {
-			
-				Destroy (otherPickCardItem);
-				otherPickCardItem = null;
-
-			} else {
-				int dirIndex = getIndexByDir (getDirection (curAvatarIndex));
-				GameObject obj = handCardList [dirIndex] [0];
-				handCardList [dirIndex].RemoveAt (0);
-				Destroy (obj);
-
-			}
+			_data.pgcCardPoint = cardPoint;
+			_uiHelper.removePickCard ();
 			createPutOutCardAndPlayAction (cardPoint, curAvatarIndex);
 		}
 
@@ -705,17 +431,16 @@ namespace AssemblyCSharp
 		/// </summary>
 		/// <param name="cardPoint">Card point.</param>
 		/// <param name="curAvatarIndex">Current avatar index.</param>
-		private void createPutOutCardAndPlayAction (int cardPoint, int curAvatarIndex)
+		private void createPutOutCardAndPlayAction (int cardPoint, int avatarIndex)
 		{
 			MyDebug.Log ("put out cardPoint" + cardPoint);
-			SoundCtrl.getInstance ().playSound (cardPoint, avatarList [curAvatarIndex].account.sex);
+			SoundCtrl.getInstance ().playSound (cardPoint, avatarList [avatarIndex].account.sex);
 
-			putOutCardPoint = cardPoint;
-			SelfAndOtherPutoutCard = cardPoint;
+			_data.putoutPoint = cardPoint;
 
-			_uiHelper.addPutoutCard (cardPoint, _data.toGameDir (curAvatarIndex), parentList [0]);
+			_uiHelper.addPutoutCard (cardPoint, _data.toGameDir (avatarIndex));
 
-			_uiHelper.lastCardOnTable = _uiHelper.addCardToTable (cardPoint, _data.toGameDir(curAvatarIndex), tableCardList, outparentList);
+			_uiHelper.lastCardOnTable = _uiHelper.addCardToTable (_data.toGameDir (avatarIndex), cardPoint);
 
 			_uiHelper.addPointer (_uiHelper.lastCardOnTable);
 
@@ -723,490 +448,85 @@ namespace AssemblyCSharp
 		}
 
 
-		/// <summary>
-		/// 根据一个人在数组里的索引，得到这个人所在的方位，L-左，T-上,R-右，B-下（自己的方位永远都是在下方）
-		/// </summary>
-		/// <returns>The direction.</returns>
-		/// <param name="avatarIndex">Avatar index.</param>
-		private String getDirection (int avatarIndex)
-		{
-			String result = DirectionEnum.Bottom;
-			int myselfIndex = getMyIndexFromList ();
-			if (myselfIndex == avatarIndex) {
-//				MyDebug.Log ("getDirection == B");
-				curDirIndex = 0;
-				return result;
-			}
-			//从自己开始计算，下一位的索引
-			for (int i = 0; i < 4; i++) {
-				myselfIndex++;
-				if (myselfIndex >= 4) {
-					myselfIndex = 0;
-				}
-				if (myselfIndex == avatarIndex) {
-					if (i == 0) {
-						//MyDebug.Log ("getDirection == R");
-						curDirIndex = 1;
-						return DirectionEnum.Right;
-					} else if (i == 1) {
-						//MyDebug.Log ("getDirection == T");
-						curDirIndex = 2;
-						return DirectionEnum.Top;
-					} else {
-						//MyDebug.Log ("getDirection == L");
-						curDirIndex = 3;
-						return DirectionEnum.Left;
-					}
-				}
-			}
-			//MyDebug.Log ("getDirection == B");
-			curDirIndex = 0;
-			return DirectionEnum.Bottom;
-		}
-
-		/// <summary>
-		/// 设置红色箭头的显示方向
-		/// </summary>
-		public void SetDirGameObjectAction () //设置方向
-		{
-			//UpateTimeReStart();
-			for (int i = 0; i < dirGameList.Count; i++) {
-				dirGameList [i].SetActive (false);
-			}
-			dirGameList [getIndexByDir (curDirString)].SetActive (true);
-		}
-
-		public void otherPeng (ClientResponse response)//其他人碰牌
+		private void onPeng (ClientResponse response)//碰牌处理
 		{
 			UpateTimeReStart ();
-			OtherPengGangBackVO cardVo = JsonMapper.ToObject<OtherPengGangBackVO> (response.message);
-			otherPengCard = cardVo.cardPoint;
-			curDirString = getDirection (cardVo.avatarId);
-			print ("Current Diretion==========>" + curDirString);
-			SetDirGameObjectAction ();
+			OtherPengGangBackVO pvo = JsonMapper.ToObject<OtherPengGangBackVO> (response.message);
+
+			_data.pickIndex = pvo.avatarId;
+			int cardPoint = pvo.cardPoint;
+			_uiHelper.setDirectPointer (_data.pickIndex);
 			_actionHlpr.pengGangHuEffectCtrl (ActionType.PENG);
-			SoundCtrl.getInstance ().playSoundByAction ("peng", avatarList [cardVo.avatarId].account.sex);
+			SoundCtrl.getInstance ().playSoundByAction ("peng", avatarList [_data.pickIndex].account.sex);
 
-			_uiHelper.removeCardFromTable ();
+			_uiHelper.removeLastPutoutCard ();
 
 
-			if (curDirString == DirectionEnum.Bottom) {  //==============================================自己碰牌
-				mineList [0] [putOutCardPoint]++;
-				mineList [1] [putOutCardPoint] = 2;
-				int removeCount = 0;
-				for (int i = 0; i < handCardList [0].Count; i++) {
-					GameObject temp = handCardList [0] [i];
-					int tempCardPoint = temp.GetComponent<bottomScript> ().getPoint ();
-					if (tempCardPoint == putOutCardPoint) {
+			if (_data.pickIndex == _data.myIndex) {  //自己碰牌
+				_data.paiArray [0] [cardPoint]++;
+				_data.paiArray [1] [cardPoint] = 2;
+				_uiHelper.removeMyHandCard (cardPoint, 2);
+				_uiHelper.rangeMyHandCard (true);
 
-						handCardList [0].RemoveAt (i);
-						Destroy (temp);
-						i--;
-						removeCount++;
-						if (removeCount == 2) {
-							break;
-						}
-					}
-				}
-				SetPosition (true);
-				bottomPeng ();
+				_uiHelper.addPGCCards (Direction.B, cardPoint, 1);
+				GlobalData.isDrag = true;
 		
-			} else {//==============================================其他人碰牌
-				List<GameObject> tempCardList = handCardList [getIndexByDir (curDirString)];
-				string path = "Prefab/PengGangCard/PengGangCard_" + curDirString;
-				if (tempCardList != null) {
-					MyDebug.Log ("tempCardList.count======前" + tempCardList.Count);
-					for (int i = 0; i < 2; i++) {//消除其他的人牌碰牌长度
-						GameObject temp = tempCardList [0];
-						Destroy (temp);
-						tempCardList.RemoveAt (0);
+			} else {//其他人碰牌
+				List<GameObject> Hand = _uiHelper.getCardGOs (_data.pickIndex).Hand;
+				string path = "Prefab/PengGangCard/PengGangCard_" + _data.toGameDir (_data.pickIndex).ToString ();
+				Direction dir = _data.toGameDir (_data.pickIndex);
+				_uiHelper.removeOtherHandCard (dir, 2);
+				_uiHelper.rangeOtherHandCard (dir, 1);
 
-					}
-					MyDebug.Log ("tempCardList.count======前" + tempCardList.Count);
-
-					otherPickCardItem = tempCardList [0];
-					gameTool.setOtherCardObjPosition (tempCardList, curDirString, 1);
-					//Destroy (tempCardList [0]);
-					tempCardList.RemoveAt (0);
-				}
-				Vector3 tempvector3 = new Vector3 (0, 0, 0);
-				List<GameObject> tempList = new List<GameObject> ();
-
-				switch (curDirString) {
-				case DirectionEnum.Right:
-					for (int i = 0; i < 3; i++) {
-						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardVo.cardPoint);
-						tempvector3 = new Vector3 (0, -122 + PengGangList_R.Count * 95 + i * 26f);
-						//+ new Vector3(0, i * 26, 0);
-						obj.transform.parent = pengGangParenTransformR.transform;
-						obj.transform.SetSiblingIndex (0);
-						obj.transform.localScale = Vector3.one;
-						obj.transform.localPosition = tempvector3;
-						tempList.Add (obj);
-					}
-					break;
-				case DirectionEnum.Top:
-					for (int i = 0; i < 3; i++) {
-						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<PutoutCardView> ().setPoint (cardVo.cardPoint);
-						tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + i * 37, 0, 0);
-						obj.transform.parent = pengGangParenTransformT.transform;
-						obj.transform.localScale = Vector3.one;
-						obj.transform.localPosition = tempvector3;
-						tempList.Add (obj);
-					}
-					break;
-				case DirectionEnum.Left:
-					for (int i = 0; i < 3; i++) {
-						GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardVo.cardPoint);
-						tempvector3 = new Vector3 (0, 122 - PengGangList_L.Count * 95f - i * 26f, 0);
-						obj.transform.parent = pengGangParenTransformL.transform;
-						obj.transform.localScale = Vector3.one;
-						obj.transform.localPosition = tempvector3;
-						tempList.Add (obj);
-					}
-					break;
-				}
-				addListToPengGangList (curDirString, tempList);
+				_uiHelper.addPGCCards (dir, cardPoint, 1);
 			}
-
-
 		}
 
-		private void bottomPeng ()
-		{
-			List<GameObject> templist = new List<GameObject> ();
-			for (int j = 0; j < 3; j++) {
-				GameObject obj1 = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-					                 pengGangParenTransformB.transform,
-					                 new Vector3 (-370 + PengGangCardList.Count * 190 + j * 60f, 0));
-				obj1.GetComponent<PutoutCardView> ().setPoint (putOutCardPoint);
-				obj1.transform.localScale = Vector3.one;
-				templist.Add (obj1);
-			}
-			PengGangCardList.Add (templist);
-			GlobalData.isDrag = true;
-		}
 
-		private void otherGang (ClientResponse response) //其他人杠牌
+		private void onOtherGang (ClientResponse response) //其他人杠牌
 		{
 
-			GangNoticeVO gangNotice = JsonMapper.ToObject<GangNoticeVO> (response.message);
-			otherGangCard = gangNotice.cardPoint;
-			otherGangType = gangNotice.type;
-			string path = "";
-			string path2 = "";
-			Vector3 tempvector3 = new Vector3 (0, 0, 0);
-			curDirString = getDirection (gangNotice.avatarId);
+			GangNoticeVO gvo = JsonMapper.ToObject<GangNoticeVO> (response.message);
+			int cardPoint = gvo.cardPoint;
+			_data.pickIndex = gvo.avatarId;
 			_actionHlpr.pengGangHuEffectCtrl (ActionType.GANG);
-			SetDirGameObjectAction ();
-			SoundCtrl.getInstance ().playSoundByAction ("gang", avatarList [gangNotice.avatarId].account.sex);
-			List<GameObject> tempCardList = null;
+			_uiHelper.setDirectPointer (_data.pickIndex);
+			SoundCtrl.getInstance ().playSoundByAction ("gang", avatarList [_data.pickIndex].account.sex);
 
+			Direction dir = _data.toGameDir (_data.pickIndex);
+			if (_uiHelper.findIndexInPGC (dir, cardPoint) == -1) {//判断有没有碰过了，
+				_uiHelper.removeOtherHandCard(dir,3);//消耗3只牌
+				_uiHelper.rangeMyHandCard (false);
+				_uiHelper.rangeOtherHandCard (dir, 2);
 
-			//确定牌背景（明杠，暗杠）
-			switch (curDirString) {
-			case DirectionEnum.Right:
-				tempCardList = handCardList [1];
-				path = "Prefab/PengGangCard/PengGangCard_R";
-				path2 = "Prefab/PengGangCard/GangBack_L&R";
-				break;
-			case DirectionEnum.Top:
-				tempCardList = handCardList [2];
-				path = "Prefab/PengGangCard/PengGangCard_T";
-				path2 = "Prefab/PengGangCard/GangBack_T";
-				break;
-			case DirectionEnum.Left:
-				tempCardList = handCardList [3];
-				path = "Prefab/PengGangCard/PengGangCard_L";
-				path2 = "Prefab/PengGangCard/GangBack_L&R";
-				break;
-			}
-
-
-			List<GameObject> tempList = new List<GameObject> ();
-			if (getPaiInpeng (otherGangCard, curDirString) == -1) {
-
-
-				//删除玩家手牌，当玩家碰牌牌组里面的有碰牌时，不用删除手牌
-				for (int i = 0; i < 3; i++) {
-					GameObject temp = tempCardList [0];
-					tempCardList.RemoveAt (0);
-					Destroy (temp);
+				if (gvo.type == 0) {//明杠别人
+					_uiHelper.removeLastPutoutCard ();
+					_uiHelper.addPGCCards (dir, cardPoint, 2);
+				} else {//暗杠
+					_uiHelper.removePickCard ();//消耗一只摸的牌
+					_uiHelper.addPGCCards (dir, cardPoint, 3);//杠4只到桌面
 				}
-				SetPosition (false);
-
-				if (tempCardList != null) {
-					gameTool.setOtherCardObjPosition (tempCardList, curDirString, 2);
-				}
-
-				//创建杠牌，当玩家碰牌牌组里面的无碰牌，才创建
-
-				if (otherGangType == 0) {
-					_uiHelper.removeCardFromTable ();
-
-					for (int i = 0; i < 4; i++) { //实例化其他人杠牌
-						GameObject obj1 = Instantiate (Resources.Load (path)) as GameObject;
-
-
-						switch (curDirString) {
-						case DirectionEnum.Right:
-							obj1.GetComponent< PutoutCardView > ().setLefAndRightPoint (otherGangCard);
-							if (i == 3) {
-								tempvector3 = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
-								obj1.transform.parent = pengGangParenTransformR.transform;
-							} else {
-								tempvector3 = new Vector3 (0, -122 + PengGangList_R.Count * 95 + i * 28f);
-								obj1.transform.parent = pengGangParenTransformR.transform;
-								obj1.transform.SetSiblingIndex (0);
-							}
-
-							break;
-						case DirectionEnum.Top:
-							obj1.GetComponent< PutoutCardView > ().setPoint (otherGangCard);
-							if (i == 3) {
-								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 20f);
-							} else {
-								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + i * 37, 0f);
-							}
-
-							obj1.transform.parent = pengGangParenTransformT.transform;
-							break;
-						case DirectionEnum.Left:
-							obj1.GetComponent< PutoutCardView > ().setLefAndRightPoint (otherGangCard);
-							if (i == 3) {
-								tempvector3 = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f);
-							} else {
-								tempvector3 = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - i * 28f);
-							}
-
-							obj1.transform.parent = pengGangParenTransformL.transform;
-							break;
-						}
-						obj1.transform.localScale = Vector3.one;
-						obj1.transform.localPosition = tempvector3;
-						tempList.Add (obj1);
-					}
-				} else if (otherGangType == 1) {
-					Destroy (otherPickCardItem);
-					for (int j = 0; j < 4; j++) {
-						GameObject obj2;
-						if (j == 3) {
-							obj2 = Instantiate (Resources.Load (path)) as GameObject;
-						} else {
-							obj2 = Instantiate (Resources.Load (path2)) as GameObject;
-						}
-
-						switch (curDirString) {
-						case DirectionEnum.Right:
-							obj2.transform.parent = pengGangParenTransformR.transform;
-							if (j == 3) {
-								tempvector3 = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
-								obj2.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
-
-							} else {
-								tempvector3 = new Vector3 (0, -122 + PengGangList_R.Count * 95 + j * 28);
-							}
-
-							break;
-						case DirectionEnum.Top:
-							obj2.transform.parent = pengGangParenTransformT.transform;
-							if (j == 3) {
-								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 10f);
-								obj2.GetComponent<PutoutCardView> ().setPoint (otherGangCard);
-							} else {
-								tempvector3 = new Vector3 (251 - PengGangList_T.Count * 120f + j * 37, 0f);
-							}
-
-							break;
-						case DirectionEnum.Left:
-							obj2.transform.parent = pengGangParenTransformL.transform;
-							if (j == 3) {
-								tempvector3 = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f, 0);
-								obj2.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
-							} else {
-								tempvector3 = new Vector3 (0, 122 - PengGangList_L.Count * 95 - j * 28f, 0);
-							}
-
-							break;
-						}
-
-						obj2.transform.localScale = Vector3.one;
-						obj2.transform.localPosition = tempvector3;
-						tempList.Add (obj2);
-					}
-			
-
-				}
-				addListToPengGangList (curDirString, tempList);
-				//Destroy (otherPickCardItem);
-
-			} else if (getPaiInpeng (otherGangCard, curDirString) != -1) {/////////end of if(getPaiInpeng(otherGangCard,curDirString) == -1)
-
-				int gangIndex = getPaiInpeng (otherGangCard, curDirString);
-
-				if (otherPickCardItem != null) {
-					Destroy (otherPickCardItem);
-				}
-
-				GameObject objTemp = Instantiate (Resources.Load (path)) as GameObject;
-				switch (curDirString) {
-				case DirectionEnum.Top:
-					objTemp.transform.parent = pengGangParenTransformT.transform;
-					tempvector3 = new Vector3 (251 - gangIndex * 120f + 37f, 20f);
-					objTemp.GetComponent<PutoutCardView> ().setPoint (otherGangCard);
-					PengGangList_T [gangIndex].Add (objTemp);
-					break;
-				case DirectionEnum.Left:
-					objTemp.transform.parent = pengGangParenTransformL.transform;
-					tempvector3 = new Vector3 (0f, 122 - gangIndex * 95f - 26f, 0);
-					objTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
-
-					PengGangList_L [gangIndex].Add (objTemp);
-					break;
-				case DirectionEnum.Right:
-					objTemp.transform.parent = pengGangParenTransformR.transform;
-					tempvector3 = new Vector3 (0f, -122 + gangIndex * 95f + 26f);
-					objTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (otherGangCard);
-
-					PengGangList_R [gangIndex].Add (objTemp);
-					break;
-				}
-				objTemp.transform.localScale = Vector3.one;
-				objTemp.transform.localPosition = tempvector3;
-
-			}
-
-
-
-		}
-
-
-		private void addListToPengGangList (string dirString, List<GameObject> tempList)
-		{
-			switch (dirString) {
-			case DirectionEnum.Right:
-				PengGangList_R.Add (tempList);
-				break;
-			case DirectionEnum.Top:
-				PengGangList_T.Add (tempList);
-				break;
-			case DirectionEnum .Left:
-				PengGangList_L.Add (tempList);
-				break;
-			}
-		}
-
-		/**
-	 * 
-	 * 判断碰牌的牌组里面是否包含某个牌，用于判断是否实例化一张牌还是三张牌
-	 * cardpoint：牌点
-	 * direction：方向
-	 * 返回-1  代表没有牌
-	 * 其余牌在list的位置
-	 */
-		private int getPaiInpeng (int cardPoint, string direction)
-		{
-			List<List<GameObject>> jugeList = new List<List<GameObject>> ();
-			switch (direction) {
-			case DirectionEnum.Bottom://自己
-				jugeList = PengGangCardList;
-				break;
-			case DirectionEnum.Right:
-				jugeList = PengGangList_R;
-				break;
-			case DirectionEnum.Left:
-				jugeList = PengGangList_L;
-				break;
-			case DirectionEnum.Top:
-				jugeList = PengGangList_T;
-				break;
-			}
-
-			if (jugeList == null || jugeList.Count == 0) {
-
-				return -1;
-			} 
-
-			//循环遍历比对点数
-			for (int i = 0; i < jugeList.Count; i++) {
-
-				try {
-					if (jugeList [i] [0].GetComponent<PutoutCardView> ().getPoint () == cardPoint) {
-						return i;
-					}
-				} catch (Exception e) {
-					Debug.Log (e.ToString ());
-					return -1;
-				}
-
-			}
-
-			return -1;
-		}
-
-
-		/// <summary>
-		/// 自己打出来的牌
-		/// </summary>
-		/// <param name="obj">Object.</param>
-		public void cardChange (GameObject obj)//
-		{
-			int handCardCount = handCardList [0].Count - 1;
-			if (handCardCount == 13 || handCardCount == 10 || handCardCount == 7 || handCardCount == 4 || handCardCount == 1) {
-				GlobalData.isDrag = false;
-				obj.GetComponent<bottomScript> ().onSendMessage -= cardChange;
-				obj.GetComponent<bottomScript> ().reSetPoisiton -= cardSelect;
-				MyDebug.Log ("card change over");
-				int putOutCardPointTemp = obj.GetComponent<bottomScript> ().getPoint ();//将当期打出牌的点数传出
-				pushOutFromMineList (putOutCardPointTemp);                         //将牌的索引从minelist里面去掉
-				handCardList [0].Remove (obj);
-				MyDebug.Log ("cardchange  goblist count = > " + handCardList [0].Count);
-				Destroy (obj);
-				SetPosition (false);
-				createPutOutCardAndPlayAction (putOutCardPointTemp, getMyIndexFromList ());//讲拖出牌进行第一段动画的播放
-				//========================================================================
-				CardVO cardvo = new CardVO ();
-				cardvo.cardPoint = putOutCardPointTemp;
-				GameManager.getInstance ().Server.requset (new PutOutCardRequest (cardvo));
-			}
-
-		}
-
-		public void insertCardIntoList (GameObject item)//插入牌的方法
-		{
-			if (item != null) {
-				int curCardPoint = item.GetComponent<bottomScript> ().getPoint ();//得到当前牌指针
-				for (int i = 0; i < handCardList [0].Count; i++) {//i<游戏物体个数 自增
-					int cardPoint = handCardList [0] [i].GetComponent<bottomScript> ().getPoint ();//得到所有牌指针
-					if (cardPoint >= curCardPoint) {//牌指针>=当前牌的时候插入
-						handCardList [0].Insert (i, item);//在
-						return;
-					}
-				}
-				handCardList [0].Add (item);//游戏对象列表添加当前牌
-			}
-			item = null;
-		}
-
-		public void SetPosition (bool flag)//设置位置
-		{
-			int count = handCardList [0].Count;
-			int startX = 594 - count * 80;
-			if (flag) {
-				for (int i = 0; i < count - 1; i++) {
-					handCardList [0] [i].transform.localPosition = new Vector3 (startX + i * 80f, -292f); //从左到右依次对齐
-				}
-				handCardList [0] [count - 1].transform.localPosition = new Vector3 (580f, -292f); //从左到右依次对齐
 
 			} else {
-				for (int i = 0; i < count; i++) {
-					handCardList [0] [i].transform.localPosition = new Vector3 (startX + i * 80f - 80f, -292f); //从左到右依次对齐
-				}
+				_uiHelper.removePickCard ();
+				_uiHelper.addPGCCards (dir, cardPoint, 5);//明杠1只到桌面
+
 			}
+
 		}
+
+		/**客户端主动打一只牌**/
+		public void putoutCard (int cardPoint)//
+		{
+			pushOutFromMineList (cardPoint);
+			createPutOutCardAndPlayAction (cardPoint, _data.myIndex);//讲拖出牌进行第一段动画的播放
+			//========================================================================
+			CardVO cardvo = new CardVO ();
+			cardvo.cardPoint = cardPoint;
+			GameManager.getInstance ().Server.requset (new PutOutCardRequest (cardvo));
+		}
+
+
 
 		void Update ()
 		{
@@ -1234,10 +554,9 @@ namespace AssemblyCSharp
 		{
 			_actionHlpr.cleanBtnShow ();
 
-			if (passType == "selfPickCard") {
+			if (_data.pickIndex == _data.myIndex) {
 				GlobalData.isDrag = true;
 			}
-			passType = "";
 			GameManager.getInstance ().Server.requset (new GaveUpRequest ());
 		}
 
@@ -1246,7 +565,7 @@ namespace AssemblyCSharp
 			GlobalData.isDrag = true;
 			UpateTimeReStart ();
 			CardVO cardvo = new CardVO ();
-			cardvo.cardPoint = putOutCardPoint;
+			cardvo.cardPoint = _data.pgcCardPoint;
 			GameManager.getInstance ().Server.requset (new PengPaiRequest (cardvo));
 			_actionHlpr.cleanBtnShow ();
 		}
@@ -1256,231 +575,71 @@ namespace AssemblyCSharp
 			GlobalData.isDrag = false;
 			UpateTimeReStart ();
 			CardVO cardvo = new CardVO ();
-			cardvo.cardPoint = putOutCardPoint;
-			cardvo.onePoint = putOutCardPoint;
-			cardvo.twoPoint = putOutCardPoint;
+			cardvo.cardPoint = _data.pgcCardPoint;
+			cardvo.onePoint = _data.pgcCardPoint;
+			cardvo.twoPoint = _data.pgcCardPoint;
 			GameManager.getInstance ().Server.requset (new ChiPaiRequest (cardvo));
 			_actionHlpr.cleanBtnShow ();
 		}
 
 
-		public void gangResponse (ClientResponse response)
+		public void onMyGang (ClientResponse response)
 		{
 			UpateTimeReStart ();
-			GangBackVO gangBackVo = JsonMapper.ToObject<GangBackVO> (response.message);
-			int gangKind = gangBackVo.type;
-
-			if (gangBackVo.cardList.Count == 0) {
-
-
+			GangBackVO gvo = JsonMapper.ToObject<GangBackVO> (response.message);
+			int gangKind = gvo.type;
+			if (gvo.cardList.Count == 0) {
+				int cardPoint = _data.pgcCardPoint;
 				if (gangKind == 0) {//明杠
-					mineList [1] [selfGangCardPoint] = 3;
+					
+					_data.paiArray[1][cardPoint] = 3;
 					/**杠牌点数**/
-					//int gangpaiPonitTemp = gangBackVo.cardList [0];
-					if (getPaiInpeng (selfGangCardPoint, DirectionEnum.Bottom) == -1) {//杠牌不在碰牌数组以内，一定为别人打得牌
-
-
-						_uiHelper.removeCardFromTable ();
-
-						//销毁手牌中的三张牌
-						int removeCount = 0;
-						for (int i = 0; i < handCardList [0].Count; i++) {
-							GameObject temp = handCardList [0] [i];
-							int tempCardPoint = handCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
-							if (selfGangCardPoint == tempCardPoint) {
-								handCardList [0].RemoveAt (i);
-								Destroy (temp);
-								i--;
-								removeCount++;
-								if (removeCount == 3) {
-									break;
-								}
-							}
-						}
-
-						//创建杠牌序列
-
-						List<GameObject> gangTempList = new List<GameObject> ();
-						for (int i = 0; i < 4; i++) {
-							GameObject obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-								                pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
-							obj.transform.localScale = Vector3.one;
-							if (i == 3) {
-
-								obj.transform.localPosition = new Vector3 (-310f + PengGangCardList.Count * 190f, 24f);
-							}
-							gangTempList.Add (obj);
-						}
-
-						//添加到杠牌数组里面
-						PengGangCardList.Add (gangTempList);
-
-					} else {//在碰牌数组以内，则一定是自摸的牌
-
-						for (int i = 0; i < handCardList [0].Count; i++) {
-							if (handCardList [0] [i].GetComponent<bottomScript> ().getPoint () == selfGangCardPoint) {
-								GameObject temp = handCardList [0] [i];
-								handCardList [0].RemoveAt (i);
-								Destroy (temp);
-								break;
-							}
-
-						}
-
-						int index = getPaiInpeng (selfGangCardPoint, DirectionEnum.Bottom);
-						//将杠牌放到对应位置
-						GameObject obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-							                pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + 0 * 60f, 0));
-						obj.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
-						obj.transform.localScale = Vector3.one;
-						obj.transform.localPosition = new Vector3 (-310f + index * 190f, 24f);
-						PengGangCardList [index].Add (obj);
-
-					}
-					//MoPaiCardPoint = gangBackVo.cardList [0];
-					//putCardIntoMineList (gangBackVo.cardList [0]);
-
-
-				} else if (gangKind == 1) { //===================================================================================暗杠
-
-					mineList [1] [selfGangCardPoint] = 4;
-					int removeCount = 0;
-
-					for (int i = 0; i < handCardList [0].Count; i++) {
-						GameObject temp = handCardList [0] [i];
-						int tempCardPoint = handCardList [0] [i].GetComponent<bottomScript> ().getPoint ();
-						if (selfGangCardPoint == tempCardPoint) {
-							handCardList [0].RemoveAt (i);
-							Destroy (temp);
-							i--;
-							removeCount++;
-							if (removeCount == 4) {
-								break;
-							}
-						}
-					}
-					List<GameObject> tempGangList = new List<GameObject> ();
-					for (int i = 0; i < 4; i++) {
-
-						if (i < 3) {
-							GameObject obj = createGameObjectAndReturn ("Prefab/PengGangCard/gangBack",
-								                pengGangParenTransformB.transform, new Vector3 (-370 + PengGangCardList.Count * 190f + i * 60, 0));
-							tempGangList.Add (obj);
-						} else if (i == 3) {
-							GameObject obj1 = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-								                 pengGangParenTransformB.transform, new Vector3 (-310f + PengGangCardList.Count * 190f, 24f));
-							obj1.GetComponent<PutoutCardView> ().setPoint (selfGangCardPoint);
-							tempGangList.Add (obj1);
-						}
-
+					if (_uiHelper.findIndexInPGC (Direction.B,cardPoint) == -1) {//杠别人
+						_uiHelper.removeLastPutoutCard ();
+						_uiHelper.removeMyHandCard (cardPoint, 3);
+						_uiHelper.addPGCCards (Direction.B, cardPoint, 2);
+					} else {//摸牌杠
+						_uiHelper.removeMyHandCard(cardPoint,1);
+						_uiHelper.addPGCCards(Direction.B,cardPoint,5);
 					}
 
-					PengGangCardList.Add (tempGangList);
+				} else if (gangKind == 1) { //暗杠
+
+					_data.paiArray [1] [cardPoint] = 4;
+					_uiHelper.removeMyHandCard (cardPoint, 4);
+
+					_uiHelper.addPGCCards(Direction.B,cardPoint,3);
+
 				}
-			} else if (gangBackVo.cardList.Count == 2) {
+			} else if (gvo.cardList.Count == 2) {
 
 			}
-			SetPosition (false);
+			_uiHelper.rangeMyHandCard (false);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="path"></param>
-		/// <param name="parent"></param>
-		/// <param name="position"></param>
-		/// <returns></returns>
-		private GameObject createGameObjectAndReturn (string path, Transform parent, Vector3 position)
-		{
-			GameObject obj = Instantiate (Resources.Load (path)) as GameObject;
-			obj.transform.SetParent (parent);
-			//  obj.transform.parent = parent;
-			obj.transform.localScale = Vector3.one;
-			obj.transform.localPosition = position;
-			return obj;
-		}
 
 		public void myGangBtnClick ()
 		{
-			//useForGangOrPengOrChi = int.Parse (gangPaiList [0]);
-			GlobalData.isDrag = true;
-			if (gangPaiList.Length == 1) {
-				useForGangOrPengOrChi = int.Parse (gangPaiList [0]);
-				selfGangCardPoint = useForGangOrPengOrChi;
-
-			} else {//多张牌
-				useForGangOrPengOrChi = int.Parse (gangPaiList [0]);
-				selfGangCardPoint = useForGangOrPengOrChi;
-			}
-
-			GameManager.getInstance ().Server.requset (new GangPaiRequest (useForGangOrPengOrChi, 0));
-			MyDebug.Log ("==myGangBtnClick=Invoke=====>");
+			//TODO 多张可以杠的牌
+			_data.pgcCardPoint = int.Parse (_data.gangPaiList [0]);
+			_data.gangPaiList = null;
+			GameManager.getInstance ().Server.requset (new GangPaiRequest (_data.pgcCardPoint, 0));
 			SoundCtrl.getInstance ().playSoundByAction ("gang", GlobalData.getInstance ().myAvatarVO.account.sex);
 			_actionHlpr.cleanBtnShow ();
 			_actionHlpr.pengGangHuEffectCtrl (ActionType.GANG);
-			gangPaiList = null;
-			return;
 
-
+			GlobalData.isDrag = true;
 		}
 
-		/// <summary>
-		/// 清理桌面
-		/// </summary>
-		public void clean ()
-		{
-			cleanArrayList (handCardList);
-			cleanArrayList (tableCardList);
-			cleanArrayList (PengGangList_L);
-			cleanArrayList (PengGangCardList); 
-			cleanArrayList (PengGangList_R);
-			cleanArrayList (PengGangList_T);
-			if (mineList != null) {
-				mineList.Clear ();
-			}
-
-
-			_uiHelper.clean ();
-
-			if (pickCardItem != null) {
-				Destroy (pickCardItem);
-			}
-
-			if (otherPickCardItem != null) {
-				Destroy (otherPickCardItem);
-			}
-
-		}
-
-		private void cleanArrayList (List<List<GameObject>> list)
-		{
-			if (list != null) {
-				while (list.Count > 0) {
-					List<GameObject> tempList = list [0];
-					list.RemoveAt (0);
-					cleanList (tempList);
-				}
-			}
-		}
-
-		private void cleanList (List<GameObject> tempList)
-		{
-			if (tempList != null) {
-				while (tempList.Count > 0) {
-					GameObject temp = tempList [0];
-					tempList.RemoveAt (0);
-					GameObject.Destroy (temp);
-				}
-			}
-		}
+			
 
 		/**进入房间**/
-		public void joinToRoom (List<AvatarVO> avatars)
+		public void joinToRoom ()
 		{
-			avatarList = avatars;
-			for (int i = 0; i < avatars.Count; i++) {
-				setSeat (avatars [i]);
+			avatarList = GlobalData.getInstance ().playerList;
+			_data.AvatarList = GlobalData.getInstance ().playerList;
+			for (int i = 0; i < avatarList.Count; i++) {
+				_uiHelper.getCardGOs (i).PlayerItem.setAvatarVo (avatarList [i]);
 			}
 			_uiHelper.updateRule (roomRemark);
 			GlobalData.getInstance ().gameStatus = GameStatus.READYING;
@@ -1488,51 +647,6 @@ namespace AssemblyCSharp
 			markselfReadyGame ();
 		}
 
-		/// <summary>
-		/// 设置当前角色的座位
-		/// </summary>
-		/// <param name="avatar">Avatar.</param>
-		private void setSeat (AvatarVO avatar)
-		{
-			//游戏结束后用的数据，勿删！！！
-
-			//GlobalDataScript.palyerBaseInfo.Add (avatar.account.uuid, avatar.account);
-
-			if (avatar.account.uuid == GlobalData.getInstance ().myAvatarVO.account.uuid) {
-				playerItems [0].setAvatarVo (avatar);
-			} else {
-				int myIndex = getMyIndexFromList ();
-				int curAvaIndex = avatarList.IndexOf (avatar);
-				int seatIndex = curAvaIndex - myIndex;
-				if (seatIndex < 0) {
-					seatIndex = 4 + seatIndex;
-				}
-				playerItems [seatIndex].setAvatarVo (avatar);
-			}
-
-		}
-
-		/// <summary>
-		/// Gets my index from list.
-		/// </summary>
-		/// <returns>The my index from list.</returns>
-		private int getMyIndexFromList ()
-		{
-			//return getIndex (GlobalDataScript.loginResponseData.account.uuid);
-			if (avatarList != null) {
-				var myaccount = GlobalData.getInstance ().myAvatarVO.account;
-				for (int i = 0; i < avatarList.Count; i++) {
-					if (avatarList [i].account.uuid == myaccount.uuid || avatarList [i].account.openid == myaccount.openid) {
-						GlobalData.getInstance ().myAvatarVO.account.uuid = avatarList [i].account.uuid;
-//						MyDebug.Log ("数据正常返回" + i);
-						return i;
-					}
-
-				}
-			}
-			MyDebug.Log ("数据异常返回0");
-			return 0;
-		}
 
 		private int getIndex (int uuid)
 		{
@@ -1551,8 +665,8 @@ namespace AssemblyCSharp
 		public void otherUserJointRoom (ClientResponse response)
 		{
 			AvatarVO avatar = JsonMapper.ToObject<AvatarVO> (response.message);
+			_uiHelper.getCardGOs (avatarList.Count).PlayerItem.setAvatarVo (avatar);
 			avatarList.Add (avatar);
-			setSeat (avatar);
 		}
 
 
@@ -1561,9 +675,8 @@ namespace AssemblyCSharp
 	 */ 
 		public void myHuBtnClick ()
 		{
-
-			if (SelfAndOtherPutoutCard != -1) {
-				int cardPoint = SelfAndOtherPutoutCard;//需修改成正确的胡牌cardpoint
+			if (_data.pgcCardPoint != -1) {
+				int cardPoint = _data.pgcCardPoint;//需修改成正确的胡牌cardpoint
 				CardVO requestVo = new CardVO ();
 				requestVo.cardPoint = cardPoint;
 				if (isQiangHu) {
@@ -1574,12 +687,6 @@ namespace AssemblyCSharp
 				GameManager.getInstance ().Server.requset (new HupaiRequest (sendMsg));
 				_actionHlpr.cleanBtnShow ();
 			}
-
-
-			//模拟胡牌操作
-			//ClientResponse response = new ClientResponse();
-			//HupaiResponseItem itemData = new HupaiResponseItem();
-			//itemData.cardlist = new int[2][27]{{},{}}
 		}
 
 
@@ -1590,7 +697,6 @@ namespace AssemblyCSharp
 		private void hupaiCallBack (ClientResponse response)
 		{
 			//删除这句，未区分胡家是谁
-			GlobalData.hupaiResponseVo = new HupaiResponseVo ();
 			GlobalData.hupaiResponseVo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
 
 			string scores = GlobalData.hupaiResponseVo.currentScore;
@@ -1600,15 +706,16 @@ namespace AssemblyCSharp
 			if (GlobalData.hupaiResponseVo.type == "0") {
 				SoundCtrl.getInstance ().playSoundByAction ("hu", GlobalData.getInstance ().myAvatarVO.account.sex);
 				_actionHlpr.pengGangHuEffectCtrl (ActionType.HU);
+
 				for (int i = 0; i < GlobalData.hupaiResponseVo.avatarList.Count; i++) {
 					if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 1) {//胡
-						playerItems [getIndexByDir (getDirection (i))].setHuFlagDisplay ();
+						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundCtrl.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
 					} else if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 2) {
-						playerItems [getIndexByDir (getDirection (i))].setHuFlagDisplay ();
+						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundCtrl.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
 					} else {
-						playerItems [getIndexByDir (getDirection (i))].setHuFlagHidde ();
+						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagHidde ();
 					}
 
 				}
@@ -1617,6 +724,7 @@ namespace AssemblyCSharp
 				if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.getInstance ().roomVO.roomType == GameType.GI_PING_HU) {//只有转转麻将才显示抓码信息
 					if (GlobalData.getInstance ().roomVO.ma > 0 && allMas != null && allMas.Length > 0) {
 						zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
+						zhuamaPanel.GetComponent<ZhuMaScript> ().init (_data);
 						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, GlobalData.hupaiResponseVo.validMas);
 						Invoke ("openGameOverPanelSignal", 7);
 					} else {
@@ -1691,8 +799,9 @@ namespace AssemblyCSharp
 					string itemstr = scoreList [i];
 					int uuid = int.Parse (itemstr.Split (new char[1]{ ':' }) [0]);
 					int score = int.Parse (itemstr.Split (new char[1]{ ':' }) [1]) + 1000;
-					playerItems [getIndexByDir (getDirection (getIndex (uuid)))].scoreText.text = score + "";
-					avatarList [getIndex (uuid)].scores = score;
+					int avatarIndex = _data.toAvatarIndex (uuid);
+					_uiHelper.getCardGOs (avatarIndex).PlayerItem.scoreText.text = score + "";
+					avatarList [avatarIndex].scores = score;
 				}
 			}
 
@@ -1702,27 +811,21 @@ namespace AssemblyCSharp
 		private void openGameOverPanelSignal ()
 		{//单局结算
 			_actionHlpr.liujuEffect.SetActive (false);
-			setAllPlayerHuImgVisbleToFalse ();
+			_uiHelper.hideHuIcon ();
 			if (zhuamaPanel != null) {
 				Destroy (zhuamaPanel.GetComponent<ZhuMaScript> ());
 				Destroy (zhuamaPanel);
 			}
 
 			//GlobalDataScript.singalGameOver = PrefabManage.loadPerfab("prefab/Panel_Game_Over");
-			GameObject obj = PrefabManage.loadPerfab ("Prefab/Panel_Game_Over");
-			avatarList [bankerId].main = false;
-			getDirection (bankerId);
-			playerItems [curDirIndex].setbankImgEnable (false);
-			if (handCardList != null && handCardList.Count > 0 && handCardList [0].Count > 0) {
-				for (int i = 0; i < handCardList [0].Count; i++) {
-					handCardList [0] [i].GetComponent<bottomScript> ().onSendMessage -= cardChange;
-					handCardList [0] [i].GetComponent<bottomScript> ().reSetPoisiton -= cardSelect;
-				}
-			}
+			GameObject gameOverView = PrefabManage.loadPerfab ("Prefab/Panel_Game_Over");
+			avatarList [_data.bankerIndex].main = false;
+			_uiHelper.getBankerCGO ().PlayerItem.setbankImgEnable (false);
 
-			initPanel ();
-			obj.GetComponent<GameOverScript> ().setDisplaContent (0, avatarList, allMas, GlobalData.hupaiResponseVo.validMas);
-			GlobalData.singalGameOverList.Add (obj);
+
+			cleanTable ();
+			gameOverView.GetComponent<GameOverScript> ().setDisplaContent (0, avatarList, allMas, GlobalData.hupaiResponseVo.validMas);
+			GlobalData.singalGameOverList.Add (gameOverView);
 			allMas = "";//初始化码牌数据为空
 			//GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ().setDisplaContent (0,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);	
 		}
@@ -1755,19 +858,18 @@ namespace AssemblyCSharp
 
 					int uuid = responseMsg.uuid;
 					if (uuid != GlobalData.getInstance ().myAvatarVO.account.uuid) {
-						int index = getIndex (uuid);
+						int index = _data.toAvatarIndex (uuid);
 						avatarList.RemoveAt (index);
-
-						for (int i = 0; i < playerItems.Count; i++) {
-							playerItems [i].setAvatarVo (null);
+						_data.AvatarList = GlobalData.getInstance ().playerList;
+						int i = 0;
+						for (; i < avatarList.Count; i++) {
+							var avo = avatarList [i];
+							_uiHelper.getCardGOs (i).PlayerItem.setAvatarVo (avo);
 						}
-
-						if (avatarList != null) {
-							for (int i = 0; i < avatarList.Count; i++) {
-								setSeat (avatarList [i]);
-							}
-							markselfReadyGame ();
+						for (; i < 4; i++) {
+							_uiHelper.getCardGOs (i).PlayerItem.setAvatarVo (avatarList [i]);
 						}
+						markselfReadyGame ();
 					} else {
 						exitOrDissoliveRoom ();
 					}
@@ -1794,12 +896,7 @@ namespace AssemblyCSharp
 			//===============================================
 			JsonData json = JsonMapper.ToObject (response.message);
 			int avatarIndex = Int32.Parse (json ["avatarIndex"].ToString ());
-			int myIndex = getMyIndexFromList ();
-			int seatIndex = avatarIndex - myIndex;
-			if (seatIndex < 0) {
-				seatIndex = 4 + seatIndex;
-			}
-			playerItems [seatIndex].readyImg.enabled = true;
+			_uiHelper.getCardGOs (avatarIndex).PlayerItem.readyImg.enabled = true;
 			avatarList [avatarIndex].isReady = true;
 		}
 
@@ -1818,293 +915,85 @@ namespace AssemblyCSharp
 		/*************************断线重连*********************************/
 		private void reEnterRoom ()
 		{
-			GlobalData.getInstance ().isReEnter = false;
 			_uiHelper.updateRule (roomRemark);
 			//设置座位
 
 			avatarList = GlobalData.getInstance ().playerList;
-			AvatarVO myAVO = GlobalData.getInstance ().myAvatarVO;
+			_data.AvatarList = GlobalData.getInstance ().playerList;
 			for (int i = 0; i < avatarList.Count; i++) {
-				AvatarVO avo = avatarList [i];
-				setSeat (avo);
-				if (avo.account.uuid == myAVO.account.uuid || avo.account.openid == myAVO.account.openid) {
-					_data.setMyAvatarIndex (i);
-				}
+				_uiHelper.getCardGOs (i).PlayerItem.setAvatarVo (avatarList [i]);
 			}
 
 
-			int[][] selfPaiArray = avatarList [_data.myIndex].paiArray;
-			if (selfPaiArray == null || selfPaiArray.Length == 0) {//游戏还没有开始
+			if (_data.paiArray.Count == 0) {//游戏还没有开始
 				GlobalData.getInstance ().gameStatus = GameStatus.READYING;
 
 			} else {//牌局已开始
 				GlobalData.getInstance ().gameStatus = GameStatus.GAMING;
-				setAllPlayerReadImgVisbleToFalse ();
+				_uiHelper.hideReadyIcon ();
 				cleanGameplayUI ();
-				//显示打牌数据
-				displayTableCards ();
-				//显示碰牌
-				displayOtherHandercard ();//显示其他玩家的手牌
-				displayallGangCard ();//显示杠牌
-				displayPengCard ();//显示碰牌
-				dispalySelfhanderCard ();//显示自己的手牌
+
+				for (int i = 0; i < avatarList.Count; i++) {
+					AvatarVO avo = avatarList [i];
+					var dir = _data.toGameDir (i);
+					//HandCard
+					_uiHelper.addOtherHandCards (dir, avo.commonCards);
+					//TableCard
+					int[] chupai = avo.chupais;
+					if (chupai != null && chupai.Length > 0) {
+						for (int j = 0; j < chupai.Length; j++) {
+							_uiHelper.addCardToTable (dir, chupai [j]);
+						}
+					}
+					//GangCard
+					int[] paiArrayType = avo.paiArray [1];
+					if (paiArrayType.Contains<int> (2)) {
+						string gangString = avo.huReturnObjectVO.totalInfo.gang;
+						if (gangString != null) {
+							string[] gangArray = gangString.Split (new char[1]{ ',' });
+							for (int j = 0; j < gangArray.Length; j++) {
+								string item = gangArray [j];
+								string[] vals = item.Split (new char[1]{ ':' });
+								GangpaiObj gangpaiObj = new GangpaiObj ();
+								gangpaiObj.uuid = vals [0];
+								gangpaiObj.cardPiont = int.Parse (vals [1]);
+								gangpaiObj.type = vals [2];
+								//增加判断是否为自己的杠牌的操作
+								avo.paiArray [0] [gangpaiObj.cardPiont] -= 4;
+								if (gangpaiObj.type == "an") {
+									_uiHelper.addPGCCards (_data.toGameDir (i), gangpaiObj.cardPiont, 3);
+
+								} else {
+									_uiHelper.addPGCCards (_data.toGameDir (i), gangpaiObj.cardPiont, 2);
+
+								}
+							}
+						}
+					}
+					//PengCard
+					if (paiArrayType.Contains<int> (1)) {
+						for (int j = 0; j < paiArrayType.Length; j++) {
+							if (paiArrayType [j] == 1 && avo.paiArray [0] [j] > 0) {
+								avo.paiArray [0] [j] -= 3;
+								_uiHelper.addPGCCards (_data.toGameDir (i), j, 1);
+							}
+						}
+					}
+				}
+				_uiHelper.addMyHandCards (_data.paiArray [0]);
 				GameManager.getInstance ().Server.requset (new CurrentStatusRequest ());
 			}
 
 		}
 
-
-
-
-
-
-		private void dispalySelfhanderCard ()
-		{
-			mineList = ToList (avatarList [getMyIndexFromList ()].paiArray);
-			for (int i = 0; i < mineList [0].Count; i++) {
-				if (mineList [0] [i] > 0) {
-					for (int j = 0; j < mineList [0] [i]; j++) {
-						GameObject gob = Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
-						//GameObject.Instantiate ("");
-
-						if (gob != null) {//
-							gob.transform.SetParent (parentList [0]);//设置父节点
-							gob.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
-							gob.GetComponent<bottomScript> ().onSendMessage += cardChange;//发送消息fd
-							gob.GetComponent<bottomScript> ().reSetPoisiton += cardSelect;
-							gob.GetComponent<bottomScript> ().setPoint (i);//设置指针                                                                                         
-							handCardList [0].Add (gob);//增加游戏对象
-						}
-					}
-
-				}
-			}
-			SetPosition (false);
-		}
-
-		private List<List<int>> ToList (int[][] param)
-		{
-			List<List<int>> returnData = new List<List<int>> ();
-			for (int i = 0; i < param.Length; i++) {
-				List<int> temp = new List<int> ();
-				for (int j = 0; j < param [i].Length; j++) {
-					temp.Add (param [i] [j]);
-				}
-				returnData.Add (temp);
-			}
-			return returnData;
-		}
-
 		public void myselfSoundActionPlay ()
 		{
-			playerItems [0].showChatAction ();
+			_uiHelper.getCardGOs (Direction.B).PlayerItem.showChatAction ();
 		}
 
 
-		/**显示打牌数据在桌面**/
-		private void displayTableCards ()
-		{
-			for (int i = 0; i < avatarList.Count; i++) {
-				AvatarVO avo = avatarList [i];
-				int[] chupai = avo.chupais;
-				if (chupai != null && chupai.Length > 0) {
-					for (int j = 0; j < chupai.Length; j++) {
-						int cardpoint = chupai [j];
-						_uiHelper.addCardToTable (cardpoint, _data.toGameDir(i), tableCardList, outparentList);
-					}
-				}
-			}
-		}
-
-		/**显示其他人的手牌**/
-		private void displayOtherHandercard ()
-		{
-			for (int i = 0; i < avatarList.Count; i++) {
-				AvatarVO avo = avatarList [i];
-				string dir = getDirection (getIndex (avo.account.uuid));
-				int count = avo.commonCards;
-				if (dir != DirectionEnum.Bottom) {
-					initOtherCardList (dir, count);
-				}
-
-			}
-		}
-
-		/**显示杠牌**/
-		private void displayallGangCard ()
-		{
-			for (int i = 0; i < avatarList.Count; i++) {
-				AvatarVO avo = avatarList [i];
-				int[] paiArrayType = avo.paiArray [1];
-				string dirstr = getDirection (getIndex (avo.account.uuid));
-				if (paiArrayType.Contains<int> (2)) {
-					string gangString = avo.huReturnObjectVO.totalInfo.gang;
-					if (gangString != null) {
-						string[] gangtemps = gangString.Split (new char[1]{ ',' });
-						for (int j = 0; j < gangtemps.Length; j++) {
-							string item = gangtemps [j];
-							GangpaiObj gangpaiObj = new GangpaiObj ();
-							gangpaiObj.uuid = item.Split (new char[1]{ ':' }) [0];
-							gangpaiObj.cardPiont = int.Parse (item.Split (new char[1]{ ':' }) [1]);
-							gangpaiObj.type = item.Split (new char[1]{ ':' }) [2];
-							//增加判断是否为自己的杠牌的操作
-							avo.paiArray [0] [gangpaiObj.cardPiont] -= 4;
 
 
-							if (gangpaiObj.type == "an") {
-								doDisplayPengGangCard (dirstr, gangpaiObj.cardPiont, 4, 1);
-
-							} else {
-								doDisplayPengGangCard (dirstr, gangpaiObj.cardPiont, 4, 0);
-
-							}
-						}
-					}
-				}
-
-			}
-		}
-
-		private void displayPengCard ()
-		{
-			for (int i = 0; i < avatarList.Count; i++) {
-				AvatarVO avo = avatarList [i];
-				int[] paiArrayType = avo.paiArray [1];
-				string dirstr = getDirection (getIndex (avo.account.uuid));
-				if (paiArrayType.Contains<int> (1)) {
-					for (int j = 0; j < paiArrayType.Length; j++) {
-						if (paiArrayType [j] == 1 && avo.paiArray [0] [j] > 0) {
-							avo.paiArray [0] [j] -= 3;
-							doDisplayPengGangCard (dirstr, j, 3, 2);
-
-						}
-					}
-				}
-			}
-		}
-
-
-		/**
-	 * 显示杠碰牌
-	 * cloneCount 代表clone的次数  若为3则表示碰   若为4则表示杠
-	 */ 
-		private void doDisplayPengGangCard (string dirstr, int point, int cloneCount, int flag)
-		{
-			List<GameObject> gangTempList;
-			switch (dirstr) {
-			case DirectionEnum.Bottom:
-				gangTempList = new List<GameObject> ();
-				for (int i = 0; i < cloneCount; i++) {
-					GameObject obj;
-					if (i < 3) {
-						if (flag != 1) {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-								pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.GetComponent<PutoutCardView> ().setPoint (point);
-							obj.transform.localScale = Vector3.one;
-						} else {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/gangBack",
-								pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.transform.localScale = Vector3.one;
-						}
-					} else {
-						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_B",
-							pengGangParenTransformB.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-						obj.GetComponent<PutoutCardView> ().setPoint (point);
-						obj.transform.localPosition = new Vector3 (-310f + PengGangCardList.Count * 190f, 24f);
-					}
-
-
-					gangTempList.Add (obj);
-				}
-				PengGangCardList.Add (gangTempList);
-				break;
-			case DirectionEnum.Top:
-				gangTempList = new List<GameObject> ();
-				for (int i = 0; i < cloneCount; i++) {
-					GameObject obj;
-					if (i < 3) {
-						if (flag != 1) {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_T",
-								pengGangParenTransformT.transform, new Vector3 (-370f + PengGangList_T.Count * 190f + i * 60f, 0));
-							obj.transform.parent = pengGangParenTransformT.transform;
-							obj.GetComponent<PutoutCardView> ().setPoint (point);
-						} else {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_T",
-								pengGangParenTransformT.transform, new Vector3 (-370f + PengGangCardList.Count * 190f + i * 60f, 0));
-							obj.transform.localScale = Vector3.one;
-						}
-						obj.transform.localPosition = new Vector3 (251 - PengGangList_T.Count * 120f + i * 37, 0f);
-					} else {
-						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_T",
-							pengGangParenTransformT.transform, new Vector3 (-370f + PengGangList_T.Count * 190f + i * 60f, 0));
-					
-						obj.GetComponent<PutoutCardView> ().setPoint (point);
-						obj.transform.localPosition = new Vector3 (251 - PengGangList_T.Count * 120f + 37f, 20f);
-
-					} 
-					gangTempList.Add (obj);
-				}
-				PengGangList_T.Add (gangTempList);
-				break;
-			case DirectionEnum.Left:
-				gangTempList = new List<GameObject> ();
-				for (int i = 0; i < cloneCount; i++) {
-					GameObject obj;
-					if (i < 3) {
-						if (flag != 1) {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_L",
-								pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
-							obj.transform.parent = pengGangParenTransformL.transform;
-							obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
-						} else {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_L&R",
-								pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
-						}
-						obj.transform.localPosition = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - i * 28f);
-					} else {
-						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_L",
-							pengGangParenTransformL.transform, new Vector3 (-370f + PengGangList_L.Count * 190f + i * 60f, 0));
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
-						obj.transform.localPosition = new Vector3 (0f, 122 - PengGangList_L.Count * 95f - 18f);
-
-					}
-
-
-					gangTempList.Add (obj);
-				}
-				PengGangList_L.Add (gangTempList);
-				break;
-			case DirectionEnum.Right:
-				gangTempList = new List<GameObject> ();
-				for (int i = 0; i < cloneCount; i++) {
-					GameObject obj;
-					if (i < 3) {
-						if (flag != 1) {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_R",
-								pengGangParenTransformR.transform, new Vector3 (-370f + PengGangList_R.Count * 190f + i * 60f, 0));
-							obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
-							obj.transform.parent = pengGangParenTransformR.transform;
-						} else {
-							obj = createGameObjectAndReturn ("Prefab/PengGangCard/GangBack_L&R",
-								pengGangParenTransformR.transform, new Vector3 (-370f + PengGangList_R.Count * 190f + i * 60f, 0));
-						}
-						obj.transform.localPosition = new Vector3 (0, -122 + PengGangList_R.Count * 95 + i * 28f);
-
-						obj.transform.SetSiblingIndex (0);
-					} else {
-						obj = createGameObjectAndReturn ("Prefab/PengGangCard/PengGangCard_R",
-							pengGangParenTransformR.transform, new Vector3 (-370f + PengGangList_R.Count * 190f + i * 60f, 0));
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (point);
-						obj.transform.localPosition = new Vector3 (0f, -122 + PengGangList_R.Count * 95 + 33f);
-					}
-
-					gangTempList.Add (obj);
-				}
-				PengGangList_R.Add (gangTempList);
-				break;
-			}
-		}
 
 		public void inviteFriend ()
 		{
@@ -2117,24 +1006,9 @@ namespace AssemblyCSharp
 		public void offlineNotice (ClientResponse response)
 		{
 			int uuid = int.Parse (response.message);
-			int index = getIndex (uuid);
-			string dirstr = getDirection (index);
-			switch (dirstr) {
-			case DirectionEnum.Bottom:
-				playerItems [0].GetComponent<PlayerItemView> ().setPlayerOffline ();
-				break;
-			case DirectionEnum.Right:
-				playerItems [1].GetComponent<PlayerItemView> ().setPlayerOffline ();
-				break;
-			case DirectionEnum.Top:
-				playerItems [2].GetComponent<PlayerItemView> ().setPlayerOffline ();
-				break;
-			case DirectionEnum.Left:
-				playerItems [3].GetComponent<PlayerItemView> ().setPlayerOffline ();
-				break;
-		
+			int index = _data.toAvatarIndex (uuid);
+			_uiHelper.getCardGOs (index).PlayerItem.setPlayerOffline ();
 
-			}
 
 			//申请解散房间过程中，有人掉线，直接不能解散房间
 			if (GlobalData.isDissoliving) {
@@ -2148,23 +1022,9 @@ namespace AssemblyCSharp
 		public void onlineNotice (ClientResponse  response)
 		{
 			int uuid = int.Parse (response.message);
-			int index = getIndex (uuid);
-			string dirstr = getDirection (index);
-			switch (dirstr) {
-			case DirectionEnum.Bottom:
-				playerItems [0].GetComponent<PlayerItemView> ().setPlayerOnline ();
-				break;
-			case DirectionEnum.Right:
-				playerItems [1].GetComponent<PlayerItemView> ().setPlayerOnline ();
-				break;
-			case DirectionEnum.Top:
-				playerItems [2].GetComponent<PlayerItemView> ().setPlayerOnline ();
-				break;
-			case DirectionEnum.Left:
-				playerItems [3].GetComponent<PlayerItemView> ().setPlayerOnline ();
-				break;
+			var avatarIndex = _data.toAvatarIndex (uuid);
+			_uiHelper.getCardGOs (avatarIndex).PlayerItem.setPlayerOnline ();
 
-			}
 		}
 
 
@@ -2172,122 +1032,98 @@ namespace AssemblyCSharp
 		{
 			string[] arr = response.message.Split (new char[1]{ '|' });
 			int uuid = int.Parse (arr [1]);
-			int myIndex = getMyIndexFromList ();
-			int curAvaIndex = getIndex (uuid);
-			int seatIndex = curAvaIndex - myIndex;
-			if (seatIndex < 0) {
-				seatIndex = 4 + seatIndex;
-			}
-			playerItems [seatIndex].showChatMessage (int.Parse (arr [0]));
+			var avatarIndex = _data.toAvatarIndex (uuid);
+			_uiHelper.getCardGOs (avatarIndex).PlayerItem.showChatMessage (int.Parse (arr [0]));
 		}
 
 
 		/*显示自己准备*/
 		private void markselfReadyGame ()
 		{
-			playerItems [0].readyImg.transform.gameObject.SetActive (true);
+			_uiHelper.getCardGOs (Direction.B).PlayerItem.readyImg.transform.gameObject.SetActive (true);
 		}
 
 
 		public void micInputNotice (ClientResponse response)
 		{
-			int sendUUid = int.Parse (response.message);
-			if (sendUUid > 0) {
-				for (int i = 0; i < playerItems.Count; i++) {
-					if (playerItems [i].getUuid () != -1) {
-						if (sendUUid == playerItems [i].getUuid ()) {
-							playerItems [i].showChatAction ();
-						}
-					}
-				}
-			}
+			int uuid = int.Parse (response.message);
+			var avatarIndex = _data.toAvatarIndex (uuid);
+			_uiHelper.getCardGOs (avatarIndex).PlayerItem.showChatAction ();
 		}
 
 
 		public void returnGameResponse (ClientResponse response)
 		{
-//		string returnstr = response.message;
-			//JsonData returnJsonData = new JsonData (returnstr);
 			//1.显示剩余牌的张数和圈数
-			JsonData returnJsonData = JsonMapper.ToObject (response.message);
-			string surplusCards = returnJsonData ["surplusCards"].ToString ();
-			LeavedCastNumText.text = surplusCards;
-			LeavedCardsNum = int.Parse (surplusCards);
-			int gameRound = int.Parse (returnJsonData ["gameRound"].ToString ());
+			JsonData msgData = JsonMapper.ToObject (response.message);
+			string surplusCards = msgData ["surplusCards"].ToString ();
+			_data.remainCardNum = int.Parse (surplusCards) + 1;
+			_uiHelper.updateRemainCardNum ();
+			int gameRound = int.Parse (msgData ["gameRound"].ToString ());
 			LeavedRoundNumText.text = gameRound + "";
 			GlobalData.getInstance ().remainRoundCount = gameRound;
 
 
-			int curAvatarIndexTemp = -1;//当前出牌人的索引
-			int pickAvatarIndexTemp = -1; //当前摸牌人的索引
-			int putOffCardPointTemp = -1;//当前打得点数
-			int currentCardPointTemp = -1;//当前摸的点数
+			int avatarIndexPutout = -1;//当前出牌人的索引
+			int avatarIndexPick = -1; //当前摸牌人的索引
+			int cardPointPutout = -1;//当前打得点数
+			int cardPointPick = -1;//当前摸的点数
 
 
 			//不是自己摸牌
 			try {
 
-				curAvatarIndexTemp = int.Parse (returnJsonData ["curAvatarIndex"].ToString ());//当前打牌人的索引
-				putOffCardPointTemp = int.Parse (returnJsonData ["putOffCardPoint"].ToString ());//当前打得点数
+				avatarIndexPutout = int.Parse (msgData ["curAvatarIndex"].ToString ());//当前打牌人的索引
+				cardPointPutout = int.Parse (msgData ["putOffCardPoint"].ToString ());//当前打得点数
 
 
-				putOutCardPoint = putOffCardPointTemp;//碰
-				//useForGangOrPengOrChi = putOutCardPoint;//杠
-				//	selfGangCardPoint = useForGangOrPengOrChi;
-				SelfAndOtherPutoutCard = putOutCardPoint;
-				pickAvatarIndexTemp = int.Parse (returnJsonData ["pickAvatarIndex"].ToString ()); //当前摸牌牌人的索引
+				_data.pgcCardPoint = cardPointPutout;
+				avatarIndexPick = int.Parse (msgData ["pickAvatarIndex"].ToString ()); //当前摸牌牌人的索引
 
-				if(returnJsonData.Keys.Contains("currentCardPoint")){
-					currentCardPointTemp = int.Parse (returnJsonData ["currentCardPoint"].ToString ());//当前摸得的点数  
-					SelfAndOtherPutoutCard = currentCardPointTemp; 
+				if (msgData.Keys.Contains ("currentCardPoint")) {
+					cardPointPick = int.Parse (msgData ["currentCardPoint"].ToString ());//当前摸得的点数  
+					_data.pickPoint = cardPointPick; 
 				}
 
 			} catch (Exception e) {
 				Debug.Log (e.ToString ());
 			}
 
+			_uiHelper.setDirectPointer (avatarIndexPick);
+			_data.putoutIndex = avatarIndexPutout;
 
-			if (pickAvatarIndexTemp == getMyIndexFromList ()) {//自己摸牌
-				if (currentCardPointTemp == -2) {
-					MoPaiCardPoint = handCardList [0] [handCardList [0].Count - 1].GetComponent<bottomScript> ().getPoint ();
-					SelfAndOtherPutoutCard = MoPaiCardPoint; 
-					useForGangOrPengOrChi = curAvatarIndexTemp;
+			if (avatarIndexPick == _data.myIndex) {//TODO 这一段很有问题，删了又加，多余
+				if (cardPointPick == -2) {
+					int cardPoint = handCardList [0] [handCardList [0].Count - 1].GetComponent<bottomScript> ().getPoint ();
+
 					Destroy (handCardList [0] [handCardList [0].Count - 1]);
 					handCardList [0].Remove (handCardList [0] [handCardList [0].Count - 1]);
-					SetPosition (false);
-					putCardIntoMineList (MoPaiCardPoint);
-					moPai ();
-					curDirString = DirectionEnum.Bottom;
-					SetDirGameObjectAction ();
-					GlobalData.isDrag = true;	
+					_uiHelper.rangeMyHandCard (false);
+					putCardIntoMineList (cardPoint);
+					_uiHelper.addPickCard (_data.myIndex, cardPoint);
+
 					MyDebug.Log ("自己摸牌");
 
 				} else {
 					if ((handCardList [0].Count) % 3 != 1) {
-						MoPaiCardPoint = currentCardPointTemp;
-						MyDebug.Log ("摸牌" + MoPaiCardPoint);
-						SelfAndOtherPutoutCard = MoPaiCardPoint; 
-						useForGangOrPengOrChi = curAvatarIndexTemp;
+						int cardPoint = cardPointPick;
+						MyDebug.Log ("摸牌" + cardPoint);
 						for (int i = 0; i < handCardList [0].Count; i++) {
-							if (handCardList [0] [i].GetComponent<bottomScript> ().getPoint () == currentCardPointTemp) {
+							if (handCardList [0] [i].GetComponent<bottomScript> ().getPoint () == cardPointPick) {
 								Destroy (handCardList [0] [i]);
 								handCardList [0].Remove (handCardList [0] [i]);
 								break;
 							}
 						}
-						SetPosition (false);
-						putCardIntoMineList (MoPaiCardPoint);
-						moPai ();
-						curDirString = DirectionEnum.Bottom;
-						SetDirGameObjectAction ();
-						GlobalData.isDrag = true;	
+						_uiHelper.rangeMyHandCard (false);
+						putCardIntoMineList (cardPoint);
+						_uiHelper.addPickCard (_data.myIndex, cardPoint);
 					}
 
 				}
-
+				GlobalData.isDrag = true;	
 			} else { //别人摸牌
-				curDirString = getDirection (pickAvatarIndexTemp);
-				SetDirGameObjectAction ();
+				
 			}
 
 
@@ -2295,13 +1131,13 @@ namespace AssemblyCSharp
 
 
 			//光标指向打牌人
-			int dirindex = getIndexByDir (getDirection (curAvatarIndexTemp));
 
-			if (tableCardList [dirindex] == null || tableCardList [dirindex].Count == 0) {//刚启动
+			var Table = _uiHelper.getCardGOs (avatarIndexPutout).Table;
+			if (Table.Count == 0) {//刚启动
 
 
 			} else {
-				_uiHelper.lastCardOnTable = tableCardList [dirindex] [tableCardList [dirindex].Count - 1];
+				_uiHelper.lastCardOnTable = Table [Table.Count - 1];
 				_uiHelper.addPointer (_uiHelper.lastCardOnTable);
 			}
 

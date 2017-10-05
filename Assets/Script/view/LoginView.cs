@@ -116,10 +116,9 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 		RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
 		GameManager.getInstance ().DataMgr.updateRoomVO (vo);
-		GlobalData.getInstance ().isReEnter = true;
 		ChatSocket.getInstance ().sendMsg (new LoginChatRequest(GlobalData.getInstance().myAvatarVO.account.uuid));
 		SceneManager.getInstance ().changeToScene (SceneType.GAME);
-	
+		SceneManager.getInstance ().CurScenePanel.GetComponent<GameView> ().Data.isReEnter = true;
 	}
 
 

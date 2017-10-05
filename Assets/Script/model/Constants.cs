@@ -6,6 +6,12 @@ namespace AssemblyCSharp
 	{
 		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;
 	}
+	public enum PaiArrayType{
+		PENG=1,
+		GANG=2,
+		CHI=3,
+		PENG_CHI=4
+	}
 	public enum GameType{
 		ZHUAN_ZHUAN=1,
 		HUA_SHUI=2,

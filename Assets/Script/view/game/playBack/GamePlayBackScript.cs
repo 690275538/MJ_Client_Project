@@ -88,8 +88,8 @@ public class GamePlayBackScript : MonoBehaviour {
 					GameObject temp = null;
 					for (int b = 0; b < tempPai [a]; b++) {
 						temp = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[i], parentList [i], Vector3.one);
-						if (pathDirString [i] == DirectionEnum.Left || pathDirString [i] == DirectionEnum.Right) {
-							temp.GetComponent<PutoutCardView> ().setLefAndRightPoint (a);
+						if (pathDirString [i] == Direction.L.ToString() || pathDirString [i] == Direction.R.ToString()) {
+							temp.GetComponent<PutoutCardView> ().setPoint (a,Direction.L);
 						} else {
 							temp.GetComponent<PutoutCardView> ().setPoint (a);
 						}
@@ -199,7 +199,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			break;
 		case 1:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_R", parentList [avaIndex], new Vector3(0,250));
-			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 			break;
 		case 2:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_T", parentList [avaIndex], new Vector3(-260,0));
@@ -207,7 +207,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			break;
 		case 3:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_L", parentList [avaIndex], new Vector3(0,-190));
-			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 			break;
 		}
 
@@ -223,7 +223,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			break;
 		case 1:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_R", parentList [avaIndex], new Vector3(0,250));
-			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.R);
 			break;
 		case 2:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_T", parentList [avaIndex], new Vector3(-260,0));
@@ -231,7 +231,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			break;
 		case 3:
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_L", parentList [avaIndex], new Vector3(0,-190));
-			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 			break;
 		}
 
@@ -441,8 +441,8 @@ public class GamePlayBackScript : MonoBehaviour {
 	private void frontIncard(int avaIndex,int cardPoint){
 		GameObject tempObj = null;
 		tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[avaIndex], parentList [avaIndex], Vector3.one);
-		if (pathDirString [avaIndex] == DirectionEnum.Left || pathDirString [avaIndex] == DirectionEnum.Right) {
-			tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+		if (pathDirString [avaIndex] == Direction.L.ToString() || pathDirString [avaIndex] == Direction.R.ToString()) {
+			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 
 		} else {
 			tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
@@ -548,7 +548,7 @@ public class GamePlayBackScript : MonoBehaviour {
 		temp = createGameObjectAndReturn (path,outparentList[avaIndex],poisVector3);
 		temp.transform.localScale = Vector3.one;
 		if (avaIndex == 1 || avaIndex == 3) {
-			temp.GetComponent<PutoutCardView> ().setLefAndRightPoint (index);
+			temp.GetComponent<PutoutCardView> ().setPoint (index,Direction.L);
 		} else {
 			temp.GetComponent<PutoutCardView>().setPoint(index);
 		}
@@ -612,7 +612,7 @@ public class GamePlayBackScript : MonoBehaviour {
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
 					case 1:
-					obj.GetComponent<PutoutCardView>().setLefAndRightPoint(cardPoint);
+					obj.GetComponent<PutoutCardView>().setPoint(cardPoint,Direction.L);
 						tempvector3 = new Vector3(0, -116 + pengGangLists[avaIndex].Count*90 + i*26f);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						obj.transform.SetSiblingIndex(0);
@@ -623,7 +623,7 @@ public class GamePlayBackScript : MonoBehaviour {
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
 					case 3:
-						obj.GetComponent<PutoutCardView>().setLefAndRightPoint(cardPoint);
+					obj.GetComponent<PutoutCardView>().setPoint(cardPoint,Direction.L);
 						tempvector3 = new Vector3(0, 142 - pengGangLists[avaIndex].Count*90f - i*26f, 0);
 						obj.transform.parent = pengGangParentList[avaIndex];
 						break;
@@ -706,7 +706,7 @@ public class GamePlayBackScript : MonoBehaviour {
 					}
 					GameObject obj = createGameObjectAndReturn (path, pengGangParentList [avaIndex], tempvector3);
 					if (avaIndex == 1 || avaIndex == 3) {
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 					} else {
 						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 					}
@@ -767,7 +767,7 @@ public class GamePlayBackScript : MonoBehaviour {
 						obj.transform.localPosition = new Vector3 (tempobj.transform.localPosition.x+60,24);
 						break;
 					case 1:
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 						obj.transform.localPosition = new Vector3 (0, tempobj.transform.localPosition.y + 37);
 						break;
 					case 2:
@@ -775,7 +775,7 @@ public class GamePlayBackScript : MonoBehaviour {
 						obj.transform.localPosition = new Vector3 (tempobj.transform.localPosition.x+37, 17);
 						break;
 					case 3:
-						obj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+						obj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 						obj.transform.localPosition = new Vector3 (0,tempobj.transform.localPosition.y - 17, 0);
 						break;
 					}
@@ -804,7 +804,7 @@ public class GamePlayBackScript : MonoBehaviour {
 			GameObject tempObj = null;
 			tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_"+pathDirString[avaIndex], parentList [avaIndex], Vector3.one);
 			if (avaIndex == 1 || avaIndex == 3) {
-				tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+				tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 			} else {
 				tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 			}
@@ -823,7 +823,7 @@ public class GamePlayBackScript : MonoBehaviour {
 				GameObject tempObj = null;
 				tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_" + pathDirString [avaIndex], parentList [avaIndex], Vector3.one);
 				if (avaIndex == 1 || avaIndex == 3) {
-					tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+					tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 				} else {
 					tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 				}
@@ -846,7 +846,7 @@ public class GamePlayBackScript : MonoBehaviour {
 					GameObject tempObj = null;
 					tempObj = createGameObjectAndReturn ("Prefab/playBack/HandCard_" + pathDirString [avaIndex], parentList [avaIndex], Vector3.one);
 					if (avaIndex == 1 || avaIndex == 3) {
-						tempObj.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+						tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 					} else {
 						tempObj.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 					}

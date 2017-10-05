@@ -3976,6 +3976,11 @@ MonoBehaviour:
   - {fileID: 22438122}
   - {fileID: 22476132}
   - {fileID: 22451134}
+  PlayerItemViews:
+  - {fileID: 11440022}
+  - {fileID: 11490162}
+  - {fileID: 11477048}
+  - {fileID: 11408872}
   dirGameList:
   - {fileID: 128054}
   - {fileID: 131762}

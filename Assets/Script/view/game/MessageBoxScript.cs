@@ -22,7 +22,7 @@ public class MessageBoxScript : MonoBehaviour {
 			myMaj = SceneManager.getInstance ().CurScenePanel.GetComponent<GameView> ();
 		}
 		if (myMaj != null) {
-			myMaj.playerItems [0].showChatMessage (index);
+			myMaj.PlayerItemViews [0].showChatMessage (index);
 		}
 		hidePanel ();
 	}

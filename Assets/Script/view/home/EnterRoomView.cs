@@ -99,7 +99,6 @@ public class EnterRoomView : MonoBehaviour{
 			GameManager.getInstance ().DataMgr.updateRoomVO (vo);
 
 			SceneManager.getInstance ().changeToScene (SceneType.GAME);
-			SceneManager.getInstance().CurScenePanel.GetComponent<GameView> ().joinToRoom (vo.playerList);
 			closeDialog ();
 		} else {
 			TipsManager.getInstance ().setTips (response.message);

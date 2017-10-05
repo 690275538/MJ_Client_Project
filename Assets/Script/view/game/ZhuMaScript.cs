@@ -24,8 +24,11 @@ public class ZhuMaScript : MonoBehaviour {
 	private List<string> mapaiList;
 	private string uuid;
 
+	private GamingData _data;
 
-
+	public void init(GamingData data){
+		_data = data;
+	}
 	void Start () {
 
 
@@ -34,54 +37,6 @@ public class ZhuMaScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
-	}
-
-
-	private int getIndex(int uuid){
-		if (avatarList != null) {
-			for (int i = 0; i < avatarList.Count; i++) {
-			if (avatarList[i].account.uuid ==uuid) {
-					return i;
-				}
-			}
-		}
-		return 0;
-	}
-
-	private string getDirection(int index){
-		 
-		int selfIndex = getIndex (GlobalData.getInstance().myAvatarVO.account.uuid);
-		int ratio = selfIndex - index;
-		if (ratio == 0) {
-			return DirectionEnum.Bottom;
-		}  
-		for (int i = 0; i < 4; i++)
-		{
-			selfIndex++;
-			if (selfIndex >= 4)
-			{
-				selfIndex = 0;
-			}
-			if (selfIndex == index)
-			{
-				if (i == 0)
-				{
-					MyDebug.Log ("getDirection == R");
-					return DirectionEnum.Right;
-				}
-				else if (i == 1)
-				{
-					MyDebug.Log ("getDirection == T");
-					return DirectionEnum.Top;
-				}
-				else
-				{
-					MyDebug.Log ("getDirection == L");
-					return DirectionEnum.Left;
-				}
-			}
-		}
-		return DirectionEnum.Bottom;
 	}
 
 
@@ -135,7 +90,7 @@ public class ZhuMaScript : MonoBehaviour {
 
 
 	private void doArrage(){
-		int referIndex = getIndex (int.Parse(uuid));
+		int referIndex = _data.toAvatarIndex (int.Parse(uuid));
 		int startPositionB = 0;
 		int startPositionT = 0;
 		int startPositionL = 0;
@@ -145,45 +100,45 @@ public class ZhuMaScript : MonoBehaviour {
 		for (int i = 0; i < mapaiList.Count; i++) {
 			int cardPoint =int.Parse(mapaiList [i]);
 			int positionIndex = (cardPoint + 1) % 9;
-			string resultPonsition ="";
+			Direction dir = Direction.B;
 			if (cardPoint != 31) {
 				switch(positionIndex){
 				case 1:
 				case 5:
 				case 0:
 
-					resultPonsition = getDirection (referIndex);	
+					dir = _data.toGameDir (referIndex);	
 					break;
 				case 2:
 				case 6:
 					if ((referIndex + 1) == 4) {
-						resultPonsition = getDirection (0);	
+						dir = _data.toGameDir (0);	
 					} else {
-						resultPonsition = getDirection (referIndex + 1);	
+						dir = _data.toGameDir (referIndex + 1);	
 					}
 
 					break;
 				case 4:
 				case 8:
 					if ((referIndex - 1) < 0) {
-						resultPonsition = getDirection (3);	
+						dir = _data.toGameDir (3);	
 					} else {
-						resultPonsition = getDirection (referIndex - 1);	
+						dir = _data.toGameDir (referIndex - 1);	
 					}
 					break;
 				case 3:
 				case 7:
 					if ((referIndex + 2) == 4) {
-						resultPonsition = getDirection (0);	
+						dir = _data.toGameDir (0);	
 					} else if ((referIndex + 2) > 4) {
-						resultPonsition = getDirection (1);	
+						dir = _data.toGameDir (1);	
 					} else if ((referIndex + 2) < 4) {
-						resultPonsition = getDirection (referIndex + 2);	
+						dir = _data.toGameDir (referIndex + 2);	
 					}
 					break;	
 				}
 			} else {
-				resultPonsition = getDirection (referIndex);
+				dir = _data.toGameDir (referIndex);
 			}
 
 
@@ -191,8 +146,8 @@ public class ZhuMaScript : MonoBehaviour {
 			GameObject itemTemp;
 
 
-			switch (resultPonsition) {
-			case DirectionEnum.Bottom:
+			switch (dir) {
+			case Direction.B:
 				if (checkIsVaild (cardPoint)) {
 					imgB.transform.gameObject.SetActive (true);
 				}
@@ -203,31 +158,31 @@ public class ZhuMaScript : MonoBehaviour {
 				itemTemp.transform.localPosition = new Vector3 (-149f+startPositionB  * 60f,0f, 0);
 				startPositionB += 1;
 				break;
-			case DirectionEnum.Left:
+			case Direction.L:
 				if (checkIsVaild (cardPoint)) {
 					imgL.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_L")) as GameObject;
-				itemTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 				itemTemp.transform.parent = leftContaner.transform;
 				itemTemp.transform.localScale = new Vector3(2.0f,2.0f,1.0f);
 				itemTemp.transform.localPosition = new Vector3 (0, 140f-startPositionL*50f, 0);
 
 				startPositionL += 1;
 				break;
-			case DirectionEnum.Right:
+			case Direction.R:
 				if (checkIsVaild (cardPoint)) {
 					imgR.transform.gameObject.SetActive (true);
 				}
 				itemTemp = Instantiate (Resources.Load ("Prefab/PengGangCard/PengGangCard_R")) as GameObject;
-				itemTemp.GetComponent<PutoutCardView> ().setLefAndRightPoint (cardPoint);
+				itemTemp.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.L);
 				itemTemp.transform.parent = rightContaner.transform;
 				itemTemp.transform.localScale = new Vector3(2.0f,2.0f,1.0f);
 				itemTemp.transform.localPosition = new Vector3 (0f, -140f+startPositionR*50f, 0);
 				startPositionR += 1;
 				itemTemp.transform.SetSiblingIndex (0);
 				break;
-			case DirectionEnum.Top:
+			case Direction.T:
 				if (checkIsVaild (cardPoint)) {
 					imgT.transform.gameObject.SetActive (true);
 				}
