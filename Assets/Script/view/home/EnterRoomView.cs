@@ -37,8 +37,8 @@ public class EnterRoomView : MonoBehaviour{
 	}
 
 	public void OnClickHandle (GameObject gobj){
-		//if(eventData.button)
-		MyDebug.Log(gobj);
+		
+
 		clickNumber (gobj.GetComponentInChildren<Text>().text);
 	}
 
@@ -46,7 +46,7 @@ public class EnterRoomView : MonoBehaviour{
 
 	private void clickNumber(string number){
 
-		MyDebug.Log (number.ToString ());
+
 		if (inputChars.Count >=6) {
 			return;
 		}
@@ -64,7 +64,7 @@ public class EnterRoomView : MonoBehaviour{
 	}
 
 	public void closeDialog(){
-		MyDebug.Log ("closeDialog");
+		
 		//GlobalDataScript.homePanel.SetActive (false);
 		removeListener ();
 		Destroy (this);
@@ -77,13 +77,13 @@ public class EnterRoomView : MonoBehaviour{
 
 	public void sureRoomNumber(){
 		if (inputChars.Count != 6) {
-			MyDebug.Log ("请先完整输入房间号码！");
+			
 			TipsManager.getInstance ().setTips ("请先完整输入房间号码！");
 			return;
 		}
 
 		String roomNumber = inputChars[0]+inputChars[1]+inputChars[2]+inputChars[3]+inputChars[4]+inputChars[5];
-		MyDebug.Log (roomNumber);
+
 		RoomJoinVo roomJoinVo = new  RoomJoinVo ();
 		roomJoinVo.roomId =int.Parse(roomNumber);
 		string sendMsg = JsonMapper.ToJson (roomJoinVo);
@@ -92,7 +92,7 @@ public class EnterRoomView : MonoBehaviour{
 	}
 
 	public void onJoinRoomCallBack(ClientResponse response){
-		MyDebug.Log (response);
+		
 
 		if (response.status == 1) {
 			RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);

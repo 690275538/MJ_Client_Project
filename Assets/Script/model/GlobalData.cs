@@ -24,14 +24,10 @@ public class GlobalData
 		return _instance;
 	}
 
-	/**是否到自己出牌**/
-	public static bool isDrag = false;
 	/**单局游戏结束服务器返回数据**/
 	public static HupaiResponseVo hupaiResponseVo;
 	/**全局游戏结束服务器返回数据**/
 	public static FinalGameEndVo finalGameEndVo;
-
-	public static int mainUuid;
 
 
 	/// <summary>
@@ -109,6 +105,7 @@ public class GlobalData
 	/**游戏状态**/
 	public GameStatus gameStatus;
 
+	public GamingData gamingData;
 	/**
 	 * 重新初始化数据
 	*/
@@ -119,8 +116,8 @@ public class GlobalData
 		playerList = null;
 		remainRoundCount = 0;
 		gameStatus = GameStatus.UNDEFINED;
+		gamingData = null;
 
-		isDrag = false;
 		finalGameEndVo = null;
 		singalGameOverList = new List<GameObject> ();
 		lotteryDatas = null;
@@ -131,6 +128,7 @@ public class GlobalData
 	{
 		roomVO = new RoomVO (); 
 		playerList = null;
+		gamingData = null;
 
 		gameStatus = GameStatus.UNDEFINED;
 	}

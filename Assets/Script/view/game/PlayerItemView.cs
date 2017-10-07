@@ -113,7 +113,7 @@ namespace AssemblyCSharp
 
 
 
-		public void setbankImgEnable (bool flag)
+		public void setBankerIconVisible (bool flag)
 		{
 			bankerImg.enabled = flag;
 
@@ -134,7 +134,7 @@ namespace AssemblyCSharp
 			return result;
 		}
 
-		public void clean ()
+		public void destroy_all ()
 		{
 			Destroy (headerIcon.gameObject);
 			Destroy (bankerImg.gameObject);
@@ -144,6 +144,8 @@ namespace AssemblyCSharp
 			Destroy (chatAction);
 			Destroy (offlineImage);
 			Destroy (HuFlag);
+			Destroy (gameObject);
+			Destroy (this);
 		}
 
 		/**设置游戏玩家离线**/

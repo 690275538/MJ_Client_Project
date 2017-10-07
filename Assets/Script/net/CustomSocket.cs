@@ -100,7 +100,7 @@ public class CustomSocket{
 
 	public bool sendMsg(ClientRequest client){
 		if (_status != SocketStatus.CONNECTED || _tcpclient == null || !_tcpclient.Connected) {
-			Debug.Log ("未建立连接，不能发送请求");
+			//Debug.Log ("未建立连接，不能发送请求");
 			return false;
 		}
 		try

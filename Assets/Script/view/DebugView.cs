@@ -45,11 +45,13 @@ namespace AssemblyCSharp
 
 		public void Click ()
 		{
+			#if TEST
 			try{
 				GameManager.getInstance ().Server.qq (Int32.Parse (codeTf.text,System.Globalization.NumberStyles.HexNumber), input.text);
 			}catch(Exception e){
 				Debug.Log (e.ToString ());
 			}
+			#endif
 		}
 		public void Next(){
 			if (index < kk.Length) {

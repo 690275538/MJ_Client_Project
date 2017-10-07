@@ -13,19 +13,37 @@ namespace AssemblyCSharp
 		public int remainCardNum;
 		/**自己的手牌**/
 		public List<List<int>> paiArray;
+
 		List<AvatarVO> avatarList;
 
+		/**断线重进房间**/
 		public bool isReEnter = false;
-
+		/**上一个出牌的人**/
 		public int putoutIndex;
-		/**因摸牌，碰，吃，杠牌，而要出牌的人**/
+		/**因摸牌，碰，吃，杠牌，而将要出牌的人**/
 		public int pickIndex;
+		/**上一个打出的牌**/
 		public int putoutPoint;
+		/**摸到的牌**/
 		public int pickPoint;
 
+		/**服务器下发的可杠的牌**/
 		public string[] gangPaiList;
+		/**被碰吃杠的牌,杠可以在手牌中有多组，胡牌时可以自摸，可以胡别人**/
 		public int pgcCardPoint;
 
+		public int[] chiPoints;
+
+		public bool isQiangHu = false;
+		public int BankerUuid {
+			get {
+				if (avatarList != null) {
+					var avo = avatarList [bankerIndex];
+					return avo.account.uuid;
+				}
+				return -1;
+			}
+		}
 		public List<AvatarVO> AvatarList{
 			set{
 				avatarList = value;

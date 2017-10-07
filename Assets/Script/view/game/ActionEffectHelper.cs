@@ -56,7 +56,7 @@ public class ActionEffectHelper : MonoBehaviour {
 
 	}
 
-	public void pengGangHuEffectCtrl(ActionType type)
+	public void showEffect(ActionType type)
 	{
 		if (type == ActionType.PENG)
 		{

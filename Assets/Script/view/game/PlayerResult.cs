@@ -9,14 +9,14 @@ namespace AssemblyCSharp
 {
 	public class PlayerResult :MonoBehaviour
 	{
-		public Text name;
+		public Text NameTf;
 		public Text result;
 		public PlayerResult ()
 		{
 		}
 
 		public void  setInitVal(string namestr,string resultstr){
-			name.text = namestr;
+			NameTf.text = namestr;
 			result.text = resultstr;
 		}
 

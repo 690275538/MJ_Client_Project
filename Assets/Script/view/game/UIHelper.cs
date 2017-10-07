@@ -11,7 +11,7 @@ namespace AssemblyCSharp
 		public GameObject lastCardOnTable;
 		public GameObject putOutCard;
 		/**自己摸到的牌**/
-		private GameObject pickCardItem;
+//		private GameObject pickCardItem;
 		private GameObject otherPickCardItem;
 		private GamingData _data;
 		private List<CardGOs> allCardGOs;
@@ -67,14 +67,15 @@ namespace AssemblyCSharp
 			var cgo = getCardGOs (Direction.B);
 			for (int i = 0; i < cardPoints.Count; i++) {
 				for (int j = 0; j < cardPoints [i]; j++) {
-					GameObject gob = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
-					gob.transform.SetParent (cgo.HandParent);
-					gob.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
-					gob.GetComponent<bottomScript> ().onMyHandCardPutout += onMyHandCardPutout;
-					gob.GetComponent<bottomScript> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
-					gob.GetComponent<bottomScript> ().setPoint (i);        
+					GameObject card = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
+					card.transform.SetParent (cgo.HandParent);
+					card.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
+					card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
+					card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
+					card.GetComponent<MyHandCardView> ().onMyHandCardChiChange += onMyHandCardChiChange;
+					card.GetComponent<MyHandCardView> ().setPoint (i);        
 
-					cgo.Hand.Add (gob);//增加游戏对象
+					cgo.Hand.Add (card);//增加游戏对象
 
 				}
 			}
@@ -86,18 +87,140 @@ namespace AssemblyCSharp
 			var Hand = getCardGOs (Direction.B).Hand;
 			int handCardCount = Hand.Count - 1;
 			if (handCardCount == 13 || handCardCount == 10 || handCardCount == 7 || handCardCount == 4 || handCardCount == 1) {
-				GlobalData.isDrag = false;
-				card.GetComponent<bottomScript> ().onMyHandCardPutout -= onMyHandCardPutout;
-				card.GetComponent<bottomScript> ().onMyHandCardSelectedChange -= onMyHandCardSelectedChange;
+				MyHandCardView.isPutout = false;
+				card.GetComponent<MyHandCardView> ().onMyHandCardPutout -= onMyHandCardPutout;
+				card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange -= onMyHandCardSelectedChange;
+				card.GetComponent<MyHandCardView> ().onMyHandCardChiChange -= onMyHandCardChiChange;
 
 				Hand.Remove (card);
 				GameObject.Destroy (card);
 				rangeMyHandCard (false);
 
-				int putOutCardPointTemp = card.GetComponent<bottomScript> ().getPoint ();//将当期打出牌的点数传出
+				int putOutCardPointTemp = card.GetComponent<MyHandCardView> ().getPoint ();//将当期打出牌的点数传出
 				_host.putoutCard (putOutCardPointTemp);
 			}
 
+		}
+		public void onMyHandCardChiChange(GameObject card){
+			_showChiCard (card.GetComponent<MyHandCardView>().getPoint());
+		}
+		public void showChiCard(){
+			MyHandCardView.isChi = true;
+			_showChiCard ();
+		}
+		public bool checkChi(){
+			int cardPoint = _data.putoutPoint;
+			int i = cardPoint % 9;
+			List<int> activePoints = new List<int> (){-1,-1,-1,-1};
+			if (i - 2 > 0) {
+				activePoints[0] = (cardPoint - 2);
+			}
+			if (i - 1 > 0) {
+				activePoints[1] = (cardPoint - 1);
+			}
+			if (i + 1 < 9) {
+				activePoints[2] = (cardPoint + 1);
+			}
+			if (i + 2 < 9) {
+				activePoints[3] = (cardPoint + 2);
+			}
+			var Hand = getCardGOs (Direction.B).Hand;
+			List<int> points = new List<int> ();
+			for (i = 0; i < Hand.Count; i++) {
+				int a = Hand [i].GetComponent<MyHandCardView> ().getPoint ();
+				if ((int)a / 9 == (int)cardPoint / 9) {
+					points.Add (a);
+				}
+			}
+
+			bool hasL = false;
+			bool hasC = false;
+			bool hasR = false;
+
+			if (points.Contains (activePoints [1]) && points.Contains (activePoints [2])) {
+				hasC = true;
+			}
+			if (points.Contains (activePoints [0]) && points.Contains (activePoints [1])) {
+				hasL = true;
+			}
+			if (points.Contains (activePoints [2]) && points.Contains (activePoints [3])) {
+				hasR = true;
+			}
+			return hasC || hasL || hasR;
+		}
+		public void _showChiCard(int selectPiont=-2){
+			int cardPoint = _data.putoutPoint;
+			int i = cardPoint % 9;
+			List<int> activePoints = new List<int> (){-1,-1,-1,-1};
+			if (i - 2 > 0) {
+				activePoints[0] = (cardPoint - 2);
+			}
+			if (i - 1 > 0) {
+				activePoints[1] = (cardPoint - 1);
+			}
+			if (i + 1 < 9) {
+				activePoints[2] = (cardPoint + 1);
+			}
+			if (i + 2 < 9) {
+				activePoints[3] = (cardPoint + 2);
+			}
+			var Hand = getCardGOs (Direction.B).Hand;
+			List<int> points = new List<int> ();
+			for (i = 0; i < Hand.Count; i++) {
+				int a = Hand [i].GetComponent<MyHandCardView> ().getPoint ();
+				if ((int)a / 9 == (int)cardPoint / 9) {
+					points.Add (a);
+				}
+			}
+
+			int[] showList = null;
+			selectPiont = activePoints.IndexOf (selectPiont);
+
+			bool hasL = false;
+			bool hasC = false;
+			bool hasR = false;
+			
+			if (points.Contains (activePoints [1]) && points.Contains (activePoints [2])) {
+				showList = new int[]{ activePoints [1], activePoints [2] };
+				hasC = true;
+			}
+			if (points.Contains (activePoints [0]) && points.Contains (activePoints [1])) {
+				showList = new int[]{ activePoints [0], activePoints [1] };
+				hasL = true;
+			}
+			if (points.Contains (activePoints [2]) && points.Contains (activePoints [3])) {
+				showList = new int[]{ activePoints [2], activePoints [3] };
+				hasR = true;
+			}
+			
+			if (selectPiont > -1) {
+				int diff = selectPiont - cardPoint;
+				if (hasC && (diff == -1 || diff == 1)) {
+					showList = new int[]{ activePoints [1], activePoints [2] };
+				} else if (hasL && diff == -2) {
+					showList = new int[]{ activePoints [0], activePoints [1] };
+				} else if (hasR && diff == 2) {
+					showList = new int[]{ activePoints [2], activePoints [3] };
+				} else {
+					return;
+				}
+			}
+			_data.chiPoints = showList;
+			int j = 0;
+			for (i = 0; i < Hand.Count; i++) {
+				var card = Hand [i];
+				if (j < 2) {
+					int a = card.GetComponent<MyHandCardView> ().getPoint ();
+					int A = showList [j];
+					if (a == A) {
+						card.transform.localPosition = new Vector3 (card.transform.localPosition.x, -272f);
+						j += 1;
+						continue;
+					}
+				}
+				card.transform.localPosition = new Vector3 (card.transform.localPosition.x, -292f);
+
+			}
 		}
 
 		public void onMyHandCardSelectedChange (GameObject card)
@@ -109,13 +232,13 @@ namespace AssemblyCSharp
 					Hand.RemoveAt (i);
 					i--;
 				} else {
-					g.transform.localPosition = new Vector3 (g.transform.localPosition.x, -292f); //从右到左依次对齐
-					g.transform.GetComponent<bottomScript> ().selected = false;
+					g.transform.localPosition = new Vector3 (g.transform.localPosition.x, -292f); 
+					g.transform.GetComponent<MyHandCardView> ().selected = false;
 				}
 			}
 			if (card != null) {
 				card.transform.localPosition = new Vector3 (card.transform.localPosition.x, -272f);
-				card.transform.GetComponent<bottomScript> ().selected = true;
+				card.transform.GetComponent<MyHandCardView> ().selected = true;
 			}
 		}
 
@@ -135,9 +258,15 @@ namespace AssemblyCSharp
 				}
 			}
 		}
+		public void addOtherHandCards (int avatarIndex, int count)
+		{
+			Direction dir = _data.toGameDir(avatarIndex);
 
+			addOtherHandCards (dir,count);
+		}
 		public void addOtherHandCards (Direction dir, int count)
 		{
+			
 			var cgo = getCardGOs (dir);
 			for (int i = 0; i < count; i++) {
 				GameObject card = GameObject.Instantiate (Resources.Load ("Prefab/card/Bottom_" + dir.ToString ())) as GameObject;
@@ -167,7 +296,7 @@ namespace AssemblyCSharp
 			var Hand = getCardGOs (Direction.B).Hand;
 			for (int i = 0; i < Hand.Count; i++) {
 				GameObject card = Hand [i];
-				int point = card.GetComponent<bottomScript> ().getPoint ();
+				int point = card.GetComponent<MyHandCardView> ().getPoint ();
 				if (point == cardPoint) {
 
 					Hand.RemoveAt (i);
@@ -180,8 +309,8 @@ namespace AssemblyCSharp
 				}
 			}
 		}
-		public void removeOtherHandCard(Direction dir,int num){
-			var Hand = getCardGOs (dir).Hand;
+		public void removeOtherHandCard(int avatarIndex,int num){
+			var Hand = getCardGOs (avatarIndex).Hand;
 			for (int i = 0; i < num; i++) {
 				GameObject temp = Hand [0];
 				Hand.RemoveAt (0);
@@ -190,8 +319,9 @@ namespace AssemblyCSharp
 
 		}
 		/**排列其他玩家手牌，type:1碰2杠**/
-		public void rangeOtherHandCard (Direction dir,int type)//设置位置
+		public void rangeOtherHandCard (int avatarIndex,int type)//设置位置
 		{
+			Direction dir = _data.toGameDir (avatarIndex);
 			var Hand = getCardGOs (dir).Hand;
 			if (Hand.Count < 1)
 				return;
@@ -243,8 +373,9 @@ namespace AssemblyCSharp
 		}
 
 		/**type:1碰2明杠3暗杠4吃5先碰后杠**/
-		public void addPGCCards (Direction dir, int cardPoint, int type)
+		public void addPGCCards (int avatarIndex, int cardPoint, int type)
 		{
+			Direction dir = _data.toGameDir (avatarIndex);
 			String[] AN_GANG_PATHS = new string[] {
 				"Prefab/PengGangCard/gangBack",
 				"Prefab/PengGangCard/GangBack_L&R",
@@ -260,7 +391,7 @@ namespace AssemblyCSharp
 			int[] points;
 			var cgo = getCardGOs (dir);
 			if (type == 5) {
-				int index = findIndexInPGC (dir, cardPoint);
+				int index = findIndexInPGC (avatarIndex, cardPoint);
 				GameObject card = newGameObject (Normal_PATHS [(int)dir], cgo.PGCParent, _getPGCPosition (dir, 1, 1, index));
 				if (dir == Direction.R) {
 					card.transform.SetSiblingIndex (0);
@@ -273,7 +404,7 @@ namespace AssemblyCSharp
 			} else if (type == 1) {
 				points = new int[]{ cardPoint, cardPoint, cardPoint };
 			} else {
-				points = new int[]{ cardPoint + 1, cardPoint + 2, cardPoint + 3 };
+				points = new int[]{ cardPoint , cardPoint + 1, cardPoint + 2 };
 			}
 
 			List<GameObject> cards = new List<GameObject> ();
@@ -297,8 +428,8 @@ namespace AssemblyCSharp
 			cgo.PGC.Add (cards);
 
 		}
-		public int findIndexInPGC(Direction dir,int cardPoint){
-			var PGC = getCardGOs (dir).PGC;
+		public int findIndexInPGC(int avatarIndex,int cardPoint){
+			var PGC = getCardGOs (avatarIndex).PGC;
 			for (int i = 0; i < PGC.Count; i++) {
 				var list = PGC [i];
 				var a = list [0].GetComponent<PutoutCardView> ().getPoint ();
@@ -337,13 +468,13 @@ namespace AssemblyCSharp
 				card.transform.SetParent (cvo.HandParent);
 				card.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
 				card.transform.localPosition = new Vector3 (580f, -292f);
-				card.GetComponent<bottomScript> ().onMyHandCardPutout += onMyHandCardPutout;
-				card.GetComponent<bottomScript> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
-				card.GetComponent<bottomScript> ().setPoint (cardPoint); 
+				card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
+				card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
+				card.GetComponent<MyHandCardView> ().setPoint (cardPoint); 
 
 				var Hand = cvo.Hand;
 				for (int i = 0; i < Hand.Count; i++) {
-					int cc = Hand [i].GetComponent<bottomScript> ().getPoint ();
+					int cc = Hand [i].GetComponent<MyHandCardView> ().getPoint ();
 					if (cc >= cardPoint) {
 						Hand.Insert (i, card);
 						return;
@@ -387,10 +518,10 @@ namespace AssemblyCSharp
 		}
 
 		/**提示用，打出的牌，1秒后会自动销毁**/
-		public GameObject addPutoutCard (int cardPoint, Direction dir)
+		public GameObject addPutoutCardEffect (int avatarIndex,int cardPoint)
 		{
 			Vector3 position = new Vector3 (0, 0);
-
+			Direction dir = _data.toGameDir (avatarIndex);
 			switch (dir) {
 			case Direction.T: //上
 				position = new Vector3 (0, 130f);
@@ -409,7 +540,7 @@ namespace AssemblyCSharp
 			GameObject card = newGameObject ("Prefab/card/PutOutCard", _host.transform, position);
 			card.name = "putOutCard";
 			card.transform.localScale = Vector3.one;
-			card.GetComponent<PutoutCardView> ().setPoint (cardPoint,Direction.B);
+			card.GetComponent<PutoutCardView> ().setPoint (cardPoint, Direction.B);
 
 			if (card != null) {
 				GameObject.Destroy (card, 1f);
@@ -433,8 +564,9 @@ namespace AssemblyCSharp
 		}
 
 		/**往桌子上打出一张牌**/
-		public GameObject addCardToTable (Direction dir, int cardpoint)//
+		public GameObject addCardToTable (int avatarIndex, int cardpoint)//
 		{
+			Direction dir = _data.toGameDir(avatarIndex);
 			GameObject card = null;
 			String path = "";
 			Vector3 position = Vector3.one;
@@ -494,7 +626,7 @@ namespace AssemblyCSharp
 		}
 
 		/**清理游戏过程中产生的牌**/
-		public void clean ()
+		public void cleanCardInTable ()
 		{
 			if (putOutCard != null) {
 				GameObject.Destroy (putOutCard);
@@ -507,21 +639,14 @@ namespace AssemblyCSharp
 
 			for (int i = 0; i < 4; i++) {
 				CardGOs cgo = allCardGOs [i];
-				destroyListGO (cgo.Hand);
-				destroyListGO (cgo.Table);
-				destroyListListGO (cgo.PGC);
-				cgo.PlayerItem.clean ();
-				GameObject.Destroy (cgo.PlayerItem.gameObject);
-				GameObject.Destroy (cgo.PlayerItem);
+				destroyListGO (cgo.Hand);//手牌
+				destroyListGO (cgo.Table);//桌上的牌
+				destroyListListGO (cgo.PGC);//碰杠吃的牌
 			}
-//			if (mineList != null) {
-//				mineList.Clear ();
+
+//			if (pickCardItem != null) {
+//				GameObject.Destroy (pickCardItem);
 //			}
-
-
-			if (pickCardItem != null) {
-				GameObject.Destroy (pickCardItem);
-			}
 
 			if (otherPickCardItem != null) {
 				GameObject.Destroy (otherPickCardItem);

@@ -88,13 +88,13 @@ namespace AssemblyCSharp
 					case APIS.JOIN_ROOM_RESPONSE:
 						MyDebug.Log("测试用户加入房间成功");
 						break;
-					case APIS.STARTGAME_RESPONSE_NOTICE:
+					case APIS.START_GAME_NOTIFY:
 						break;
-					case APIS.PICKCARD_RESPONSE:
+					case APIS.MY_PICK_NOTIFY:
 						break;
-					case APIS.OTHER_PICKCARD_RESPONSE_NOTICE:
+					case APIS.OTHER_PICK_NOTIFY:
 						break;
-					case APIS.CHUPAI_RESPONSE:
+					case APIS.OTHER_PUTOUT_NOTIFY:
 						break;
 					}
 				}

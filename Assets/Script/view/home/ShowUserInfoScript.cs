@@ -9,7 +9,7 @@ public class ShowUserInfoScript : MonoBehaviour {
 	public Image headIcon;
 	public Text Ip;
 	public Text ID;
-	public Text name;
+	public Text NickName;
 
 	private Texture2D texture2D;
 	private string headIconPath;
@@ -28,7 +28,7 @@ public class ShowUserInfoScript : MonoBehaviour {
 		headIconPath = userInfo.account.headicon;
 		Ip.text = "IP:"+ userInfo.IP;
 		ID.text = "ID:"+  userInfo.account.uuid +"";
-		name.text ="昵称:"+ userInfo.account.nickname;
+		NickName.text ="昵称:"+ userInfo.account.nickname;
 		StartCoroutine (LoadImg());
 
 	}

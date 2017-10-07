@@ -84,7 +84,7 @@ public class SignalOverItemScript : MonoBehaviour {
 
 		paiArray = itemData.paiArray;
 		huFlagImg.SetActive (false);
-		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == GlobalData.mainUuid) {
+		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == GlobalData.getInstance().gamingData.BankerUuid) {
 			GenzhuangFlag.SetActive (true);
 		} else {
 			GenzhuangFlag.SetActive (false);

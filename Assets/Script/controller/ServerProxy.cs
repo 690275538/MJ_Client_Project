@@ -66,8 +66,8 @@ namespace AssemblyCSharp
 					Debug.Log ("命令出错：" + _cache [0].headCode.ToString ("x8") + " " + _cache [0].message);
 					Debug.Log (e.ToString ());
 				}
-
-				Debug.Log("res: "+_cache [0].headCode.ToString ("x8")+" , "+_cache [0].message);
+				if (_cache [0].headCode != APIS.headRESPONSE)
+					Debug.Log ("res: " + _cache [0].headCode.ToString ("x8") + " , " + _cache [0].message);
 				_cache.RemoveAt (0);
 			}
 			if (_isDisconnet) {

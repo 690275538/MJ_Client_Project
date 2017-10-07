@@ -4,18 +4,20 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+public class MyHandCardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-
-    private int cardPoint;
+	public static bool isPutout;
+	public static bool isChi;
+    private int _cardPoint;
     private Vector3 oldPosition;
 	private bool dragFlag = false;
     //==================================================
     public Image image;
     //
-    public delegate void EventHandler(GameObject obj);
-    public event EventHandler onMyHandCardPutout;
-	public event EventHandler onMyHandCardSelectedChange;
+    public delegate void HandCardHandler(GameObject obj);
+	public event HandCardHandler onMyHandCardPutout;
+	public event HandCardHandler onMyHandCardSelectedChange;
+	public event HandCardHandler onMyHandCardChiChange;
 	public bool selected = false;
 
     // Use this for initialization
@@ -29,7 +31,7 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
     public void OnDrag(PointerEventData eventData)
     {
-        if (GlobalData.isDrag)
+        if (isPutout)
         {
 			dragFlag = true;
             GetComponent<RectTransform>().pivot.Set(0, 0);
@@ -40,12 +42,12 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
-		if (GlobalData.isDrag) {
+		if (isPutout) {
 			if (selected == false) {
 				selected = true;
 				oldPosition = transform.localPosition;
 			} else {
-				sendObjectToCallBack ();
+				putoutHandCard ();
 			}
 		}
 
@@ -53,43 +55,51 @@ public class bottomScript : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerUp(PointerEventData eventData)
     {
-		if (GlobalData.isDrag) {
+		if (isPutout) {
 			if (transform.localPosition.y > -122f) {
-				sendObjectToCallBack ();
+				putoutHandCard ();
 			} else {
 				if (dragFlag) {
 					transform.localPosition = oldPosition;
 				} else {
-					reSetPoisitonCallBack ();
+					selectedChange ();
 				}
 			}
 			dragFlag = false;
 		}
+		if (isChi) {
+			chiChange ();
+		}
     }
-
-	private void sendObjectToCallBack(){
-		if (onMyHandCardPutout != null)     //发送消息
+	private void chiChange(){
+		if (onMyHandCardChiChange != null)
 		{
-			onMyHandCardPutout(gameObject);//发送当前游戏物体消息
+			onMyHandCardChiChange(gameObject);
+		}
+	}
+	private void putoutHandCard(){
+		if (onMyHandCardPutout != null)
+		{
+			onMyHandCardPutout(gameObject);
 		}
 	}
 
-	private void reSetPoisitonCallBack(){
+	private void selectedChange(){
 		if (onMyHandCardSelectedChange != null) {
 			onMyHandCardSelectedChange (gameObject);
 		}
 	}
 
-    public void setPoint(int _cardPoint)
-    {
-        cardPoint = _cardPoint;//设置所有牌指针
-		image.sprite = Resources.Load("Cards/Big/b"+cardPoint,typeof(Sprite)) as Sprite;
+    public void setPoint(int cardPoint)
+	{
+        _cardPoint = cardPoint;
+		image.sprite = Resources.Load("Cards/Big/b"+_cardPoint,typeof(Sprite)) as Sprite;
 
     }
 
     public int getPoint()
     {
-        return cardPoint;
+        return _cardPoint;
     }
 
     private void destroy()

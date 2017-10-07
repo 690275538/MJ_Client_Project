@@ -9,8 +9,7 @@ namespace AssemblyCSharp
 	public enum PaiArrayType{
 		PENG=1,
 		GANG=2,
-		CHI=3,
-		PENG_CHI=4
+		CHI=4
 	}
 	public enum GameType{
 		ZHUAN_ZHUAN=1,
