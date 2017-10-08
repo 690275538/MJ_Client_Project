@@ -174,25 +174,23 @@ namespace AssemblyCSharp
 			}
 
 			int[] showList = null;
-			selectPiont = activePoints.IndexOf (selectPiont);
 
 			bool hasL = false;
 			bool hasC = false;
 			bool hasR = false;
 			
-			if (points.Contains (activePoints [1]) && points.Contains (activePoints [2])) {
-				showList = new int[]{ activePoints [1], activePoints [2] };
-				hasC = true;
+			if (points.Contains (activePoints [2]) && points.Contains (activePoints [3])) {
+				showList = new int[]{ activePoints [2], activePoints [3] };
+				hasR = true;
 			}
 			if (points.Contains (activePoints [0]) && points.Contains (activePoints [1])) {
 				showList = new int[]{ activePoints [0], activePoints [1] };
 				hasL = true;
 			}
-			if (points.Contains (activePoints [2]) && points.Contains (activePoints [3])) {
-				showList = new int[]{ activePoints [2], activePoints [3] };
-				hasR = true;
+			if (points.Contains (activePoints [1]) && points.Contains (activePoints [2])) {
+				showList = new int[]{ activePoints [1], activePoints [2] };
+				hasC = true;
 			}
-			
 			if (selectPiont > -1) {
 				int diff = selectPiont - cardPoint;
 				if (hasC && (diff == -1 || diff == 1)) {

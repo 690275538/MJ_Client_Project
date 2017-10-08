@@ -16,7 +16,6 @@ namespace AssemblyCSharp
 	{
 		public Text Number;
 		public Text roomRemark;
-		public Image headIconImg;
 
 		public List<Transform> PGCParents;
 		public List<Transform> HandParents;
@@ -226,7 +225,7 @@ namespace AssemblyCSharp
 				onlineNotice (response);
 				break;
 			case APIS.CURRENT_STATUS_RESPONSE:
-				returnGameResponse (response);
+				onCurStatusResponse (response);
 				break;
 			case APIS.Game_FollowBander_Notice://跟庄
 				gameFollowBanderNotice (response);
@@ -1038,7 +1037,7 @@ namespace AssemblyCSharp
 		}
 
 
-		public void returnGameResponse (ClientResponse response)
+		public void onCurStatusResponse (ClientResponse response)
 		{
 			//1.显示剩余牌的张数和圈数
 			JsonData msgData = JsonMapper.ToObject (response.message);
