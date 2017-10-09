@@ -7,21 +7,21 @@ using AssemblyCSharp;
 */
 namespace AssemblyCSharp
 {
-	public class PlayerResult :MonoBehaviour
+	public class VoteResultItemView :MonoBehaviour
 	{
-		public Text NameTf;
-		public Text result;
-		public PlayerResult ()
+		public Text nameTf;
+		public Text resultTf;
+		public VoteResultItemView ()
 		{
 		}
 
 		public void  setInitVal(string namestr,string resultstr){
-			NameTf.text = namestr;
-			result.text = resultstr;
+			nameTf.text = namestr;
+			resultTf.text = resultstr;
 		}
 
 		public void changeResult(string resultstr){
-			result.text = resultstr;
+			resultTf.text = resultstr;
 		}
 			
 	}

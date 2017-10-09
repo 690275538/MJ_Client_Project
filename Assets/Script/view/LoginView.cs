@@ -96,7 +96,7 @@ public class LoginView : MonoBehaviour, ISceneView {
 	private void onLoginCallBack(ClientResponse response){
 		watingPanel.SetActive(false);
 
-		SoundCtrl.getInstance ().playBGM ();
+		SoundManager.getInstance ().playBGM ();
 		if (response.status == 1) {
 			
 			GlobalData.getInstance().myAvatarVO = JsonMapper.ToObject<AvatarVO> (response.message);

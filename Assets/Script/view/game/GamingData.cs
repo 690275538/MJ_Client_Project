@@ -7,10 +7,28 @@ namespace AssemblyCSharp
 
 	public class GamingData
 	{
+		public event Change RemainCardNumChange;
+		public event Change PickIndexChange;
+
 		public int myIndex;
 		/**本轮庄家**/
 		public int bankerIndex;
-		public int remainCardNum;
+
+		private int _remainCardNum;
+		public int remainCardNum{
+			set{
+				if (_remainCardNum != value) {
+					_remainCardNum = value;
+					if (RemainCardNumChange != null) {
+						RemainCardNumChange ();
+					}
+				}
+			}
+			get{
+				return _remainCardNum;
+			}
+
+		}
 		/**自己的手牌**/
 		public List<List<int>> paiArray;
 
@@ -20,8 +38,22 @@ namespace AssemblyCSharp
 		public bool isReEnter = false;
 		/**上一个出牌的人**/
 		public int putoutIndex;
+
+		private int _pickIndex;
 		/**因摸牌，碰，吃，杠牌，而将要出牌的人**/
-		public int pickIndex;
+		public int pickIndex{
+			set{
+				if (_pickIndex != value) {
+					_pickIndex = value;
+					if (PickIndexChange != null) {
+						PickIndexChange ();
+					}
+				}
+			}
+			get{
+				return _pickIndex;
+			}
+		}
 		/**上一个打出的牌**/
 		public int putoutPoint;
 		/**摸到的牌**/

@@ -6,17 +6,17 @@ using System.Collections;
  * author :kevin
  * 
  * */
-public class SoundCtrl  {
+public class SoundManager  {
 
 	private Hashtable soudHash = new Hashtable (); 
 
-	private static SoundCtrl _instance;
+	private static SoundManager _instance;
 
 	private static AudioSource audioS; 
 
-	public static SoundCtrl getInstance(){
+	public static SoundManager getInstance(){
 		if (_instance == null) {
-			_instance = new SoundCtrl ();
+			_instance = new SoundManager ();
 			audioS = GameObject.Find ("MyAudio").GetComponent<AudioSource> ();
 		}
 
@@ -24,7 +24,7 @@ public class SoundCtrl  {
 	}
 
 	public void playSound(int cardPoint,int sex){
-		if (GlobalData.soundToggle) {
+		if (GlobalData.getInstance().SoundToggle) {
 			string path = "Sounds/";
 			if (sex == 1) {
 				path += "boy/" + (cardPoint + 1);
@@ -43,7 +43,7 @@ public class SoundCtrl  {
 	}
 
 	public void playMessageBoxSound(int codeIndex){
-		if(GlobalData.soundToggle){
+		if(GlobalData.getInstance().SoundToggle){
 			string path = "Sounds/other/"+codeIndex;
 			AudioClip temp = (AudioClip)soudHash[path];
 			if(temp == null){

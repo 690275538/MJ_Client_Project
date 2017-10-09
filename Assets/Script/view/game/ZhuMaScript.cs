@@ -19,7 +19,6 @@ public class ZhuMaScript : MonoBehaviour {
 	public GameObject mapaiBg;//中间显示码牌的背景框
 
 
-	private  List<AvatarVO> avatarList;
 	private List<int> validMas;
 	private List<string> mapaiList;
 	private string uuid;
@@ -40,9 +39,8 @@ public class ZhuMaScript : MonoBehaviour {
 	}
 
 
-	public void arrageMas(string allMas, List<AvatarVO> list,List<int> validMasParms){
+	public void arrageMas(string allMas,List<int> validMasParms){
 		
-		avatarList = list;
 		validMas = validMasParms;
 		if (allMas == null) {
 			return;

@@ -19,7 +19,6 @@ namespace AssemblyCSharp
 		public ServerCallBackEvent FinalGameOverCallBack;//全局结束回调
 
 		public ServerCallBackEvent micInputNotice;
-		public ServerCallBackEvent messageBoxNotice;
 		public ServerCallBackEvent backLoginNotice;//玩家断线重连
 		public ServerCallBackEvent RoomBackResponse;//掉线后返回房间
 		public ServerCallBackEvent cardChangeNotice;//房卡数据变化
@@ -105,11 +104,6 @@ namespace AssemblyCSharp
 					micInputNotice (response);
 				}
 				break;
-			case APIS.MessageBox_Notice:
-				if (messageBoxNotice != null) {
-					messageBoxNotice (response);
-				}
-				break;
 			case APIS.BACK_LOGIN_RESPONSE:
 				if (RoomBackResponse != null) {
 					RoomBackResponse (response);
@@ -177,11 +171,6 @@ namespace AssemblyCSharp
 				JoinRoomCallBack = null;
 			}
 				
-
-
-			if (messageBoxNotice != null) {
-				messageBoxNotice = null;
-			}
 
 
 

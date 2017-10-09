@@ -17,10 +17,10 @@ namespace AssemblyCSharp
 		private List<CardGOs> allCardGOs;
 		GameView _host;
 
-		public void init (GamingData data, GameView host)
+		public void init (GameView host)
 		{
-			_data = data;
 			_host = host;
+			_data = _host.Data;
 			allCardGOs = new List<CardGOs> (4);
 			for (int i = 0; i < 4; i++) {
 				CardGOs cgo = new CardGOs ();
@@ -681,7 +681,7 @@ namespace AssemblyCSharp
 			if (_data.remainCardNum < 0) {
 				_data.remainCardNum = 0;
 			}
-			_host.LeavedCastNumText.text = _data.remainCardNum + "";
+
 		}
 
 		public void initRemainCardNum ()
@@ -704,66 +704,10 @@ namespace AssemblyCSharp
 				_data.remainCardNum = 136;
 			}
 			_data.remainCardNum = _data.remainCardNum - 53;
-			_host.LeavedCastNumText.text = (_data.remainCardNum) + "";
 
 		}
-		/// <summary>
-		/// 设置红色箭头的显示方向
-		/// </summary>
-		public void setDirectPointer (int avatarIndex) //设置方向
-		{
-			//UpateTimeReStart();
-			for (int i = 0; i < _host.dirGameList.Count; i++) {
-				_host.dirGameList [i].SetActive (false);
-			}
-			_host.dirGameList [(int)_data.toGameDir(avatarIndex)].SetActive (true);
-		}
-		/**左上角显示房间规则**/
-		public void updateRule (Text tf)
-		{
-			RoomVO rvo = GlobalData.getInstance ().roomVO;
-			string str = "房间号：\n" + rvo.roomId + "\n";
-			str += "圈数：" + rvo.roundNumber + "\n";
 
-			if (rvo.roomType == GameType.GI_PING_HU) {
-				str += "鸡平胡\n";
-			} else {
 
-				if (rvo.roomType == GameType.ZHUAN_ZHUAN) {
-					if (rvo.hong) {
-						str += "红中麻将\n";
-					} else {
-						str += "转转麻将\n";
-					}
-
-				} else if (rvo.roomType == GameType.HUA_SHUI) {
-					str += "划水麻将\n";
-				}
-				if (rvo.ziMo == 1) {
-					str += "只能自摸\n";
-				} else {
-					str += "可抢杠胡\n";
-				}
-				if (rvo.sevenDouble && rvo.roomType != GameType.HUA_SHUI) {
-					str += "可胡七对\n";
-				}
-
-				if (rvo.addWordCard) {
-					str += "有风牌\n";
-				}
-				if (rvo.xiaYu > 0) {
-					str += "下鱼数：" + rvo.xiaYu + "";
-				}
-
-				if (rvo.ma > 0) {
-					str += "抓码数：" + rvo.ma + "";
-				}
-			}
-			if (rvo.magnification > 0) {
-				str += "倍率：" + rvo.magnification + "";
-			}
-			tf.text = str;
-		}
 	}
 
 	public class CardGOs

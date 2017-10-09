@@ -2,9 +2,9 @@
 
 namespace AssemblyCSharp
 {
-	public class MessageBoxRequest : ClientRequest
+	public class QuickMsgRequest : ClientRequest
 	{
-		public MessageBoxRequest (int codeIndex,int uuid)
+		public QuickMsgRequest (int codeIndex,int uuid)
 		{
 			headCode = APIS.MessageBox_Request;
 			messageContent = codeIndex + "|"+uuid;

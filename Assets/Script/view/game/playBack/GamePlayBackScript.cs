@@ -237,7 +237,7 @@ public class GamePlayBackScript : MonoBehaviour {
 
 		handerCardList [avaIndex].Add (tempObj);
 		playerItems [avaIndex].showHuEffect ();
-		SoundCtrl.getInstance ().playSoundByAction ("hu",playerItems[avaIndex].getSex());
+		SoundManager.getInstance ().playSoundByAction ("hu",playerItems[avaIndex].getSex());
 
 	}
 	/// <summary>
@@ -275,7 +275,7 @@ public class GamePlayBackScript : MonoBehaviour {
 	/// <param name="curAvatarIndex">Current avatar index.</param>
 	private void createPutOutCardAndPlayAction(int cardPoint, int curAvatarIndex)
 	{
-		SoundCtrl.getInstance ().playSound (cardPoint,playerItems[curAvatarIndex].getSex());
+		SoundManager.getInstance ().playSound (cardPoint,playerItems[curAvatarIndex].getSex());
 		Vector3 tempVector3 = new Vector3(0, 0);
 
 		switch (curAvatarIndex)
@@ -563,7 +563,7 @@ public class GamePlayBackScript : MonoBehaviour {
 	public void pengCard(int avaIndex,int cardPoint)//其他人碰牌
 	{
 		playerItems [avaIndex].showPengEffect ();
-		SoundCtrl.getInstance ().playSoundByAction ("peng",playerItems[avaIndex].getSex());
+		SoundManager.getInstance ().playSoundByAction ("peng",playerItems[avaIndex].getSex());
 		List<GameObject> tempCardList = handerCardList[avaIndex];
 		string path="Prefab/PengGangCard/PengGangCard_"+pathDirString[avaIndex];
 		Vector3 tempvector3 = new Vector3(0, 0, 0);
@@ -639,7 +639,7 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	private void huCard(int avaIndex,int cardPoint){
 		playerItems [avaIndex].showHuEffect ();
-		SoundCtrl.getInstance ().playSoundByAction ("hu",playerItems[avaIndex].getSex());
+		SoundManager.getInstance ().playSoundByAction ("hu",playerItems[avaIndex].getSex());
 	}
 
 	/// <summary>
@@ -650,7 +650,7 @@ public class GamePlayBackScript : MonoBehaviour {
 	/// <param name="gangType">Gang type.</param>
 	private void gangCard(int avaIndex,int cardPoint,int gangType){
 		playerItems [avaIndex].showGangEffect ();
-		SoundCtrl.getInstance ().playSoundByAction ("gang",playerItems[avaIndex].getSex());
+		SoundManager.getInstance ().playSoundByAction ("gang",playerItems[avaIndex].getSex());
 		List<GameObject> tempCardList = handerCardList[avaIndex];
 		string path="Prefab/PengGangCard/PengGangCard_"+pathDirString[avaIndex];
 		Vector3 tempvector3 = new Vector3(0, 0, 0);
@@ -893,15 +893,9 @@ public class GamePlayBackScript : MonoBehaviour {
 			return;
 		}
 		if (zhuamaPanel == null) {
-			List<AvatarVO> avatarList = new List<AvatarVO> ();
-			for (int i = 0; i < 4; i++) {
-				AvatarVO avo = new AvatarVO ();
-				avo.account = new Account ();
-				avo.account.uuid = aa.playerItems [i].uuid;
-				avatarList.Add (avo);
-			}
+			
 			zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
-			zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, vailedMa);
+			zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, vailedMa);
 		}
 		Invoke ("frontZhuaMa",7);
 	}

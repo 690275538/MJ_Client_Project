@@ -14,8 +14,8 @@ public class MicroPhoneInput : MonoBehaviour {
 
 	private static MicroPhoneInput m_instance;  
 
-	public float sensitivity=100;  
-	public float loudness=0;  
+//	public float sensitivity=100;  
+//	public float loudness=0;  
 
 	private AudioSource playAudio;
 
@@ -35,11 +35,6 @@ public class MicroPhoneInput : MonoBehaviour {
 		}
 	}  
 
-	// Update is called once per frame   
-	void Update ()  
-	{  
-		//loudness = GetAveragedVolume () * sensitivity;  
-	}  
 
 	public static MicroPhoneInput getInstance()  
 	{  
@@ -98,7 +93,7 @@ public class MicroPhoneInput : MonoBehaviour {
 		PlayRecord ();
 	}  
 
-	public Byte[] GetClipData()  
+	private Byte[] GetClipData()  
 	{  
 		if (GetComponent<AudioSource>().clip == null)  
 		{  
@@ -133,7 +128,7 @@ public class MicroPhoneInput : MonoBehaviour {
 	}  
 
 
-	public void PlayClipData(Int16[] intArr)  
+	private void PlayClipData(Int16[] intArr)  
 	{  
 		if (intArr.Length == 0)  
 		{  
@@ -168,7 +163,7 @@ public class MicroPhoneInput : MonoBehaviour {
 	}  
 		
 
-	public  float GetAveragedVolume()  
+	private  float GetAveragedVolume()  
 	{  
 		float[] data=new float[256];  
 		float a=0;  
@@ -204,9 +199,9 @@ public class MicroPhoneInput : MonoBehaviour {
 		yield return 0;  
 	}
 
-	public void micInputNotice(ClientResponse response){
+	private void micInputNotice(ClientResponse response){
 		MyDebug.Log ("micInputNotice");
-		if(GlobalData.soundToggle){
+		if(GlobalData.getInstance().SoundToggle){
 			byte[] data = response.bytes;
 			int i = 0;
 			List<short> result = new List<short>();

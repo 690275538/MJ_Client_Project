@@ -9,18 +9,16 @@ using System;
 
 /**申请解散房间投票框**/
 
-public class VoteScript : MonoBehaviour {
+public class VoteView : MonoBehaviour {
 	public Text sponsorNameText;
-	public List<PlayerResult> playerList; 
+	public List<VoteResultItemView> voteResultList; 
 	public Button okButton;
 	public Button cancleButton;
 	public Text timerText;
-//	private List<int> uuids; 
 	private string sponsorName;
-	private int disagreeCount = 0;
 	private string dissolveType;
 	private List<string> playerNames;
-	private float timer = Constants.GAME_DEFALUT_AGREE_TIME;
+	private float _timer = Constants.GAME_DEFALUT_AGREE_TIME;
 
 
 	// Use this for initialization
@@ -30,16 +28,15 @@ public class VoteScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (timer != 0) {
-
-			timer -= Time.deltaTime;
-			if (timer < 0)
+		if (_timer != 0) {
+			_timer -= Time.deltaTime;
+			if (_timer < 0)
 			{
-				timer = 0;
+				_timer = 0;
 				clickOk ();
 				//UpateTimeReStart();
 			}
-			timerText.text = Math.Floor(timer) + "";
+			timerText.text = Math.Floor(_timer) + "";
 		}
 
 
@@ -62,8 +59,8 @@ public class VoteScript : MonoBehaviour {
 			break;
 		}
 	}
-	public  void iniUI( string sponsor,List<AvatarVO> avatarVOList){
-		
+	public  void iniUI( string sponsor){
+		List<AvatarVO> avatarList = GlobalData.getInstance ().playerList;
 		if (GlobalData.getInstance().myAvatarVO.account.nickname == sponsor) {
 			okButton.transform.gameObject.SetActive (false);
 			cancleButton.transform.gameObject.SetActive (false);
@@ -73,8 +70,8 @@ public class VoteScript : MonoBehaviour {
 		playerNames = new List<string> ();
 		sponsorNameText.text = sponsorName;
 		addListener ();
-		for (int i = 0; i <avatarVOList.Count; i++) {
-			string name = avatarVOList [i].account.nickname;
+		for (int i = 0; i <avatarList.Count; i++) {
+			string name = avatarList [i].account.nickname;
 		
 			if (name != sponsorName) {
 				playerNames.Add (name);
@@ -83,51 +80,37 @@ public class VoteScript : MonoBehaviour {
 		}
 
 		for (int i = 0; i < playerNames.Count; i++) {
-			playerList [i].setInitVal (playerNames [i], "正在选择");
+			voteResultList [i].setInitVal (playerNames [i], "正在选择");
 		}
 
 	
 	}
 
-	private int getPlayerIndex(string name){
+	private VoteResultItemView getResultItem(string name){
 		for (int i = 0; i < playerNames.Count; i++) {
 			if (name == playerNames[i]) {
-				return i;
+				return voteResultList[i];
 			}
 		}	
-		return 0;
+		return voteResultList[0];
 	}
 
 	private void dissoliveRoomResponse(ClientResponse response){
-		DissoliveRoomResponseVo dissoliveRoomResponseVo = JsonMapper.ToObject<DissoliveRoomResponseVo> (response.message);
-		string plyerName = dissoliveRoomResponseVo.accountName;
-		if (dissoliveRoomResponseVo.type == "1") {
-			playerList [getPlayerIndex (plyerName)].changeResult ("同意");
-		} else if (dissoliveRoomResponseVo.type == "2") {
-			GlobalData.isDissoliving = false;
-			playerList [getPlayerIndex (plyerName)].changeResult ("拒绝");
-			disagreeCount += 1;
-			if (disagreeCount >= 2) {
-				TipsManager.getInstance ().setTips ("同意解散房间申请人数不够，本轮投票结束，继续游戏");
-				removeListener ();
-				Destroy (this);
-				Destroy (gameObject);
-			}
+		DissoliveRoomResponseVo dvo = JsonMapper.ToObject<DissoliveRoomResponseVo> (response.message);
+		string plyerName = dvo.accountName;
+		if (dvo.type == "1") {
+			getResultItem (plyerName).changeResult ("同意");
+		} else if (dvo.type == "2") {
+			getResultItem (plyerName).changeResult ("拒绝");
+
 		} 
 	}
 
-	private void exitGamePlay(){
-	//	CommonEvent.getInstance ().closeGamePanel ();
-		removeListener ();
-		Destroy (this);
-		Destroy (gameObject);
-	}
-
 	private void  doDissoliveRoomRequest(){
-		DissoliveRoomRequestVo dissoliveRoomRequestVo = new DissoliveRoomRequestVo ();
-		dissoliveRoomRequestVo.roomId = GlobalData.getInstance().roomVO.roomId;
-		dissoliveRoomRequestVo.type = dissolveType;
-		string sendMsg = JsonMapper.ToJson (dissoliveRoomRequestVo);
+		DissoliveRoomRequestVo dvo = new DissoliveRoomRequestVo ();
+		dvo.roomId = GlobalData.getInstance().roomVO.roomId;
+		dvo.type = dissolveType;
+		string sendMsg = JsonMapper.ToJson (dvo);
 		GameManager.getInstance().Server.requset(new DissoliveRoomRequest(sendMsg));
 
 	}

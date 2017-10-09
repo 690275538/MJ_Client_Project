@@ -14,41 +14,20 @@ namespace AssemblyCSharp
 
 	public class GameView : MonoBehaviour ,ISceneView
 	{
-		public Text Number;
-		public Text roomRemark;
-
 		public List<Transform> PGCParents;
 		public List<Transform> HandParents;
 		public List<Transform> TableParents;
 		public List<PlayerItemView> PlayerItemViews;
 
-		public List<GameObject> dirGameList;
-		public Text LeavedCastNumText;//剩余牌的张数
-		public Text LeavedRoundNumText;//剩余局数
 		public List<AvatarVO> avatarList;
-		public Image centerTitle;
-		public Button inviteFriendButton;
-		public  Button ExitRoomButton;
 
-		public Image remainCard;
-		public Image remainRound;
-		public Image centerImage;
-		public GameObject genZhuang;
-		public Text versionText;
 
 		//======================================
-		private float timer = 0;
 
 
 		/**抓码动态面板**/
 		private GameObject zhuamaPanel;
 
-
-		/// <summary>
-		/// 手牌数组，0自己，1-右边。2-上边。3-左边
-		/// </summary>
-		public List<List<GameObject>> handCardList;
-//过时
 
 		/**所有的抓码数据字符串**/
 		private string allMas;
@@ -56,20 +35,20 @@ namespace AssemblyCSharp
 		private bool isFirstOpen = true;
 
 		private UIHelper _uiHelper;
-		private DissoliveHelper _dissoliveHlpr;
+
+		public UIHelper UIHelper {
+			get {
+				return	_uiHelper;
+			}
+		}
 		private ActionEffectHelper _actionHlpr;
+		private TableView _tableView;
 
 		private GamingData _data;
 
 		public GamingData Data {
 			get {
 				return	_data;
-			}
-		}
-
-		public DissoliveHelper DissoliveHlpr {
-			get {
-				return _dissoliveHlpr;
 			}
 		}
 
@@ -84,11 +63,11 @@ namespace AssemblyCSharp
 		{
 			GlobalData.getInstance ().myAvatarVO.resetData ();//复位房间数据
 			GlobalData.getInstance ().roomVO.roomId = 0;
-			GlobalData.soundToggle = true;
+			GlobalData.getInstance().SoundToggle = true;
 			_uiHelper.cleanCardInTable ();
 			removeListener ();
 
-			SoundCtrl.getInstance ().playBGM ();
+			SoundManager.getInstance ().playBGM ();
 
 
 			for (int i = 0; i < 4; i++) {
@@ -118,27 +97,28 @@ namespace AssemblyCSharp
 		public GameView ()
 		{
 			_uiHelper = new UIHelper ();
-			_dissoliveHlpr = new DissoliveHelper ();
 			_data = new GamingData ();
 		}
 
 		void Start ()
 		{
 			
-			SoundCtrl.getInstance ().stopBGM ();
+			SoundManager.getInstance ().stopBGM ();
 			//===========================================================================================
-			versionText.text = "V" + Application.version;
+
 			//===========================================================================================
 			_actionHlpr = gameObject.GetComponent<ActionEffectHelper> ();
+			_tableView = gameObject.GetComponent<TableView> ();
 			_actionHlpr.addListener (this);
 
 			_data.init (this);
-			_uiHelper.init (_data, this);
-			_dissoliveHlpr.init (this);
+			_uiHelper.init (this);
 
-
+			gameObject.GetComponentInChildren<TRMenuBarView> ().init (this);
+			gameObject.GetComponentInChildren<QuickMsgView> ().init (this);
 			addListener ();
 			cleanTable ();
+			_tableView.setTableVisible (false);
 			try {
 				if (_data.isReEnter) {
 					_data.isReEnter = false;
@@ -162,8 +142,6 @@ namespace AssemblyCSharp
 		public void addListener ()
 		{
 			GameManager.getInstance ().Server.onResponse += onResponse;
-
-			SocketEventHandle.getInstance ().messageBoxNotice += messageBoxNotice;
 			SocketEventHandle.getInstance ().micInputNotice += micInputNotice;
 
 		}
@@ -171,8 +149,6 @@ namespace AssemblyCSharp
 		private void removeListener ()
 		{
 			GameManager.getInstance ().Server.onResponse -= onResponse;
-
-			SocketEventHandle.getInstance ().messageBoxNotice -= messageBoxNotice;
 			SocketEventHandle.getInstance ().micInputNotice -= micInputNotice;
 		}
 
@@ -228,14 +204,12 @@ namespace AssemblyCSharp
 				onCurStatusResponse (response);
 				break;
 			case APIS.Game_FollowBander_Notice://跟庄
-				gameFollowBanderNotice (response);
+				_actionHlpr.showEffect (ActionType.GEN_ZHUANG);
 				break;
 			default:
 				return;	
 
 			}
-			if (response.headCode != APIS.headRESPONSE)
-				Debug.Log ("下发：" + response.headCode.ToString ("x8") + " " + response.message);
 
 		}
 
@@ -249,7 +223,7 @@ namespace AssemblyCSharp
 			MyDebug.Log ("startGame");
 			GlobalData.getInstance ().remainRoundCount--;
 
-			LeavedRoundNumText.text = GlobalData.getInstance ().remainRoundCount + "";//刷新剩余圈数
+			_tableView.remainRoundText.text = GlobalData.getInstance ().remainRoundCount + "";//刷新剩余圈数
 			if (!isFirstOpen) {
 				isFirstOpen = false;
 				cleanTable ();
@@ -263,11 +237,10 @@ namespace AssemblyCSharp
 
 
 			_uiHelper.getBankerCGO ().PlayerItem.setBankerIconVisible (true);
-			_uiHelper.setDirectPointer (_data.bankerIndex);
-
+			_data.pickIndex = _data.bankerIndex;
 			_data.paiArray = svo.paiArray;
 
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			_uiHelper.hideReadyIcon ();
 			//创建手牌
 			_uiHelper.addMyHandCards (_data.paiArray [0]);
@@ -288,13 +261,8 @@ namespace AssemblyCSharp
 
 		private void cleanGameplayUI ()
 		{
-			centerTitle.transform.gameObject.SetActive (false);
-			inviteFriendButton.transform.gameObject.SetActive (false);
-			ExitRoomButton.transform.gameObject.SetActive (false);
-			remainCard.transform.gameObject.SetActive (true);
-			remainRound.transform.gameObject.SetActive (true);
-			centerImage.transform.gameObject.SetActive (true);
 			_actionHlpr.liujuEffect.SetActive (false);
+			_tableView.setTableVisible (true);
 		}
 
 		/// <summary>
@@ -303,11 +271,10 @@ namespace AssemblyCSharp
 		/// <param name="response">Response.</param>
 		public void onOtherPickCard (ClientResponse response)
 		{
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			JsonData json = JsonMapper.ToObject (response.message);
 			_data.pickIndex = (int)json ["avatarIndex"];
 			_uiHelper.addPickCard (_data.pickIndex);
-			_uiHelper.setDirectPointer (_data.pickIndex);
 			_uiHelper.updateRemainCardNum ();
 		}
 
@@ -319,14 +286,13 @@ namespace AssemblyCSharp
 		public void onMyPickCard (ClientResponse response)
 		{
 
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			CardVO cardvo = JsonMapper.ToObject<CardVO> (response.message);
 			int cardPoint = cardvo.cardPoint;
 			_data.pickIndex = _data.myIndex;
 			_data.pickPoint = cardPoint;
 			_data.paiArray [0] [cardPoint]++;
 			_uiHelper.addPickCard (_data.pickIndex, _data.pickPoint);
-			_uiHelper.setDirectPointer (_data.pickIndex);
 			_uiHelper.updateRemainCardNum ();
 			MyHandCardView.isPutout = true;
 
@@ -387,7 +353,7 @@ namespace AssemblyCSharp
 
 		private void createPutOutCardAndPlayAction (int cardPoint, int avatarIndex)
 		{
-			SoundCtrl.getInstance ().playSound (_data.putoutPoint, avatarList [_data.putoutIndex].account.sex);
+			SoundManager.getInstance ().playSound (_data.putoutPoint, avatarList [_data.putoutIndex].account.sex);
 
 			_uiHelper.addPutoutCardEffect (_data.putoutIndex, _data.putoutPoint);
 
@@ -398,14 +364,13 @@ namespace AssemblyCSharp
 
 		private void onChiNotify (ClientResponse response)//吃牌处理
 		{
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			ChiPaiNotifyVO pvo = JsonMapper.ToObject<ChiPaiNotifyVO> (response.message);
 
 			_data.pickIndex = pvo.avatarId;
-			_uiHelper.setDirectPointer (_data.pickIndex);
 			int cardPoint = Math.Min ( Math.Min (pvo.cardPoint, pvo.onePoint), pvo.twoPoint);
 			_actionHlpr.showEffect (ActionType.CHI);
-			SoundCtrl.getInstance ().playSoundByAction ("chi", avatarList [_data.pickIndex].account.sex);
+			SoundManager.getInstance ().playSoundByAction ("chi", avatarList [_data.pickIndex].account.sex);
 
 			_uiHelper.removeLastPutoutCard ();
 
@@ -428,14 +393,13 @@ namespace AssemblyCSharp
 		}
 		private void onPengNotify (ClientResponse response)//碰牌处理
 		{
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			OtherPengGangBackVO pvo = JsonMapper.ToObject<OtherPengGangBackVO> (response.message);
 
 			_data.pickIndex = pvo.avatarId;
 			int cardPoint = pvo.cardPoint;
-			_uiHelper.setDirectPointer (_data.pickIndex);
 			_actionHlpr.showEffect (ActionType.PENG);
-			SoundCtrl.getInstance ().playSoundByAction ("peng", avatarList [_data.pickIndex].account.sex);
+			SoundManager.getInstance ().playSoundByAction ("peng", avatarList [_data.pickIndex].account.sex);
 
 			_uiHelper.removeLastPutoutCard ();
 
@@ -463,8 +427,7 @@ namespace AssemblyCSharp
 			int cardPoint = gvo.cardPoint;
 			_data.pickIndex = gvo.avatarId;
 			_actionHlpr.showEffect (ActionType.GANG);
-			_uiHelper.setDirectPointer (_data.pickIndex);
-			SoundCtrl.getInstance ().playSoundByAction ("gang", avatarList [_data.pickIndex].account.sex);
+			SoundManager.getInstance ().playSoundByAction ("gang", avatarList [_data.pickIndex].account.sex);
 
 			if (_uiHelper.findIndexInPGC (_data.pickIndex, cardPoint) == -1) {//判断有没有碰过了，
 				_uiHelper.removeOtherHandCard(_data.pickIndex,3);//消耗3只牌
@@ -500,27 +463,6 @@ namespace AssemblyCSharp
 			GameManager.getInstance ().Server.requset (new PutOutCardRequest (cardvo));
 		}
 
-
-
-		void Update ()
-		{
-			timer -= Time.deltaTime;
-			if (timer < 0) {
-				timer = 0;
-				//UpateTimeReStart();
-			}
-			Number.text = Math.Floor (timer) + "";
-
-		}
-
-		/// <summary>
-		/// 重新开始计时
-		/// </summary>
-		void UpateTimeReStart ()
-		{
-			timer = 16;
-		}
-
 		/// <summary>
 		/// 点击放弃按钮
 		/// </summary>
@@ -537,7 +479,7 @@ namespace AssemblyCSharp
 		public void myPengBtnClick ()
 		{
 			MyHandCardView.isPutout = true;
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			CardVO cardvo = new CardVO ();
 			cardvo.cardPoint = _data.putoutPoint;
 			GameManager.getInstance ().Server.requset (new PengPaiRequest (cardvo));
@@ -548,7 +490,7 @@ namespace AssemblyCSharp
 		{
 			MyHandCardView.isPutout = true;
 			MyHandCardView.isChi = false;
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			CardVO cardvo = new CardVO ();
 			cardvo.cardPoint = _data.putoutPoint;
 			cardvo.onePoint = _data.chiPoints[0];
@@ -560,7 +502,7 @@ namespace AssemblyCSharp
 
 		public void onMyGangResponse (ClientResponse response)
 		{
-			UpateTimeReStart ();
+			_tableView.resetTimer ();
 			GangBackVO gvo = JsonMapper.ToObject<GangBackVO> (response.message);
 			int gangKind = gvo.type;
 			if (gvo.cardList.Count == 0) {
@@ -596,7 +538,7 @@ namespace AssemblyCSharp
 			_data.pgcCardPoint = int.Parse (_data.gangPaiList [0]);
 			_data.gangPaiList = null;
 			GameManager.getInstance ().Server.requset (new GangPaiRequest (_data.pgcCardPoint, 0));
-			SoundCtrl.getInstance ().playSoundByAction ("gang", GlobalData.getInstance ().myAvatarVO.account.sex);
+			SoundManager.getInstance ().playSoundByAction ("gang", GlobalData.getInstance ().myAvatarVO.account.sex);
 			_actionHlpr.cleanBtnShow ();
 			_actionHlpr.showEffect (ActionType.GANG);
 
@@ -613,7 +555,7 @@ namespace AssemblyCSharp
 			for (int i = 0; i < avatarList.Count; i++) {
 				_uiHelper.getCardGOs (i).PlayerItem.setAvatarVo (avatarList [i]);
 			}
-			_uiHelper.updateRule (roomRemark);
+			_tableView.updateRule ();
 			GlobalData.getInstance ().gameStatus = GameStatus.READYING;
 			GameManager.getInstance ().Server.requset (new GameReadyRequest ());
 			markselfReadyGame ();
@@ -662,16 +604,16 @@ namespace AssemblyCSharp
 
 
 			if (GlobalData.hupaiResponseVo.type == "0") {
-				SoundCtrl.getInstance ().playSoundByAction ("hu", GlobalData.getInstance ().myAvatarVO.account.sex);
+				SoundManager.getInstance ().playSoundByAction ("hu", GlobalData.getInstance ().myAvatarVO.account.sex);
 				_actionHlpr.showEffect (ActionType.HU);
 
 				for (int i = 0; i < GlobalData.hupaiResponseVo.avatarList.Count; i++) {
 					if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 1) {//胡
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
-						SoundCtrl.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
+						SoundManager.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
 					} else if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 2) {
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
-						SoundCtrl.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
+						SoundManager.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
 					} else {
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagHidde ();
 					}
@@ -683,7 +625,7 @@ namespace AssemblyCSharp
 					if (GlobalData.getInstance ().roomVO.ma > 0 && allMas != null && allMas.Length > 0) {
 						zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
 						zhuamaPanel.GetComponent<ZhuMaScript> ().init (_data);
-						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, avatarList, GlobalData.hupaiResponseVo.validMas);
+						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, GlobalData.hupaiResponseVo.validMas);
 						Invoke ("openGameOverPanelSignal", 7);
 					} else {
 						Invoke ("openGameOverPanelSignal", 3);
@@ -696,7 +638,7 @@ namespace AssemblyCSharp
 
 			} else if (GlobalData.hupaiResponseVo.type == "1") {
 
-				SoundCtrl.getInstance ().playSoundByAction ("liuju", GlobalData.getInstance ().myAvatarVO.account.sex);
+				SoundManager.getInstance ().playSoundByAction ("liuju", GlobalData.getInstance ().myAvatarVO.account.sex);
 				_actionHlpr.showEffect (ActionType.LIUJU);
 				Invoke ("openGameOverPanelSignal", 3);
 			} else {
@@ -859,21 +801,10 @@ namespace AssemblyCSharp
 		}
 
 
-		private void gameFollowBanderNotice (ClientResponse response)
-		{
-			genZhuang.SetActive (true);
-			Invoke ("hideGenzhuang", 2f);
-		}
-
-		private void hideGenzhuang ()
-		{
-			genZhuang.SetActive (false);
-		}
-
 		/*************************断线重连*********************************/
 		private void reEnterRoom ()
 		{
-			_uiHelper.updateRule (roomRemark);
+			_tableView.updateRule ();
 			//设置座位
 
 			avatarList = GlobalData.getInstance ().playerList;
@@ -993,14 +924,6 @@ namespace AssemblyCSharp
 			int uuid = int.Parse (response.message);
 			int index = _data.toAvatarIndex (uuid);
 			_uiHelper.getCardGOs (index).PlayerItem.setPlayerOffline ();
-
-
-			//申请解散房间过程中，有人掉线，直接不能解散房间
-			if (GlobalData.isDissoliving) {
-				_dissoliveHlpr.closeDialog ();
-				TipsManager.getInstance ().setTips ("由于" + avatarList [index].account.nickname + "离线，系统不能解散房间。");
-
-			}
 		}
 
 		/**用户上线提醒**/
@@ -1011,16 +934,7 @@ namespace AssemblyCSharp
 			_uiHelper.getCardGOs (avatarIndex).PlayerItem.setPlayerOnline ();
 
 		}
-
-
-		public void messageBoxNotice (ClientResponse response)
-		{
-			string[] arr = response.message.Split (new char[1]{ '|' });
-			int uuid = int.Parse (arr [1]);
-			var avatarIndex = _data.toAvatarIndex (uuid);
-			_uiHelper.getCardGOs (avatarIndex).PlayerItem.showChatMessage (int.Parse (arr [0]));
-		}
-
+			
 
 		/*显示自己准备*/
 		private void markselfReadyGame ()
@@ -1045,7 +959,7 @@ namespace AssemblyCSharp
 			_data.remainCardNum = int.Parse (surplusCards) + 1;
 			_uiHelper.updateRemainCardNum ();
 			int gameRound = int.Parse (msgData ["gameRound"].ToString ());
-			LeavedRoundNumText.text = gameRound + "";
+			_tableView.remainRoundText.text = gameRound + "";
 			GlobalData.getInstance ().remainRoundCount = gameRound;
 
 			try {
@@ -1061,7 +975,6 @@ namespace AssemblyCSharp
 				Debug.Log (e.ToString ());
 			}
 
-			_uiHelper.setDirectPointer (_data.pickIndex);
 
 			if (_data.pickIndex == _data.myIndex) {//把摸的牌放对位置
 				var Hand = _uiHelper.getCardGOs (Direction.B).Hand;

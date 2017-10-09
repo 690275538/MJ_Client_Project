@@ -10,7 +10,8 @@ using System.Text;
 
 public class GlobalData
 {
-	public delegate void Change();
+
+	public event Change SoundToggleChange;
 	public event Change noticeChange;
 	public event Change prizeCountChange;
 
@@ -29,12 +30,6 @@ public class GlobalData
 	/**全局游戏结束服务器返回数据**/
 	public static FinalGameEndVo finalGameEndVo;
 
-
-	/// <summary>
-	/// 声音开关
-	/// </summary>
-	public static bool soundToggle = true;
-
 	/// <summary>
 	/// 单局结算面板
 	/// </summary>
@@ -49,8 +44,6 @@ public class GlobalData
 	public static List<LotteryData> lotteryDatas;
 
 
-	/**是否处于申请解散房间状态**/
-	public static bool isDissoliving = false;
 	/**是否由用用户选择退出而退出的游戏**/
 	public static bool isOverByPlayer = false;
 
@@ -82,6 +75,20 @@ public class GlobalData
 
 	}
 
+	private bool _soundToggle = true;
+	/**声音开关**/
+	public bool SoundToggle{
+		get{
+			return _soundToggle;
+		}
+		set{
+			_soundToggle = value;
+			if (SoundToggleChange != null) {
+				SoundToggleChange ();
+			}
+		}
+
+	}
 
 	public int PrizeCount{
 		get{
@@ -121,7 +128,6 @@ public class GlobalData
 		finalGameEndVo = null;
 		singalGameOverList = new List<GameObject> ();
 		lotteryDatas = null;
-		isDissoliving = false;
 		isOverByPlayer = false;
 	}
 	public void resetDataForNewRoom()

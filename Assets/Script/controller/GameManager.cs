@@ -92,7 +92,7 @@ namespace AssemblyCSharp
 
 			MicroPhoneInput.getInstance ();//TODO 后面改
 
-			SoundCtrl.getInstance ();//TODO 后面改
+			SoundManager.getInstance ();//TODO 后面改
 
 			updateHelper = new UpdateHelper ();
 			this.uiStage.StartCoroutine (updateHelper.updateCheck());

@@ -2,6 +2,7 @@
 
 namespace AssemblyCSharp
 {
+	public delegate void Change();
 	public class Constants
 	{
 		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;

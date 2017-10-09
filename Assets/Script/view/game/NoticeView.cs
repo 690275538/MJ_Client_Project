@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 	public class NoticeView : MonoBehaviour
 	{
 
-		public GameObject noticeGameObject;
+		public GameObject ui;
 		public Text noticeText;
 
 
@@ -42,7 +42,7 @@ namespace AssemblyCSharp
 
 		private void playNoticeAction ()
 		{
-			noticeGameObject.SetActive (true);
+			ui.SetActive (true);
 
 			var noticeMsgs = GlobalData.getInstance ().NoticeMsgs;
 			if (noticeMsgs.Count != 0) {
@@ -63,7 +63,7 @@ namespace AssemblyCSharp
 			if (showNoticeNumber == GlobalData.getInstance ().NoticeMsgs.Count) {
 				showNoticeNumber = 0;
 			}
-			noticeGameObject.SetActive (false);
+			ui.SetActive (false);
 			randShowTime ();
 			timeFlag = true;
 		}
