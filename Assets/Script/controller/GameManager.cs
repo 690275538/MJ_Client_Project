@@ -90,7 +90,7 @@ namespace AssemblyCSharp
 			TipsManager.getInstance ().init (stage.transform);
 			SceneManager.getInstance ().init (root.transform,login);
 
-			MicroPhoneInput.getInstance ();//TODO 后面改
+			MicrophoneManager.getInstance ().init ();
 
 			SoundManager.getInstance ();//TODO 后面改
 

@@ -80,10 +80,10 @@ public class DebugPanelScript : MonoBehaviour {
     }
 
 	public void StartRecord()  {
-		MicroPhoneInput.getInstance ().StartRecord (userList);
+		MicrophoneManager.getInstance ().StartRecord (userList);
 	}
 
 	public void StopRecord(){
-		MicroPhoneInput.getInstance ().StopRecord ();
+		MicrophoneManager.getInstance ().StopRecord ();
 	}
 }

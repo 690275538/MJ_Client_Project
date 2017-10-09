@@ -41,7 +41,7 @@ public class UI_MicPhoneScript : MonoBehaviour
 		if (myScript.avatarList != null && myScript.avatarList.Count >1) {
 			btnDown = true;
 			InputGameObject.SetActive(true);
-			MicroPhoneInput.getInstance ().StartRecord (getUserList ());
+			MicrophoneManager.getInstance ().StartRecord (getUserList ());
 		}else{
 			TipsManager.getInstance ().setTips ("房间里只有你一个人，不能发送语音");
 		}
@@ -54,7 +54,7 @@ public class UI_MicPhoneScript : MonoBehaviour
 			InputGameObject.SetActive (false);
 			WholeTime = 10;
 			if (myScript.avatarList != null && myScript.avatarList.Count > 1) {
-				MicroPhoneInput.getInstance ().StopRecord ();
+				MicrophoneManager.getInstance ().StopRecord ();
 				myScript.myselfSoundActionPlay ();
 			} else {
 				
