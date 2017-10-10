@@ -1,6 +1,7 @@
 ﻿//#define TEST
 using System;
 using UnityEngine;
+using LitJson;
 
 namespace AssemblyCSharp
 {
@@ -112,6 +113,13 @@ namespace AssemblyCSharp
 				break;
 			case APIS.GAME_BROADCAST:
 				dataMgr.parseBroadCast (response.message);
+				break;
+			case APIS.HUPAIALL_RESPONSE://全局结束
+				GlobalData.getInstance ().gamingData.finalGameEndVo = JsonMapper.ToObject<FinalGameEndVo> (response.message);
+
+				SceneManager.getInstance ().showGameOverView (1, GlobalData.getInstance().gamingData);
+				GlobalData.getInstance ().resetDataForNewRoom ();
+				SceneManager.getInstance ().changeToScene (SceneType.HOME);
 				break;
 			}
 				

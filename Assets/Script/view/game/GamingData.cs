@@ -32,7 +32,7 @@ namespace AssemblyCSharp
 		/**自己的手牌**/
 		public List<List<int>> paiArray;
 
-		List<AvatarVO> avatarList;
+		List<AvatarVO> _avatarList;
 
 		/**断线重进房间**/
 		public bool isReEnter = false;
@@ -69,8 +69,8 @@ namespace AssemblyCSharp
 		public bool isQiangHu = false;
 		public int BankerUuid {
 			get {
-				if (avatarList != null) {
-					var avo = avatarList [bankerIndex];
+				if (_avatarList != null) {
+					var avo = _avatarList [bankerIndex];
 					return avo.account.uuid;
 				}
 				return -1;
@@ -78,10 +78,10 @@ namespace AssemblyCSharp
 		}
 		public List<AvatarVO> AvatarList{
 			set{
-				avatarList = value;
+				_avatarList = value;
 				AvatarVO myAVO = GlobalData.getInstance ().myAvatarVO;
-				for (int i = 0; i < avatarList.Count; i++) {
-					AvatarVO avo = avatarList [i];
+				for (int i = 0; i < _avatarList.Count; i++) {
+					AvatarVO avo = _avatarList [i];
 					if (avo.account.uuid == myAVO.account.uuid || avo.account.openid == myAVO.account.openid) {
 						myAVO.account.uuid = avo.account.uuid;
 						myIndex = i;
@@ -90,18 +90,16 @@ namespace AssemblyCSharp
 				}
 			}
 			get{
-				return avatarList;
+				return _avatarList;
 			}
 		}
 
-		GameView host;
+		public HupaiResponseVo hupaiResponseVO;
+		public FinalGameEndVo finalGameEndVo;
+
 		public GamingData ()
 		{
 			
-		}
-
-		public void init(GameView host){
-			this.host = host;
 		}
 
 		public Direction toGameDir(int avatarIndex){
@@ -114,17 +112,30 @@ namespace AssemblyCSharp
 		}
 		public int toAvatarIndex (int uuid)
 		{
-			var avatarList = host.avatarList;
-			if (avatarList != null) {
-				for (int i = 0; i < avatarList.Count; i++) {
-					if (avatarList [i].account != null) {
-						if (avatarList [i].account.uuid == uuid) {
+			if (_avatarList != null) {
+				for (int i = 0; i < _avatarList.Count; i++) {
+					var avo = _avatarList [i];
+					if (avo.account != null) {
+						if (avo.account.uuid == uuid) {
 							return i;
 						}
 					}
 				}
 			}
 			return 0;
+		}
+		public AvatarVO getAvatarVO(int uuid){
+			if (_avatarList != null) {
+				for (int i = 0; i < _avatarList.Count; i++) {
+					var avo = _avatarList [i];
+					if (avo.account != null) {
+						if (avo.account.uuid == uuid) {
+							return avo;
+						}
+					}
+				}
+			}
+			return null;
 		}
 		public static List<List<int>> ToList (int[][] param)
 		{

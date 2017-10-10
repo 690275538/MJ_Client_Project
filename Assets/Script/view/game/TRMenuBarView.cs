@@ -136,8 +136,6 @@ namespace AssemblyCSharp
 		public void closeDialog ()
 		{
 			if (_dissoDialog != null) {
-				_dissoDialog.GetComponent<VoteView> ().removeListener ();
-				GameObject.Destroy (_dissoDialog.GetComponent<VoteView> ());
 				GameObject.Destroy (_dissoDialog);
 				_dissoDialog = null;
 			}
@@ -147,6 +145,9 @@ namespace AssemblyCSharp
 		private void onCancle ()
 		{
 
+		}
+		void OnDestroy(){
+			GameManager.getInstance ().Server.onResponse -= onResponse;
 		}
 	}
 }

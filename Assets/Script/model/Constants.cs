@@ -2,6 +2,8 @@
 
 namespace AssemblyCSharp
 {
+	public delegate void OnData(ClientResponse response);
+	public delegate void OnStatus(SocketStatus status);
 	public delegate void Change();
 	public class Constants
 	{
@@ -40,6 +42,15 @@ namespace AssemblyCSharp
 		R,
 		T,
 		L
+	}
+	public enum ActionType
+	{
+		GANG,
+		PENG,
+		CHI,
+		HU,
+		LIUJU,
+		GEN_ZHUANG
 	}
 
 }

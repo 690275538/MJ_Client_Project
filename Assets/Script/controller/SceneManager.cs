@@ -23,6 +23,7 @@ namespace AssemblyCSharp
 		}
 
 		GameObject exitPanel;
+		GameObject gameOverPanel;
 		
 		SceneType curSceneType;
 		public SceneType CurSceneType {
@@ -78,12 +79,21 @@ namespace AssemblyCSharp
 		public void showExitPanel(){
 			if (exitPanel == null) {
 				exitPanel = GameObject.Instantiate (Resources.Load("Prefab/Panel_Exit_View")) as GameObject;
-
 			}
 			exitPanel.transform.parent = curScenePanel.transform;
 			exitPanel.transform.localScale = Vector3.one;
 			exitPanel.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
 			exitPanel.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
+		}
+
+		public void showGameOverView(int type,GamingData data){
+			if (gameOverPanel != null) {
+				GameObject.Destroy (gameOverPanel);
+				gameOverPanel = null;
+			}
+			gameOverPanel = loadPerfab ("prefab/Panel_Game_Over_View");
+			gameOverPanel.GetComponent<GameOverView> ().setDisplaContent (type, data);
+			gameOverPanel.transform.SetSiblingIndex (2);
 		}
 	}
 

@@ -23,11 +23,8 @@ namespace AssemblyCSharp
 		public List<GameObject> dirGameList;
 
 		public Button inviteFriendBtn;
-		public  Button exitRoomBtn;
+		public Button exitRoomBtn;
 
-		public TableView ()
-		{
-		}
 
 		void Update ()
 		{

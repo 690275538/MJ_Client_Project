@@ -27,9 +27,6 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	public void close (object data = null)
 	{
-		
-		removeListener ();
-		Destroy (this);
 		Destroy (gameObject);
 	}
 
@@ -39,8 +36,8 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 		//shareSdk.showUserHandler = getUserInforCallback;//注册获取用户信息回调
 
+		GameManager.getInstance ().Server.onResponse += onResponse;
 
-		addListener ();
 		versionText.text ="版本号：" +Application.version;
 
 		#if UNITY_ANDROID
@@ -61,7 +58,6 @@ public class LoginView : MonoBehaviour, ISceneView {
 		
 		if (!GameManager.getInstance().Server.Connected) {
 			GameManager.getInstance ().Server.connect ();
-			ChatSocket.getInstance ().Connect();
 			TipsManager.getInstance ().setTips ("正在连接服务器...");
 			return;
 		}
@@ -84,23 +80,25 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	}
 
-	private void addListener(){
-		SocketEventHandle.getInstance ().LoginCallBack += onLoginCallBack;
-		SocketEventHandle.getInstance ().RoomBackResponse += onRoomBackResponse;
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.LOGIN_RESPONSE://登录回包
+			onLoginResponse (response);
+			break;
+		case APIS.BACK_LOGIN_RESPONSE://掉线登录回包
+			onBackLoginResponse (response);
+			break;
+		}
 	}
-	private void removeListener(){
-		SocketEventHandle.getInstance ().LoginCallBack -= onLoginCallBack;
-		SocketEventHandle.getInstance ().RoomBackResponse -= onRoomBackResponse;
-	}
-
-	private void onLoginCallBack(ClientResponse response){
+	private void onLoginResponse(ClientResponse response){
 		watingPanel.SetActive(false);
 
 		SoundManager.getInstance ().playBGM ();
 		if (response.status == 1) {
 			
 			GlobalData.getInstance().myAvatarVO = JsonMapper.ToObject<AvatarVO> (response.message);
-			ChatSocket.getInstance ().sendMsg (new LoginChatRequest (GlobalData.getInstance().myAvatarVO.account.uuid));
+			GameManager.getInstance().Server.requset (new LoginChatRequest (GlobalData.getInstance().myAvatarVO.account.uuid));
 
 			SceneManager.getInstance ().changeToScene (SceneType.HOME);
 
@@ -109,17 +107,20 @@ public class LoginView : MonoBehaviour, ISceneView {
 			TipsManager.getInstance ().setTips (response.message);
 		}
 	}
-	private void onRoomBackResponse(ClientResponse response){
+	private void onBackLoginResponse(ClientResponse response){
 
 		watingPanel.SetActive(false);
 
 
 		RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
 		GameManager.getInstance ().DataMgr.updateRoomVO (vo);
-		ChatSocket.getInstance ().sendMsg (new LoginChatRequest(GlobalData.getInstance().myAvatarVO.account.uuid));
+		GameManager.getInstance().Server.requset (new LoginChatRequest(GlobalData.getInstance().myAvatarVO.account.uuid));
 		SceneManager.getInstance ().changeToScene (SceneType.GAME);
 		SceneManager.getInstance ().CurScenePanel.GetComponent<GameView> ().Data.isReEnter = true;
 	}
 
 
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
+	}
 }

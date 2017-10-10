@@ -30,10 +30,10 @@ namespace AssemblyCSharp
 		public Text nameText;
 		public Image readyImg;
 		public Text scoreText;
-		public string dir;
+		/**说话提示**/
 		public GameObject chatAction;
+		/**离线图片**/
 		public Image offlineImage;
-//离线图片
 		public Text chatMessage;
 		public GameObject chatMc;
 		public GameObject HuFlag;

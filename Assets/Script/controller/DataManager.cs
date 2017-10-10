@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LitJson;
 
 namespace AssemblyCSharp
 {
@@ -64,7 +65,6 @@ namespace AssemblyCSharp
 		public void parsePrizeCount(string msg){
 			int prizecount =int.Parse(msg);
 			GlobalData.getInstance().PrizeCount = prizecount;
-
 		}
 	}
 }

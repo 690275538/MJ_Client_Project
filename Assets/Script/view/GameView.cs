@@ -29,8 +29,6 @@ namespace AssemblyCSharp
 		private GameObject zhuamaPanel;
 
 
-		/**所有的抓码数据字符串**/
-		private string allMas;
 
 		private bool isFirstOpen = true;
 
@@ -65,16 +63,15 @@ namespace AssemblyCSharp
 			GlobalData.getInstance ().roomVO.roomId = 0;
 			GlobalData.getInstance().SoundToggle = true;
 			_uiHelper.cleanCardInTable ();
-			removeListener ();
 
 			SoundManager.getInstance ().playBGM ();
 
 
 			for (int i = 0; i < 4; i++) {
 				PlayerItemViews [i].destroy_all ();
-				Destroy (PGCParents[i]);
-				Destroy (HandParents[i]);
-				Destroy (TableParents[i]);
+				Destroy (PGCParents[i].gameObject);
+				Destroy (HandParents[i].gameObject);
+				Destroy (TableParents[i].gameObject);
 
 			}
 			PlayerItemViews.Clear ();
@@ -111,12 +108,14 @@ namespace AssemblyCSharp
 			_tableView = gameObject.GetComponent<TableView> ();
 			_actionHlpr.addListener (this);
 
-			_data.init (this);
 			_uiHelper.init (this);
 
 			gameObject.GetComponentInChildren<TRMenuBarView> ().init (this);
 			gameObject.GetComponentInChildren<QuickMsgView> ().init (this);
-			addListener ();
+			gameObject.GetComponentInChildren<MicrophoneView> ().init (this);
+
+			GameManager.getInstance ().Server.onResponse += onResponse;
+
 			cleanTable ();
 			_tableView.setTableVisible (false);
 			try {
@@ -137,19 +136,6 @@ namespace AssemblyCSharp
 		{
 			_uiHelper.cleanCardInTable ();
 			_actionHlpr.cleanBtnShow ();
-		}
-
-		public void addListener ()
-		{
-			GameManager.getInstance ().Server.onResponse += onResponse;
-			SocketEventHandle.getInstance ().micInputNotice += micInputNotice;
-
-		}
-
-		private void removeListener ()
-		{
-			GameManager.getInstance ().Server.onResponse -= onResponse;
-			SocketEventHandle.getInstance ().micInputNotice -= micInputNotice;
 		}
 
 		void onResponse (ClientResponse response)
@@ -231,7 +217,6 @@ namespace AssemblyCSharp
 			}
 
 
-			GlobalData.finalGameEndVo = null;
 			GlobalData.isOverByPlayer = false;
 			MyHandCardView.isPutout = _data.bankerIndex == _data.myIndex;
 
@@ -596,22 +581,21 @@ namespace AssemblyCSharp
 	 */ 
 		private void onHuNotify (ClientResponse response)
 		{
-			//删除这句，未区分胡家是谁
-			GlobalData.hupaiResponseVo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
-
-			string scores = GlobalData.hupaiResponseVo.currentScore;
+			HupaiResponseVo hvo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
+			_data.hupaiResponseVO = hvo; 
+			string scores = hvo.currentScore;
 			hupaiCoinChange (scores);
 
 
-			if (GlobalData.hupaiResponseVo.type == "0") {
+			if (hvo.type == "0") {
 				SoundManager.getInstance ().playSoundByAction ("hu", GlobalData.getInstance ().myAvatarVO.account.sex);
 				_actionHlpr.showEffect (ActionType.HU);
 
-				for (int i = 0; i < GlobalData.hupaiResponseVo.avatarList.Count; i++) {
-					if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 1) {//胡
+				for (int i = 0; i < hvo.avatarList.Count; i++) {
+					if (checkAvarHupai (hvo.avatarList [i]) == 1) {//胡
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundManager.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
-					} else if (checkAvarHupai (GlobalData.hupaiResponseVo.avatarList [i]) == 2) {
+					} else if (checkAvarHupai (hvo.avatarList [i]) == 2) {
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundManager.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
 					} else {
@@ -620,29 +604,29 @@ namespace AssemblyCSharp
 
 				}
 
-				allMas = GlobalData.hupaiResponseVo.allMas;
+				string allMas = hvo.allMas;
 				if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.getInstance ().roomVO.roomType == GameType.GI_PING_HU) {//只有转转麻将才显示抓码信息
 					if (GlobalData.getInstance ().roomVO.ma > 0 && allMas != null && allMas.Length > 0) {
 						zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
 						zhuamaPanel.GetComponent<ZhuMaScript> ().init (_data);
-						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, GlobalData.hupaiResponseVo.validMas);
-						Invoke ("openGameOverPanelSignal", 7);
+						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, hvo.validMas);
+						Invoke ("openGameOverView", 7);
 					} else {
-						Invoke ("openGameOverPanelSignal", 3);
+						Invoke ("openGameOverView", 3);
 					}
 
 				} else {
-					Invoke ("openGameOverPanelSignal", 3);
+					Invoke ("openGameOverView", 3);
 				}
 
 
-			} else if (GlobalData.hupaiResponseVo.type == "1") {
+			} else if (hvo.type == "1") {
 
 				SoundManager.getInstance ().playSoundByAction ("liuju", GlobalData.getInstance ().myAvatarVO.account.sex);
 				_actionHlpr.showEffect (ActionType.LIUJU);
-				Invoke ("openGameOverPanelSignal", 3);
+				Invoke ("openGameOverView", 3);
 			} else {
-				Invoke ("openGameOverPanelSignal", 3);
+				Invoke ("openGameOverView", 3);
 			}
 
 
@@ -708,40 +692,25 @@ namespace AssemblyCSharp
 		}
 
 
-		private void openGameOverPanelSignal ()
+		private void openGameOverView ()
 		{//单局结算
 			_actionHlpr.liujuEffect.SetActive (false);
 			_uiHelper.hideHuIcon ();
 			if (zhuamaPanel != null) {
-				Destroy (zhuamaPanel.GetComponent<ZhuMaScript> ());
 				Destroy (zhuamaPanel);
 			}
 
-			//GlobalDataScript.singalGameOver = PrefabManage.loadPerfab("prefab/Panel_Game_Over");
-			GameObject gameOverView = PrefabManage.loadPerfab ("Prefab/Panel_Game_Over");
 			avatarList [_data.bankerIndex].main = false;
 			_uiHelper.getBankerCGO ().PlayerItem.setBankerIconVisible (false);
 
-
 			cleanTable ();
-			gameOverView.GetComponent<GameOverScript> ().setDisplaContent (0, avatarList, allMas, GlobalData.hupaiResponseVo.validMas);
-			GlobalData.singalGameOverList.Add (gameOverView);
-			allMas = "";//初始化码牌数据为空
-			//GlobalDataScript.singalGameOver.GetComponent<GameOverScript> ().setDisplaContent (0,avatarList,allMas,GlobalDataScript.hupaiResponseVo.validMas);	
+
+			SceneManager.getInstance ().showGameOverView (0, _data);
 		}
 
 
 
-
-		private void  loadPerfab (string perfabName, int openFlag)
-		{
-			GameObject obj = PrefabManage.loadPerfab (perfabName);
-			obj.GetComponent<GameOverScript> ().setDisplaContent (openFlag, avatarList, allMas, GlobalData.hupaiResponseVo.validMas);
-		}
-
-		/***
-	 * 退出房间请求
-	 */
+		/**退出房间请求**/
 		public void quiteRoom ()
 		{
 			OutRoomRequestVo vo = new OutRoomRequestVo ();
@@ -902,13 +871,6 @@ namespace AssemblyCSharp
 			}
 			return false;
 		}
-		public void myselfSoundActionPlay ()
-		{
-			_uiHelper.getCardGOs (Direction.B).PlayerItem.showChatAction ();
-		}
-
-
-
 
 
 		public void inviteFriend ()
@@ -942,13 +904,6 @@ namespace AssemblyCSharp
 			_uiHelper.getCardGOs (Direction.B).PlayerItem.readyImg.transform.gameObject.SetActive (true);
 		}
 
-
-		public void micInputNotice (ClientResponse response)
-		{
-			int uuid = int.Parse (response.message);
-			var avatarIndex = _data.toAvatarIndex (uuid);
-			_uiHelper.getCardGOs (avatarIndex).PlayerItem.showChatAction ();
-		}
 
 
 		public void onCurStatusResponse (ClientResponse response)
@@ -1010,7 +965,9 @@ namespace AssemblyCSharp
 				_uiHelper.addPointer (_uiHelper.lastCardOnTable);
 			}
 		}
-
+		void OnDestroy(){
+			GameManager.getInstance ().Server.onResponse -= onResponse;
+		}
 	}
 
 }

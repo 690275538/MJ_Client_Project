@@ -42,7 +42,7 @@ public class QuickMsgView : MonoBehaviour {
 	}
 
 
-	public void Destroy(){
+	void OnDestroy(){
 		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 }

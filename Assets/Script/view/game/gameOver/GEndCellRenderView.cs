@@ -5,7 +5,7 @@ using System.Collections;
 
 namespace AssemblyCSharp
 {
-	public class finalOverItem :MonoBehaviour
+	public class GEndCellRenderView :MonoBehaviour
 	{
 		public Text nickName;//昵称
 		public Text ID;//id
@@ -21,7 +21,7 @@ namespace AssemblyCSharp
 		public GameObject mainImgFlag;
 		private string headIcon;
 		private Texture2D texture2D;         //下载的图片
-		public finalOverItem ()
+		public GEndCellRenderView ()
 		{
 		}
 

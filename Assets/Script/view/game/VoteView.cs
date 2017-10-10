@@ -47,9 +47,6 @@ public class VoteView : MonoBehaviour {
 		
 		GameManager.getInstance ().Server.onResponse += onResponse;
 	}
-	public void removeListener(){
-		GameManager.getInstance ().Server.onResponse -= onResponse;
-	}
 
 	void onResponse (ClientResponse response)
 	{
@@ -130,4 +127,7 @@ public class VoteView : MonoBehaviour {
 		cancleButton.transform.gameObject.SetActive (false);
 	}
 
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
+	}
 }

@@ -12,15 +12,11 @@ namespace AssemblyCSharp
 
 		public  delegate void ServerCallBackEvent (ClientResponse response);
 		public  delegate void ServerDisconnectCallBackEvent ();
-		public ServerCallBackEvent LoginCallBack;//登录回调
 		public ServerCallBackEvent CreateRoomCallBack;//创建房间回调
 		public ServerCallBackEvent JoinRoomCallBack;//加入房间回调
 
-		public ServerCallBackEvent FinalGameOverCallBack;//全局结束回调
 
-		public ServerCallBackEvent micInputNotice;
 		public ServerCallBackEvent backLoginNotice;//玩家断线重连
-		public ServerCallBackEvent RoomBackResponse;//掉线后返回房间
 		public ServerCallBackEvent cardChangeNotice;//房卡数据变化
 		//public ServerCallBackEvent rewardRequestCallBack;//投资请求返回
 		public ServerCallBackEvent giftResponse;//奖品回调
@@ -76,11 +72,7 @@ namespace AssemblyCSharp
 				TipsManager.getInstance ().setTips ("服务器关闭了");
 				//CustomSocket.getInstance ().closeSocket ();
 				break;
-			case APIS.LOGIN_RESPONSE:
-				if (LoginCallBack != null) {
-					LoginCallBack(response);
-				}
-				break;
+			
 			case APIS.CREATEROOM_RESPONSE:
 				if (CreateRoomCallBack != null) {
 					CreateRoomCallBack(response);
@@ -91,24 +83,7 @@ namespace AssemblyCSharp
 					JoinRoomCallBack(response);
 				}
 				break;
-			case APIS.HUPAIALL_RESPONSE:
-				if (FinalGameOverCallBack != null) {
-					FinalGameOverCallBack(response);
-				}
-				break;
-
 			case APIS.headRESPONSE:
-				break;
-			case APIS.MicInput_Response:
-				if (micInputNotice != null) {
-					micInputNotice (response);
-				}
-				break;
-			case APIS.BACK_LOGIN_RESPONSE:
-				if (RoomBackResponse != null) {
-					RoomBackResponse (response);
-				}
-
 				break;
 			case APIS.CARD_CHANGE:
 				if (cardChangeNotice != null) {

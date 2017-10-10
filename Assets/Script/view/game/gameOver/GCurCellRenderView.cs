@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using AssemblyCSharp;
 using System.Collections.Generic;
+using System;
 
 public class GangpaiObj{
 	public int cardPiont;//出牌的下标
@@ -31,7 +32,7 @@ public class ChipaiObj{
  * 
  * 
  */ 
-public class SignalOverItemScript : MonoBehaviour {
+public class GCurCellRenderView : MonoBehaviour {
 
 	public Text nickName;
 	public Text resultDes;
@@ -89,14 +90,7 @@ public class SignalOverItemScript : MonoBehaviour {
 		} else {
 			GenzhuangFlag.SetActive (false);
 		}
-			
-		/*
-		if (GlobalDataScript.isGenzhuang && mainuuid == itemData.uuid) {
-			GenzhuangFlag.SetActive(true);
-		} else {
-			GenzhuangFlag.SetActive(false);
-		}
-*/
+
 		analysisPaiInfo (itemData);
 
 	}
@@ -155,11 +149,12 @@ public class SignalOverItemScript : MonoBehaviour {
 				string item = chitemps[i];
 				ChipaiObj chipaiObj = new ChipaiObj ();
 				string[] pointStr = item.Split (new char[1]{ ':' }); 
-				chipaiObj.cardPionts = pointStr;
+				chipaiObj.cardPionts = new string[3];
+				Array.Copy (pointStr, 1, chipaiObj.cardPionts, 0, 3);
 				chipaiList.Add (chipaiObj);
-				paiArray [int.Parse(chipaiObj.cardPionts[0])] -= 1;
-				paiArray [int.Parse(chipaiObj.cardPionts[1])] -= 1;
-				paiArray [int.Parse(chipaiObj.cardPionts[2])] -= 1;
+				paiArray [int.Parse(pointStr[1])] -= 1;
+				paiArray [int.Parse(pointStr[2])] -= 1;
+				paiArray [int.Parse(pointStr[3])] -= 1;
 			}
 
 		}

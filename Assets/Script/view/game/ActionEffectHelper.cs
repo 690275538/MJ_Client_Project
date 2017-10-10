@@ -99,13 +99,5 @@ namespace AssemblyCSharp
 		}
 	}
 
-	public enum ActionType
-	{
-		GANG,
-		PENG,
-		CHI,
-		HU,
-		LIUJU,
-		GEN_ZHUANG
-	}
+
 }

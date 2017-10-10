@@ -15,6 +15,7 @@ namespace AssemblyCSharp
 		public event OnDisconnect onDisconnect;
 
 		CustomSocket _socket;
+		ChatSocket _chatSocket;
 		bool _isDisconnet;
 		private List<ClientResponse> _cache;
 
@@ -26,6 +27,7 @@ namespace AssemblyCSharp
 		public void init ()
 		{
 			_socket = new CustomSocket (onSocketData, onSocketStatus);
+			_chatSocket = new ChatSocket (onSocketData, null);
 			_cache = new List<ClientResponse> ();
 
 			heartbeatThread ();//开一个线程维持与服务的心跳
@@ -34,15 +36,18 @@ namespace AssemblyCSharp
 		public void connect ()
 		{
 			_socket.Connect ();
-
-			ChatSocket.getInstance ().Connect ();
+			_chatSocket.Connect ();
 		}
 
 		public bool Connected {
 			get {
 				return _socket.Status == SocketStatus.CONNECTED;
 			}
-
+		}
+		public bool ChatConnected {
+			get {
+				return _chatSocket.Status == SocketStatus.CONNECTED;
+			}
 		}
 
 		public void requset (ClientRequest q)
@@ -50,7 +55,11 @@ namespace AssemblyCSharp
 			Debug.Log("req: "+q.headCode.ToString ("x8")+" , "+q.messageContent);
 			_socket.sendMsg (q);
 		}
-
+		public void requset (ChatRequest q)
+		{
+			Debug.Log("req: "+q.headCode.ToString ("x8")+" , "+q.userList.ToArray());
+			_chatSocket.sendMsg (q);
+		}
 		private void onSocketData (ClientResponse response)
 		{
 			_cache.Add (response);

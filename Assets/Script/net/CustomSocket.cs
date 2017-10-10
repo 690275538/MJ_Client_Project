@@ -11,8 +11,6 @@ using System.IO;
 
 public class CustomSocket{
 
-	public delegate void OnData(ClientResponse response);
-	public delegate void OnStatus(SocketStatus status);
 
 	private OnData _onData;
 	private OnStatus _onStatus;
@@ -64,13 +62,6 @@ public class CustomSocket{
 
 
 
-
-
-    /// <summary>
-    /// 连接到服务器
-    /// </summary>
-    /// <param name="ip">服务器IP</param>
-    /// <returns></returns>
     public void Connect()
     {
 		if (_status == SocketStatus.CONNECTING || _status == SocketStatus.CONNECTED)
@@ -124,10 +115,7 @@ public class CustomSocket{
 		_onData (temp);
 	}
 
-    /// <summary>
-    /// 异步连接的回调函数
-    /// </summary>
-    /// <param name="ar"></param>
+
     private void ConnectCallback(IAsyncResult ar)
     {
 		StateObject state = (StateObject)ar.AsyncState;
@@ -154,10 +142,6 @@ public class CustomSocket{
     }
 
 
-    /// <summary>
-    /// TCP读数据的回调函数
-    /// </summary>
-    /// <param name="ar"></param>
     private void ReadCallback(IAsyncResult ar)
     {
         StateObject state = (StateObject)ar.AsyncState;
@@ -198,10 +182,7 @@ public class CustomSocket{
         }
     }
 
-	/// <summary>
-	/// 读取大端序的int
-	/// </summary>
-	/// <param name="value"></param>
+
 	public int ReadInt(byte[] intbytes)
 	{
 		Array.Reverse(intbytes);
@@ -269,10 +250,10 @@ public class CustomSocket{
 	private void startTimer(){
 		hasStartTimer = true;
 		if (t == null) {
-			t = new System.Timers.Timer(10000);   //实例化Timer类，设置间隔时间为10000毫秒；   
-			t.Elapsed += new System.Timers.ElapsedEventHandler(timeout); //到达时间的时候执行事件；   
-			t.AutoReset = true;   //设置是执行一次（false）还是一直执行(true)；   
-			t.Enabled = true;     //是否执行System.Timers.Timer.Elapsed事件；   
+			t = new System.Timers.Timer(10000);
+			t.Elapsed += new System.Timers.ElapsedEventHandler(timeout);
+			t.AutoReset = true; 
+			t.Enabled = true; 
 		}
 		t.Start ();
 	}

@@ -26,8 +26,7 @@ public class MicrophoneManager : MonoBehaviour
 
 	//	public float sensitivity=100;
 	//	public float loudness=0;
-	const int F2IFacter = 32767;
-	//to convert float to Int16
+	const int F2IFacter = 32767;//to convert float to Int16
 	private AudioSource inputAudio;
 	private AudioSource outputAudio;
 
@@ -35,7 +34,6 @@ public class MicrophoneManager : MonoBehaviour
 
 	const int HEADER_SIZE = 44;
 	const int RECORD_TIME = 10;
-	List<int> _uuidList;
 	private AudioClip redioclip;
 	private bool _isAvalable = true;
 	// Use this for initialization
@@ -49,7 +47,7 @@ public class MicrophoneManager : MonoBehaviour
 		foreach (string name in devices) {  
 			Debug.Log ("device name = " + name);  
 		}  
-		SocketEventHandle.getInstance ().micInputNotice += onMicInputNotify;
+
 		inputAudio = GameObject.Find ("GamePlayAudio").GetComponent<AudioSource> ();
 		if (inputAudio.clip == null) {
 			inputAudio.clip = AudioClip.Create ("playRecordClip", 160000, 1, 8000, false);  
@@ -57,10 +55,9 @@ public class MicrophoneManager : MonoBehaviour
 		outputAudio = GetComponent<AudioSource> ();
 	}
 
-	public void StartRecord (List<int> uuidList)
+	public void StartRecord ()
 	{  
 		if (_isAvalable) {
-			_uuidList = uuidList;
 			outputAudio.Stop ();  
 		   
 			redioclip = Microphone.Start ("inputMicro", false, RECORD_TIME, 8000); //22050    
@@ -69,13 +66,14 @@ public class MicrophoneManager : MonoBehaviour
 		}
 	}
 
-	public  void StopRecord ()
+	public Byte[] StopRecord ()
 	{  
 		if (_isAvalable) {
 			Debug.Log ("StopRecord");
+
 			if (!Microphone.IsRecording (null) || redioclip == null) {
 				Debug.Log ("未录有声音");
-				return;  
+				return null;  
 			}  
 			Microphone.End (null);  
 
@@ -88,13 +86,16 @@ public class MicrophoneManager : MonoBehaviour
 				outData [i * 2] = temdata [0];  
 				outData [i * 2 + 1] = temdata [1];  
 			}  
-			ChatSocket.getInstance ().sendMsg (new MicInputRequest (_uuidList, outData));
+
 
 			outputAudio.clip = redioclip;
 			outputAudio.mute = false;  
 			outputAudio.loop = false;  
-			outputAudio.Play ();  
+			outputAudio.Play ();
+
+			return outData;
 		}
+		return null;
 	}
 
 
@@ -109,10 +110,9 @@ public class MicrophoneManager : MonoBehaviour
 		return a / 256;  
 	}
 
-	private void onMicInputNotify (ClientResponse response)
+	public void PlaySound (byte[] data)
 	{
 		if (GlobalData.getInstance ().SoundToggle) {
-			byte[] data = response.bytes;
 			int i = 0;
 			List<short> result = new List<short> ();
 			while (data.Length - i >= 2) {

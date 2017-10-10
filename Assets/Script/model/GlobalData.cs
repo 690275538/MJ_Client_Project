@@ -25,19 +25,7 @@ public class GlobalData
 		return _instance;
 	}
 
-	/**单局游戏结束服务器返回数据**/
-	public static HupaiResponseVo hupaiResponseVo;
-	/**全局游戏结束服务器返回数据**/
-	public static FinalGameEndVo finalGameEndVo;
 
-	/// <summary>
-	/// 单局结算面板
-	/// </summary>
-	public static List<GameObject> singalGameOverList = new List<GameObject> ();
-
-
-
-	//public SocketEventHandle socketEventHandle;
 	/// <summary>
 	/// 抽奖数据
 	/// </summary>
@@ -125,8 +113,6 @@ public class GlobalData
 		gameStatus = GameStatus.UNDEFINED;
 		gamingData = null;
 
-		finalGameEndVo = null;
-		singalGameOverList = new List<GameObject> ();
 		lotteryDatas = null;
 		isOverByPlayer = false;
 	}
