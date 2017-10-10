@@ -11,5 +11,5 @@ EditorBuildSettings:
     path: Assets/Home_Scene.unity
   - enabled: 1
     path: Assets/Scenes/Home_Scene.unity
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Play_Scene.unity
