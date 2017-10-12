@@ -7038,10 +7038,21 @@ MonoBehaviour:
   devInfo:
     wechat:
       Enable: 1
+      SortId: 5
+      AppId: wx682ecf0cea34ac77
+      AppSecret: 9cf2ef1d2d09ebc042f723cdb281a3c2
+      BypassApproval: 1
     wechatMoments:
       Enable: 1
+      SortId: 6
+      AppId: wx682ecf0cea34ac77
+      AppSecret: 9cf2ef1d2d09ebc042f723cdb281a3c2
+      BypassApproval: 0
     wechatFavorites:
       Enable: 1
+      SortId: 7
+      AppId: wx682ecf0cea34ac77
+      AppSecret: 9cf2ef1d2d09ebc042f723cdb281a3c2
 --- !u!114 &1006521401
 MonoBehaviour:
   m_ObjectHideFlags: 0

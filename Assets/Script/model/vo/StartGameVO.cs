@@ -6,7 +6,7 @@ namespace AssemblyCSharp
 	[Serializable]
 	public class StartGameVO
 	{
-		public List<List<int>> paiArray;
+		public int[][] paiArray;
 		public int bankerId;
 
 		public StartGameVO ()

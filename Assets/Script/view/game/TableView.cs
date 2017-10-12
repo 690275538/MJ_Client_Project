@@ -51,6 +51,8 @@ namespace AssemblyCSharp
 			_data.PickIndexChange += onPickIndexChange;
 
 			versionText.text = "V" + Application.version;
+			onRemainCardNumChange ();
+			onPickIndexChange ();
 		}
 		private void onRemainCardNumChange(){
 			remainCardText.text = _data.remainCardNum.ToString();

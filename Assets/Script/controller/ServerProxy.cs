@@ -69,14 +69,14 @@ namespace AssemblyCSharp
 		public void FixedUpdate ()
 		{
 			while (_cache.Count > 0) {
+				if (_cache [0].headCode != APIS.headRESPONSE)
+					Debug.Log ("res: " + _cache [0].headCode.ToString ("x8") + " , " + _cache [0].message);
 				try {
 					onResponse (_cache [0]);
 				} catch (Exception e) {
 					Debug.Log ("命令出错：" + _cache [0].headCode.ToString ("x8") + " " + _cache [0].message);
 					Debug.Log (e.ToString ());
 				}
-				if (_cache [0].headCode != APIS.headRESPONSE)
-					Debug.Log ("res: " + _cache [0].headCode.ToString ("x8") + " , " + _cache [0].message);
 				_cache.RemoveAt (0);
 			}
 			if (_isDisconnet) {

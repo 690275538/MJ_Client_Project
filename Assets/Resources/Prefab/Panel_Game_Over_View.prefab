@@ -34,7 +34,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &132150
 GameObject:
   m_ObjectHideFlags: 1
@@ -65,7 +65,7 @@ GameObject:
   - 114: {fileID: 11489260}
   - 114: {fileID: 11487484}
   m_Layer: 5
-  m_Name: Button_Share_End
+  m_Name: Button_Share
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,7 +158,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &182918
 GameObject:
   m_ObjectHideFlags: 1
@@ -207,7 +207,7 @@ GameObject:
   - 114: {fileID: 11447240}
   - 114: {fileID: 11461124}
   m_Layer: 5
-  m_Name: Button_Share_Cur
+  m_Name: Button_OpenFinal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -720,7 +720,7 @@ MonoBehaviour:
   roundText: {fileID: 11455052}
   curContainer: {fileID: 107416}
   endContainer: {fileID: 156100}
-  shareCurButton: {fileID: 195684}
+  openFinalButton: {fileID: 195684}
   continueButton: {fileID: 150624}
   shareEndButton: {fileID: 143694}
   closeButton: {fileID: 132150}

@@ -62,10 +62,10 @@ namespace AssemblyCSharp
 			}
 		}
 
-		public void addMyHandCards (List<int> cardPoints)
+		public void addMyHandCards (int[] cardPoints)
 		{
 			var cgo = getCardGOs (Direction.B);
-			for (int i = 0; i < cardPoints.Count; i++) {
+			for (int i = 0; i < cardPoints.Length; i++) {
 				for (int j = 0; j < cardPoints [i]; j++) {
 					GameObject card = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
 					card.transform.SetParent (cgo.HandParent);
@@ -112,7 +112,7 @@ namespace AssemblyCSharp
 			int cardPoint = _data.putoutPoint;
 			int i = cardPoint % 9;
 			List<int> activePoints = new List<int> (){-1,-1,-1,-1};
-			if (i - 2 > 0) {
+			if (i - 2 >= 0) {
 				activePoints[0] = (cardPoint - 2);
 			}
 			if (i - 1 > 0) {
@@ -152,10 +152,10 @@ namespace AssemblyCSharp
 			int cardPoint = _data.putoutPoint;
 			int i = cardPoint % 9;
 			List<int> activePoints = new List<int> (){-1,-1,-1,-1};
-			if (i - 2 > 0) {
+			if (i - 2 >= 0) {
 				activePoints[0] = (cardPoint - 2);
 			}
-			if (i - 1 > 0) {
+			if (i - 1 >= 0) {
 				activePoints[1] = (cardPoint - 1);
 			}
 			if (i + 1 < 9) {
@@ -335,7 +335,7 @@ namespace AssemblyCSharp
 					Hand [0].transform.localPosition = new Vector3 (0, 180f); //位置                  
 					break;
 				}
-
+				otherPickCardItem = Hand [0];
 
 				for (int i = 1; i < Hand.Count; i++) {
 
@@ -414,11 +414,12 @@ namespace AssemblyCSharp
 
 				Vector3 position = _getPGCPosition (dir, k, j, cgo.PGC.Count);
 
+
 				card = newGameObject (path, cgo.PGCParent, position);
 				if (!(i < 3 && type == 3)) {
 					card.GetComponent<PutoutCardView> ().setPoint (points [i],dir);
 				}
-				if (dir == Direction.R) {
+				if (i < 3 && dir == Direction.R) {
 					card.transform.SetSiblingIndex (0);
 				}
 				cards.Add (card);
@@ -443,11 +444,11 @@ namespace AssemblyCSharp
 			if (dir == Direction.B) {
 				position = new Vector3 (-370f + count * 190f + k * 60f, j * 24);
 			} else if (dir == Direction.T) {
-				position = new Vector3 (251 - count * 120f + k * 37, j * 20);
+				position = new Vector3 (251 - count * 120f + k * 37, j * 13);
 			} else if (dir == Direction.L) {
-				position = new Vector3 (0f, 122 - count * 95f - k * 28f + j * 10);
+				position = new Vector3 (0f, 122 - count * 95f - k * 28f + j * 15);
 			} else if (dir == Direction.R) {
-				position = new Vector3 (0, -122 + count * 95 + k * 28f + j * 5);
+				position = new Vector3 (0, -122 + count * 95 + k * 28f + j * 13);
 			}
 			return position;
 		}

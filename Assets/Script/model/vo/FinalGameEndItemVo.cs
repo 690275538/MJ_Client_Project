@@ -23,14 +23,9 @@ namespace AssemblyCSharp
 			
 		}
 
-		public void  setIsWiner(bool winnerFlag){
-			isWiner = winnerFlag;
+		public void  setIsWiner(bool val){
+			isWiner = val;
 		}
-
-		public void setIsPaoshou(bool paoshouFlag){
-			isPaosshou = paoshouFlag;
-		}
-
 		public bool  getIsWiner(){
 			return isWiner;
 		}
@@ -38,29 +33,29 @@ namespace AssemblyCSharp
 		public bool getIsPaoshou(){
 			return isPaosshou;
 		}
-
-		public void  setNickname(string nicknameFlag){
-			nickname = nicknameFlag;
-		}
-
-		public void setIcon(string iconFlag){
-			icon = iconFlag;
+		public void setIsPaoshou(bool val){
+			isPaosshou = val;
 		}
 
 		public string  getNickname(){
 			return nickname ;
 		}
+		public void  setNickname(string val){
+			nickname = val;
+		}
 
 		public string getIcon(){
 			return icon;
+		}
+		public void setIcon(string val){
+			icon = val;
 		}
 
 		public bool getIsMain(){
 			return isMain;
 		}
-
-		public void setIsMain(bool  flag){
-			isMain = flag;
+		public void setIsMain(bool  val){
+			isMain = val;
 		}
 
 	}

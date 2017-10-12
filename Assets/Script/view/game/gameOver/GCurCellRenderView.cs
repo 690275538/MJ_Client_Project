@@ -5,87 +5,91 @@ using AssemblyCSharp;
 using System.Collections.Generic;
 using System;
 
-public class GangpaiObj{
-	public int cardPiont;//出牌的下标
-	public string uuid;//出牌的玩家
+public class GangpaiObj
+{
+	public int cardPiont;
+//出牌的下标
+	public string uuid;
+//出牌的玩家
 	public string type;
 }
 
 //public class PengpaiObj{
-	//public string cardPoints;//出牌的玩家
+//public string cardPoints;//出牌的玩家
 //}
 
-public class HuipaiObj{
-	public int cardPiont;//出牌的下标
+public class HuipaiObj
+{
+	public int cardPiont;
+//出牌的下标
 	public string uuid;
 	public string type;
 }
 
-public class ChipaiObj{
-	public string[] cardPionts;//出牌的下标
+public class ChipaiObj
+{
+	public string[] cardPionts;
+//出牌的下标
 
 }
-	
+
 
 
 /**
  * 
  * 
  */ 
-public class GCurCellRenderView : MonoBehaviour {
+public class GCurCellRenderView : MonoBehaviour
+{
 
 	public Text nickName;
 	public Text resultDes;
-	public GameObject huFlagImg;
 	public Text totalScroe;
 	public Text fanCount;
 	public Text gangScore;
 	public GameObject paiArrayPanel;
-	public Image zhongMaFlag;//中码标记
+
+	public GameObject zhongMaFlag;
+	public GameObject huFlag;
 	public GameObject GenzhuangFlag;
 
 
-	//public GameObject subContaner ;
-	//public GameObject chiContaner;
-	//public GameObject pengContaner;
-	//public GameObject gangContaner;	
-	//public GameObject huContaner;
 
-	private List<GangpaiObj> gangPaiList = new List<GangpaiObj>();//杠牌列表
-	private string[] pengpaiList ;//碰牌列表
-	private List<ChipaiObj> chipaiList = new List<ChipaiObj>();//吃牌列表
-	private List<int> maPais;//码牌数组
+	private List<GangpaiObj> gangPaiList = new List<GangpaiObj> ();
+//杠牌列表
+	private string[] pengpaiList;
+//碰牌列表
+	private List<ChipaiObj> chipaiList = new List<ChipaiObj> ();
+//吃牌列表
+	private List<int> maPais;
+//码牌数组
 
-	private HuipaiObj hupaiObj = new HuipaiObj();//胡牌列表
+	private HuipaiObj hupaiObj = new HuipaiObj ();
+//胡牌列表
 
 
-	private string mdesCribe = "";//对结果展示字符串
-	private int[] paiArray;//牌列表
+	private string mdesCribe = "";
+//对结果展示字符串
+	private int[] paiArray;
+//牌列表
 
 	private List<int> validMas;
-	private HupaiResponseItem mHupaiResponseItemData;
+	private HupaiResponseItem _itemdata;
 
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-	public void setUI(HupaiResponseItem itemData,List<int> validMasParm ,int mainuuid){
-		mHupaiResponseItemData = itemData;
+	public void setUI (HupaiResponseItem itemData, List<int> validMasParm, int mainuuid)
+	{
+		_itemdata = itemData;
 		validMas = validMasParm;
+
 		nickName.text = itemData.nickname;
-		totalScroe.text = itemData.totalScore+"";
-		gangScore.text = itemData.gangScore+"";
+		totalScroe.text = itemData.totalScore + "";
+		gangScore.text = itemData.gangScore + "";
 
 		paiArray = itemData.paiArray;
-		huFlagImg.SetActive (false);
-		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == GlobalData.getInstance().gamingData.BankerUuid) {
+		huFlag.SetActive (false);
+		zhongMaFlag.SetActive (false);
+		if (itemData.totalInfo.genzhuang == "1" && itemData.uuid == mainuuid) {
 			GenzhuangFlag.SetActive (true);
 		} else {
 			GenzhuangFlag.SetActive (false);
@@ -96,25 +100,31 @@ public class GCurCellRenderView : MonoBehaviour {
 	}
 
 
-	TotalInfo itemData;
-	private void analysisPaiInfo(HupaiResponseItem parms){
-		itemData = parms.totalInfo;
-		string gangpaiStr = itemData.gang;
-		if (gangpaiStr != null && gangpaiStr.Length > 0) {
-			string[] gangtemps = gangpaiStr.Split (new char[1]{','});
-			for (int i = 0; i < gangtemps.Length; i++) {
-				string item = gangtemps [i];
-				GangpaiObj gangpaiObj = new GangpaiObj ();
-				string[] val = item.Split (new char[1]{ ':' });
-				gangpaiObj.uuid  =val[0];
-				gangpaiObj.cardPiont =int.Parse( val[1]);
-				gangpaiObj.type = val[2];
+	TotalInfo totalInfo;
+
+	private void analysisPaiInfo (HupaiResponseItem itemData)
+	{
+		string str;
+		string[] ss;
+		string[] s;
+
+		totalInfo = itemData.totalInfo;
+		str = totalInfo.gang;
+		if (!string.IsNullOrEmpty (str)) {
+			ss = str.Split (new char[1]{ ',' });
+
+			for (int i = 0; i < ss.Length; i++) {
+				GangpaiObj obj = new GangpaiObj ();
+				s = ss [i].Split (new char[1]{ ':' });
+				obj.uuid = s [0];
+				obj.cardPiont = int.Parse (s [1]);
+				obj.type = s [2];
 				//增加判断是否为自己的杠牌的操作
 
-				paiArray [gangpaiObj.cardPiont] -= 4;
-				gangPaiList.Add (gangpaiObj);
+				paiArray [obj.cardPiont] -= 4;
+				gangPaiList.Add (obj);
 
-				if (gangpaiObj.type == "an") {
+				if (obj.type == "an") {
 					mdesCribe += "暗杠  ";
 				} else {
 					mdesCribe += "明杠  ";
@@ -123,18 +133,16 @@ public class GCurCellRenderView : MonoBehaviour {
 		}
 
 
-		string pengpaiStr = itemData.peng;
-		if (pengpaiStr != null && pengpaiStr.Length > 0) {
-			
-			pengpaiList = pengpaiStr.Split (new char[1]{','});
+		str = totalInfo.peng;
+		if (!string.IsNullOrEmpty (str)) {
+			ss = str.Split (new char[1]{ ',' });
 
-
-			//string[] pengpaiListTTT = pengpaiList;
-			List<string> pengpaiListTTT = new List<string>();
-			for (int i = 0; i <pengpaiList.Length; i++) {
-				if (paiArray [int.Parse (pengpaiList [i])] >= 3) {
-					paiArray [int.Parse (pengpaiList [i])] -= 3;
-					pengpaiListTTT.Add (pengpaiList [i]);
+			List<string> pengpaiListTTT = new List<string> ();
+			for (int i = 0; i < ss.Length; i++) {
+				int cardPoint = int.Parse (ss [i]);
+				if (paiArray [cardPoint] >= 3) {
+					paiArray [cardPoint] -= 3;
+					pengpaiListTTT.Add (ss [i]);
 				}
 
 			}
@@ -142,100 +150,97 @@ public class GCurCellRenderView : MonoBehaviour {
 		}
 
 
-		string chipaiStr = itemData.chi;
-		if (chipaiStr != null && chipaiStr.Length > 0) {
-			string[] chitemps = chipaiStr.Split (new char[1]{','});
-			for (int i = 0; i < chitemps.Length; i++) {
-				string item = chitemps[i];
+		str = totalInfo.chi;
+		if (!string.IsNullOrEmpty (str)) {
+			ss = str.Split (new char[1]{ ',' });
+
+			for (int i = 0; i < ss.Length; i++) {
 				ChipaiObj chipaiObj = new ChipaiObj ();
-				string[] pointStr = item.Split (new char[1]{ ':' }); 
-				chipaiObj.cardPionts = new string[3];
-				Array.Copy (pointStr, 1, chipaiObj.cardPionts, 0, 3);
+				s = ss [i].Split (new char[1]{ ':' }); 
+				List<string> list = new List<string> (s);
+				list.RemoveAt (0);
+				s = list.ToArray ();
+				chipaiObj.cardPionts = s;
 				chipaiList.Add (chipaiObj);
-				paiArray [int.Parse(pointStr[1])] -= 1;
-				paiArray [int.Parse(pointStr[2])] -= 1;
-				paiArray [int.Parse(pointStr[3])] -= 1;
+				paiArray [int.Parse (s [0])] -= 1;
+				paiArray [int.Parse (s [1])] -= 1;
+				paiArray [int.Parse (s [2])] -= 1;
 			}
 
 		}
 
 
 
-		string hupaiStr = itemData.hu;
-		if(hupaiStr!=null && hupaiStr.Length>0){
-			hupaiObj.uuid =hupaiStr.Split (new char[1]{ ':' }) [0];
-			hupaiObj.cardPiont  =int.Parse(hupaiStr.Split (new char[1]{ ':' }) [1]);
-			hupaiObj.type = hupaiStr.Split (new char[1]{ ':' }) [2];
+		str = totalInfo.hu;
+		if (!string.IsNullOrEmpty (str)) {
+			ss = str.Split (new char[1]{ ',' });
+			hupaiObj.uuid = ss [0];
+			hupaiObj.cardPiont = int.Parse (ss [1]);
+			hupaiObj.type = ss [2];
 			//增加判断是否是自己胡牌的判断
 
-			if (hupaiStr.Contains ("d_other")) {//排除一炮多响的情况
+			if (str.Contains ("d_other")) {//排除一炮多响的情况
 				mdesCribe += "点炮";
-			}else if (hupaiObj.type == "zi_common") {
+			} else if (hupaiObj.type == "zi_common") {
 				mdesCribe += "自摸";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
 
 			} else if (hupaiObj.type == "d_self") {
 				mdesCribe += "接炮";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
 			} else if (hupaiObj.type == "qiyise") {
 				mdesCribe += "清一色";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
-			}else if (hupaiObj.type == "zi_qingyise") {
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
+			} else if (hupaiObj.type == "zi_qingyise") {
 				mdesCribe += "自摸清一色";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
-			}else if (hupaiObj.type == "qixiaodui") {
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
+			} else if (hupaiObj.type == "qixiaodui") {
 				mdesCribe += "七小对";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
-			}else if (hupaiObj.type == "self_qixiaodui") {
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
+			} else if (hupaiObj.type == "self_qixiaodui") {
 				mdesCribe += "自摸七小对";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
-			}else if (hupaiObj.type == "gangshangpao") {
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
+			} else if (hupaiObj.type == "gangshangpao") {
 				mdesCribe += "杠上炮";
-			}else if (hupaiObj.type == "gangshanghua") {
+			} else if (hupaiObj.type == "gangshanghua") {
 				mdesCribe += "杠上花";
-				huFlagImg.SetActive (true);
-				paiArray [hupaiObj.cardPiont]-= 1;
+				huFlag.SetActive (true);
+				paiArray [hupaiObj.cardPiont] -= 1;
 			}
 		}
 
-		if (mHupaiResponseItemData.huType != null) {
-			mdesCribe += mHupaiResponseItemData.huType;
+		if (_itemdata.huType != null) {
+			mdesCribe += _itemdata.huType;
 		}
 			
 		resultDes.text = mdesCribe;
-		maPais = parms.getMaPoints ();
+		maPais = itemData.getMaPoints ();
 		arrangePai ();
 	}
 
 
 	/**整理牌**/
-	private void arrangePai(){
+	private void arrangePai ()
+	{
 		
 		float startPosition = 30f;
-		GameObject itemTemp;
+		GameObject card;
 
-		int subPaiConut = 0;
-		if(gangPaiList!=null){
+		if (gangPaiList != null) {
 			for (int i = 0; i < gangPaiList.Count; i++) {
 				GangpaiObj itemgangData = gangPaiList [i];
 				for (int j = 0; j < 4; j++) {
-
-					itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
-					itemTemp.transform.parent = paiArrayPanel.transform;
-				//	itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
-					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<PutoutCardView> ().setPoint (itemgangData.cardPiont);
-					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*4)+j)*36f, 0, 0);
-
+					createCard (itemgangData.cardPiont, startPosition);
+					startPosition += 36f;
 				}
 			}
-			startPosition = startPosition + (gangPaiList.Count > 0 ? (gangPaiList.Count * 4 * 36f +8f) : 0f);
+			startPosition = startPosition + (gangPaiList.Count > 0 ? 8f : 0f);
 		}
 
 
@@ -244,19 +249,11 @@ public class GCurCellRenderView : MonoBehaviour {
 			for (int i = 0; i < pengpaiList.Length; i++) {
 				string cardPoint = pengpaiList [i];
 				for (int j = 0; j < 3; j++) {
-
-					itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
-					itemTemp.transform.parent = paiArrayPanel.transform;
-					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
-					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<PutoutCardView> ().setPoint (int.Parse(cardPoint));
-
-					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*3)+j)*36f, 0, 0);
-
-
+					createCard (int.Parse(cardPoint), startPosition);
+					startPosition += 36f;
 				}
 			}
-			startPosition =startPosition+ (pengpaiList.Length > 0 ? (pengpaiList.Length * 3 * 36f + 8f) : 0f);
+			startPosition = startPosition + (pengpaiList.Length > 0 ? 8f : 0f);
 
 		}
 
@@ -266,94 +263,84 @@ public class GCurCellRenderView : MonoBehaviour {
 			for (int i = 0; i < chipaiList.Count; i++) {
 				ChipaiObj itemgangData = chipaiList [i];
 				for (int j = 0; j < 3; j++) {
-
-					itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
-					itemTemp.transform.parent = paiArrayPanel.transform;
-					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
-					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<PutoutCardView> ().setPoint (int.Parse(itemgangData.cardPionts[j]));
-
-					itemTemp.transform.localPosition = new Vector3 (startPosition+((i*3)+j)*36f, 0, 0);
-
+					createCard (int.Parse(itemgangData.cardPionts [j]), startPosition);
+					startPosition += 36f;
 
 				}
 			}
-
-			startPosition =startPosition+  (chipaiList.Count > 0 ? (chipaiList.Count * 3 * 36f + 8f) : 0f);
+			startPosition = startPosition + (chipaiList.Count > 0 ? 8f : 0f);
 		}
 
 
-		for(int i=0 ; i<paiArray.Length ;i++){
+		for (int i = 0; i < paiArray.Length; i++) {
 			
 			if (paiArray [i] > 0) {
 
 				for (int j = 0; j < paiArray [i]; j++) {
-					itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
-					itemTemp.transform.parent = paiArrayPanel.transform;
-					//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
-					itemTemp.transform.localScale = Vector3.one;
-					itemTemp.GetComponent<PutoutCardView> ().setPoint (i);
-
-					itemTemp.transform.localPosition = new Vector3 (startPosition+subPaiConut*36f, 0, 0);
-
-					subPaiConut += 1;
+					createCard (i, startPosition);
+					startPosition += 36f;
 				}
 
 			}
 
 		}
-		MyDebug.Log ("subPaiConut:"+subPaiConut);
+		startPosition += 8f;
 
-		startPosition =startPosition +  (subPaiConut * 36f + 8f);
 		if (hupaiObj != null) {
 			if (hupaiObj.type == "zi_common" || hupaiObj.type == "d_self" || hupaiObj.type == "qiyise" || hupaiObj.type == "zi_qingyise"
-			   || hupaiObj.type == "qixiaodui" || hupaiObj.type == "self_qixiaodui" || hupaiObj.type == "gangshanghua") {
-				itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
-				itemTemp.transform.parent = paiArrayPanel.transform;
-				//itemTemp.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
-				itemTemp.transform.localScale = Vector3.one;
-				itemTemp.GetComponent<PutoutCardView> ().setPoint (hupaiObj.cardPiont);
-				itemTemp.transform.localPosition = new Vector3 (startPosition, 0, 0);
+			    || hupaiObj.type == "qixiaodui" || hupaiObj.type == "self_qixiaodui" || hupaiObj.type == "gangshanghua") {
+
+				createCard (hupaiObj.cardPiont, startPosition);
 			}
 			startPosition = startPosition + 36f + 52f;
 		} else {
-			startPosition = startPosition  + 52f;
+			startPosition = startPosition + 52f;
 		}
 
 
 		if (maPais != null && maPais.Count > 0) {
 			for (int i = 0; i < maPais.Count; i++) {
-				itemTemp = Instantiate (Resources.Load ("Prefab/ThrowCard/ZhongMa")) as GameObject;
+				card = Instantiate (Resources.Load ("Prefab/ThrowCard/ZhongMa")) as GameObject;
 				if (isMaValid (maPais [i])) {
-					zhongMaFlag.transform.gameObject.SetActive (true);
+					zhongMaFlag.SetActive (true);
 				} else {
-					zhongMaFlag.transform.gameObject.SetActive (false);
+					zhongMaFlag.SetActive (false);
 				}
 
-				itemTemp.transform.parent = paiArrayPanel.transform;
-				itemTemp.GetComponent<PutoutCardView> ().setPoint (maPais[i]);
-				itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
-				itemTemp.transform.localPosition = new Vector3 ((20+i)*36f, 0, 0);
+				card.transform.parent = paiArrayPanel.transform;
+				card.GetComponent<PutoutCardView> ().setPoint (maPais [i]);
+				card.transform.localScale = new Vector3 (0.8f, 0.8f, 1f);
+				card.transform.localPosition = new Vector3 ((20 + i) * 36f, 0, 0);
 			}
 		}
 
-		if (GlobalData.getInstance().roomVO.roomType == GameType.HUA_SHUI) {
-			itemTemp = Instantiate (Resources.Load ("Prefab/Image_yu")) as GameObject;
-			itemTemp.transform.parent = paiArrayPanel.transform;
-			itemTemp.GetComponent<yuSetScript> ().setCount (GlobalData.getInstance().roomVO.xiaYu);
-			itemTemp.transform.localScale =  Vector3.one;
-			itemTemp.transform.localPosition = new Vector3 (20*36f, 0, 0);
+		if (GlobalData.getInstance ().roomVO.roomType == GameType.HUA_SHUI) {
+			card = Instantiate (Resources.Load ("Prefab/Image_yu")) as GameObject;
+			card.transform.parent = paiArrayPanel.transform;
+			card.GetComponent<yuSetScript> ().setCount (GlobalData.getInstance ().roomVO.xiaYu);
+			card.transform.localScale = Vector3.one;
+			card.transform.localPosition = new Vector3 (20 * 36f, 0, 0);
 		}
 
 
 
 
 	}
+	private void createCard (int cardPoint, float startPosition){
+
+		GameObject card = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
+		card.transform.parent = paiArrayPanel.transform;
+		//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
+		card.transform.localScale = Vector3.one;
+		card.GetComponent<PutoutCardView> ().setPoint (cardPoint);
+
+		card.transform.localPosition = new Vector3 (startPosition, 0, 0);
+	}
 
 
 
-
-	private bool isMaValid(int cardPonit){
+	private bool isMaValid (int cardPonit)
+	{
 		for (int i = 0; i < validMas.Count; i++) {
 			if (cardPonit == validMas [i]) {
 				return true;		

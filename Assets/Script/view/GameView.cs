@@ -106,6 +106,7 @@ namespace AssemblyCSharp
 			//===========================================================================================
 			_actionHlpr = gameObject.GetComponent<ActionEffectHelper> ();
 			_tableView = gameObject.GetComponent<TableView> ();
+			_tableView.init (this);
 			_actionHlpr.addListener (this);
 
 			_uiHelper.init (this);
@@ -186,8 +187,8 @@ namespace AssemblyCSharp
 			case APIS.ONLINE_NOTICE://上线通知
 				onlineNotice (response);
 				break;
-			case APIS.CURRENT_STATUS_RESPONSE:
-				onCurStatusResponse (response);
+			case APIS.RETURN_ONLINE_RESPONSE:
+				onReturnOnlineResponse (response);
 				break;
 			case APIS.Game_FollowBander_Notice://跟庄
 				_actionHlpr.showEffect (ActionType.GEN_ZHUANG);
@@ -514,6 +515,7 @@ namespace AssemblyCSharp
 				}
 			}
 			_uiHelper.rangeMyHandCard (false);
+			MyHandCardView.isPutout = true;
 		}
 
 
@@ -527,7 +529,7 @@ namespace AssemblyCSharp
 			_actionHlpr.cleanBtnShow ();
 			_actionHlpr.showEffect (ActionType.GANG);
 
-			MyHandCardView.isPutout = true;
+
 		}
 
 			
@@ -783,7 +785,7 @@ namespace AssemblyCSharp
 			}
 
 
-			if (_data.paiArray.Count == 0) {//游戏还没有开始
+			if (_data.paiArray.Length == 0) {//游戏还没有开始
 				GlobalData.getInstance ().gameStatus = GameStatus.READYING;
 
 			} else {//牌局已开始
@@ -803,8 +805,7 @@ namespace AssemblyCSharp
 						}
 					}
 					//GangCard
-					List<int> paiArrayType = _data.paiArray [1];
-					if (checkPaiArrayContainType(PaiArrayType.GANG)) {
+					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.GANG)) {
 						string gangString = avo.huReturnObjectVO.totalInfo.gang;
 						if (gangString != null) {
 							string[] gangArray = gangString.Split (new char[1]{ ',' });
@@ -816,7 +817,7 @@ namespace AssemblyCSharp
 								gangpaiObj.cardPiont = int.Parse (vals [1]);
 								gangpaiObj.type = vals [2];
 								//增加判断是否为自己的杠牌的操作
-								_data.paiArray [0] [gangpaiObj.cardPiont] -= 4;
+								avo.paiArray [0] [gangpaiObj.cardPiont] -= 4;
 								if (gangpaiObj.type == "an") {
 									_uiHelper.addPGCCards (i, gangpaiObj.cardPiont, 3);
 
@@ -828,16 +829,16 @@ namespace AssemblyCSharp
 						}
 					}
 					//PengCard
-					if (checkPaiArrayContainType(PaiArrayType.PENG)) {
-						for (int j = 0; j < paiArrayType.Count; j++) {
-							if (paiArrayType [j] == 1 && _data.paiArray [0] [j] > 0) {
-								_data.paiArray [0] [j] -= 3;
+					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.PENG)) {
+						for (int j = 0; j < avo.paiArray[1].Length; j++) {
+							if (avo.paiArray[1] [j] == 1 && avo.paiArray [0] [j] > 0) {
+								avo.paiArray [0] [j] -= 3;
 								_uiHelper.addPGCCards (i, j, 1);
 							}
 						}
 					}
 					//ChiCard
-					if (checkPaiArrayContainType(PaiArrayType.CHI)) {
+					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.CHI)) {
 						string chiString = avo.huReturnObjectVO.totalInfo.chi;
 						if (chiString != null) {
 							string[] chiArray = chiString.Split (new char[1]{ ',' });
@@ -849,22 +850,23 @@ namespace AssemblyCSharp
 								int c = int.Parse (vals [3]);
 
 								//增加判断是否为自己的杠牌的操作
-								_data.paiArray [0] [a] -= 1;
-								_data.paiArray [0] [b] -= 1;
-								_data.paiArray [0] [c] -= 1;
+								avo.paiArray [0] [a] -= 1;
+								avo.paiArray [0] [b] -= 1;
+								avo.paiArray [0] [c] -= 1;
+								a = Math.Min (Math.Min (b, c), a);
 								_uiHelper.addPGCCards (i, a, 4);
 							}
 						}
 					}
 				}
+				_data.AvatarList = GlobalData.getInstance ().playerList;
 				_uiHelper.addMyHandCards (_data.paiArray [0]);
 				GameManager.getInstance ().Server.requset (new CurrentStatusRequest ());
 			}
 
 		} 
-		private bool checkPaiArrayContainType(PaiArrayType type){
-			List<int> paiArrayType = _data.paiArray [1];
-			for (int i = 0; i < paiArrayType.Count; i++) {
+		private bool checkPaiArrayContainType(int[] paiArrayType, PaiArrayType type){
+			for (int i = 0; i < paiArrayType.Length; i++) {
 				if ((paiArrayType [i] & (int)type) == (int)type) {
 					return true;
 				}
@@ -906,7 +908,7 @@ namespace AssemblyCSharp
 
 
 
-		public void onCurStatusResponse (ClientResponse response)
+		public void onReturnOnlineResponse (ClientResponse response)
 		{
 			//1.显示剩余牌的张数和圈数
 			JsonData msgData = JsonMapper.ToObject (response.message);
@@ -930,15 +932,21 @@ namespace AssemblyCSharp
 				Debug.Log (e.ToString ());
 			}
 
+			var Hand = _uiHelper.getCardGOs (Direction.B).Hand;
+			if (_data.pickIndex == _data.myIndex || (Hand.Count%3==2)) {//把摸的牌放对位置
 
-			if (_data.pickIndex == _data.myIndex) {//把摸的牌放对位置
-				var Hand = _uiHelper.getCardGOs (Direction.B).Hand;
+//				if (Hand.Count % 3 == 2) {
+//					var lastCard = Hand [Hand.Count - 1];
+//					_data.pickPoint = lastCard.GetComponent<MyHandCardView> ().getPoint ();
+//					_uiHelper.rangeMyHandCard (true);
+//					MyHandCardView.isPutout = true;
+//				}
+//
 				if (_data.pickPoint == -2) {
 					var lastCard = Hand [Hand.Count - 1];
 					_data.pickPoint = lastCard.GetComponent<MyHandCardView> ().getPoint ();
 					_uiHelper.rangeMyHandCard (true);
 
-					MyDebug.Log ("自己摸牌");
 
 				} else {
 					if ((Hand.Count) % 3 != 1) {
@@ -948,11 +956,15 @@ namespace AssemblyCSharp
 						_uiHelper.addPickCard (_data.myIndex, _data.pickPoint);
 					}
 				}
-				MyHandCardView.isPutout = true;	 
-			} else if (_data.pickIndex == _data.putoutIndex && _data.toGameDir(_data.putoutIndex) == Direction.L){//上家出牌，先试一下能不能吃
-				if (_uiHelper.checkChi ()) {
-					_actionHlpr.showBtn (ActionType.CHI);
-					_uiHelper.showChiCard ();
+				MyHandCardView.isPutout = true;
+			} else {
+				if (_data.pickIndex != _data.putoutIndex)
+					_uiHelper.rangeOtherHandCard (_data.pickIndex, 1);
+				if (_data.pickIndex == _data.putoutIndex && _data.toGameDir(_data.putoutIndex) == Direction.L){//上家出牌，先试一下能不能吃
+//				if (_uiHelper.checkChi ()) {
+//					_actionHlpr.showBtn (ActionType.CHI);
+//					_uiHelper.showChiCard ();
+//				}
 				}
 			}
 			//光标指向打牌人

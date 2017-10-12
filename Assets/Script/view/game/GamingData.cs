@@ -30,7 +30,7 @@ namespace AssemblyCSharp
 
 		}
 		/**自己的手牌**/
-		public List<List<int>> paiArray;
+		public int[][] paiArray;
 
 		List<AvatarVO> _avatarList;
 
@@ -85,7 +85,7 @@ namespace AssemblyCSharp
 					if (avo.account.uuid == myAVO.account.uuid || avo.account.openid == myAVO.account.openid) {
 						myAVO.account.uuid = avo.account.uuid;
 						myIndex = i;
-						paiArray = ToList (avo.paiArray);
+						paiArray = avo.paiArray;
 					}
 				}
 			}
@@ -136,18 +136,6 @@ namespace AssemblyCSharp
 				}
 			}
 			return null;
-		}
-		public static List<List<int>> ToList (int[][] param)
-		{
-			List<List<int>> list = new List<List<int>> ();
-			for (int i = 0; i < param.Length; i++) {
-				List<int> subList = new List<int> ();
-				for (int j = 0; j < param [i].Length; j++) {
-					subList.Add (param [i] [j]);
-				}
-				list.Add (subList);
-			}
-			return list;
 		}
 	}
 }

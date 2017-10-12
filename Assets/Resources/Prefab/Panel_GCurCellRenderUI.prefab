@@ -28,7 +28,7 @@ GameObject:
   - 222: {fileID: 22242248}
   - 114: {fileID: 11401818}
   m_Layer: 5
-  m_Name: Text (2)
+  m_Name: Text_score_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ GameObject:
   - 222: {fileID: 22216846}
   - 114: {fileID: 11449180}
   m_Layer: 5
-  m_Name: Text (1)
+  m_Name: Text_gang_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -95,7 +95,7 @@ GameObject:
   - 224: {fileID: 22401440}
   - 114: {fileID: 11473704}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: scores
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,7 +152,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &162410
 GameObject:
   m_ObjectHideFlags: 1
@@ -181,7 +181,7 @@ GameObject:
   - 222: {fileID: 22240452}
   - 114: {fileID: 11487258}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text_fan_label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ GameObject:
   - 222: {fileID: 22245414}
   - 114: {fileID: 11428888}
   m_Layer: 5
-  m_Name: Image_Hu_Label
+  m_Name: Image_Hu_flag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -415,12 +415,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nickName: {fileID: 11440040}
   resultDes: {fileID: 11472122}
-  huFlagImg: {fileID: 176396}
   totalScroe: {fileID: 11447124}
   fanCount: {fileID: 11493912}
   gangScore: {fileID: 11410660}
   paiArrayPanel: {fileID: 196254}
-  zhongMaFlag: {fileID: 11411498}
+  zhongMaFlag: {fileID: 161122}
+  huFlag: {fileID: 176396}
   GenzhuangFlag: {fileID: 181386}
 --- !u!114 &11428888
 MonoBehaviour:
@@ -508,7 +508,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: name
 --- !u!114 &11447124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -634,7 +634,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: describe
 --- !u!114 &11473704
 MonoBehaviour:
   m_ObjectHideFlags: 1

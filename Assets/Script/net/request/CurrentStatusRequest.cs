@@ -6,7 +6,7 @@ namespace AssemblyCSharp
 	{
 		public CurrentStatusRequest ()
 		{
-			headCode = APIS.CURRENT_STATUS_REQUEST;
+			headCode = APIS.RETURN_ONLINE_REQUEST;
 			messageContent = "dd";
 		}
 	}

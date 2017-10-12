@@ -92,8 +92,8 @@ namespace AssemblyCSharp
         public const int PRIZE_RESPONSE = 0x999999;//抽奖接口
 		public const int GET_PRIZE=0x888888;//抽奖请求接口
 
-		public const int CURRENT_STATUS_RESPONSE = 0x001003;//断线重连返回最后一次打牌数据
-		public const int CURRENT_STATUS_REQUEST = 0x001004;//申请最后打牌数据数据
+		public const int RETURN_ONLINE_RESPONSE = 0x001003;//断线重连返回最后一次打牌数据
+		public const int RETURN_ONLINE_REQUEST = 0x001004;//申请最后打牌数据数据
 
 	    public const int Game_FollowBander_Notice = 0x100016;//跟庄
 
