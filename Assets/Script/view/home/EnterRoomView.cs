@@ -20,7 +20,6 @@ public class EnterRoomView : MonoBehaviour{
 	// Use this for initialization
 	void Start () {
 		
-		SocketEventHandle.getInstance().JoinRoomCallBack += onJoinRoomCallBack;
 		inputChars = new List<String>();
 		for (int i = 0; i < btnList.Count; i++) {
 			GameObject gobj = btnList [i];
@@ -29,11 +28,16 @@ public class EnterRoomView : MonoBehaviour{
 			});
 		}
 
+		GameManager.getInstance ().Server.onResponse += onResponse;
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.CREATEROOM_RESPONSE://加入房间
+			onJoinRoomResponse (response);
+			break;
+		}
 	}
 
 	public void OnClickHandle (GameObject gobj){
@@ -65,14 +69,7 @@ public class EnterRoomView : MonoBehaviour{
 
 	public void closeDialog(){
 		
-		//GlobalDataScript.homePanel.SetActive (false);
-		removeListener ();
-		Destroy (this);
 		Destroy (gameObject);
-	}
-
-	private void removeListener(){
-		SocketEventHandle.getInstance().JoinRoomCallBack -= onJoinRoomCallBack;
 	}
 
 	public void sureRoomNumber(){
@@ -91,7 +88,7 @@ public class EnterRoomView : MonoBehaviour{
 
 	}
 
-	public void onJoinRoomCallBack(ClientResponse response){
+	public void onJoinRoomResponse(ClientResponse response){
 		
 
 		if (response.status == 1) {
@@ -104,6 +101,9 @@ public class EnterRoomView : MonoBehaviour{
 			TipsManager.getInstance ().setTips (response.message);
 		}
 
+	}
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 
 }

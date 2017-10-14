@@ -921,13 +921,6 @@ namespace AssemblyCSharp
 			var Hand = _uiHelper.getCardGOs (Direction.B).Hand;
 			if (_data.pickIndex == _data.myIndex || (Hand.Count%3==2)) {//把摸的牌放对位置
 
-//				if (Hand.Count % 3 == 2) {
-//					var lastCard = Hand [Hand.Count - 1];
-//					_data.pickPoint = lastCard.GetComponent<MyHandCardView> ().getPoint ();
-//					_uiHelper.rangeMyHandCard (true);
-//					MyHandCardView.isPutout = true;
-//				}
-//
 				if (_data.pickPoint == -2) {
 					var lastCard = Hand [Hand.Count - 1];
 					_data.pickPoint = lastCard.GetComponent<MyHandCardView> ().getPoint ();
@@ -946,12 +939,7 @@ namespace AssemblyCSharp
 			} else {
 				if (_data.pickIndex != _data.putoutIndex)
 					_uiHelper.rangeOtherHandCard (_data.pickIndex, 1);
-				if (_data.pickIndex == _data.putoutIndex && _data.toGameDir(_data.putoutIndex) == Direction.L){//上家出牌，先试一下能不能吃
-//				if (_uiHelper.checkChi ()) {
-//					_actionHlpr.showBtn (ActionType.CHI);
-//					_uiHelper.showChiCard ();
-//				}
-				}
+				
 			}
 			//光标指向打牌人
 

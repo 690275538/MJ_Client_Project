@@ -39,9 +39,16 @@ public class CrateRoomView : MonoBehaviour {
 	void Start () {
 		initUI ();
 
-		SocketEventHandle.getInstance ().CreateRoomCallBack += onCreateRoomCallback;
+		GameManager.getInstance ().Server.onResponse += onResponse;
 
-
+	}
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.CREATEROOM_RESPONSE://创建房间
+			onCreateRoomResponse (response);
+			break;
+		}
 	}
 	void initUI(){
 		giPingHuBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_GiPingHu);
@@ -84,8 +91,6 @@ public class CrateRoomView : MonoBehaviour {
 	}
 
 	private void onClickBtn_Close(){
-		SocketEventHandle.getInstance ().CreateRoomCallBack -= onCreateRoomCallback;
-		Destroy (this);
 		Destroy (gameObject);
 	}
 
@@ -209,7 +214,7 @@ public class CrateRoomView : MonoBehaviour {
 			TipsManager.getInstance ().setTips ("你的房卡数量不足，不能创建房间");
 		}
 	}
-	public void onCreateRoomCallback(ClientResponse response){
+	public void onCreateRoomResponse(ClientResponse response){
 		MyDebug.Log (response.message);
 		if (response.status == 1) {
 			
@@ -233,6 +238,9 @@ public class CrateRoomView : MonoBehaviour {
 		} else {
 			TipsManager.getInstance ().setTips (response.message);
 		}
+	}
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 
 }

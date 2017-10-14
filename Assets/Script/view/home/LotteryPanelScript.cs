@@ -36,13 +36,19 @@ public class LotteryPanelScript : MonoBehaviour
 
 	void Start ()
 	{
-		SocketEventHandle.getInstance ().giftResponse += giftResponse;
 		GlobalData.getInstance ().prizeCountChange += prizeCountChange;
 		GameManager.getInstance().Server.requset (new GetGiftRequest ("0"));
 	    choujiangNum.text = GlobalData.getInstance().myAvatarVO.account.prizecount+"";
-
+		GameManager.getInstance ().Server.onResponse += onResponse;
 	}
-
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.PRIZE_RESPONSE://奖品
+			giftResponse(response);
+			break;
+		}
+	}
 
 	private void prizeCountChange(){
 		TipsManager.getInstance ().setTips ("您的抽奖次数已经更新");
@@ -160,8 +166,6 @@ public class LotteryPanelScript : MonoBehaviour
 	 *关闭对话框 
 	 */
 	public void closeDialog(){
-		SocketEventHandle.getInstance ().giftResponse -= giftResponse;
-		Destroy (this);
 		Destroy (gameObject);
 	}
 
@@ -186,5 +190,8 @@ public class LotteryPanelScript : MonoBehaviour
 	/*关闭规则对话框*/
 	public void closeRule(){
 		rulePanel.SetActive (false);
+	}
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 }

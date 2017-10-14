@@ -29,27 +29,26 @@ public class ZhanjiPanelScript : MonoBehaviour {
 	void Start () {
 		detailItemPanelList = new List<GameObject> ();
 		roomPanelList = new List<GameObject> ();
-		addListener ();
 		getRoomRequest ();
+
+		GameManager.getInstance ().Server.onResponse += onResponse;
+
 	}
 
-	// Update is called once per frame
-	void Update () {
-
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.ZHANJI_REPORTER_REPONSE://房间战绩
+			zhanjiResponse (response);
+			break;
+		case APIS.ZHANJI_DETAIL_REPORTER_REPONSE://房间详细战绩
+			zhanjiDetailResponse (response);
+			break;
+		}
 	}
 
 	private ZhanjiRoomList roomZhanjiData;
 	private ZhanjiDataList roomDetailData;
-
-	private void addListener(){
-		SocketEventHandle.getInstance ().zhanjiResponse += zhanjiResponse;
-		SocketEventHandle.getInstance ().zhanjiDetailResponse += zhanjiDetailResponse;
-	}
-
-	private void  removeListener(){
-		SocketEventHandle.getInstance ().zhanjiResponse -= zhanjiResponse;
-		SocketEventHandle.getInstance ().zhanjiDetailResponse -= zhanjiDetailResponse;
-	}
 
 
 	public void BackSpaceBtnClick()
@@ -63,7 +62,6 @@ public class ZhanjiPanelScript : MonoBehaviour {
 			detailItemPanelList.Clear ();
 			currentDisplayFlag = 0;
 		} else {
-			removeListener ();
 			Destroy(this.gameObject);
 		}
 		
@@ -193,9 +191,7 @@ public class ZhanjiPanelScript : MonoBehaviour {
 			return false;
 		}
 	}
-
-
-
-
-
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
+	}
 }

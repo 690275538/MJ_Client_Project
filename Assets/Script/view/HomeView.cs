@@ -10,12 +10,9 @@ using DG.Tweening;
 public class HomeView : MonoBehaviour,ISceneView
 {
 	public Image headIconImg;
-//头像路径
 	private string headIcon;
 	public Text nickNameText;
-//昵称
 	public Text cardCountText;
-//房卡剩余数量
 	public Text noticeText;
 
 	public Text IpText;
@@ -25,14 +22,8 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	public GameObject contactInfoPanel;
 	WWW www;
-	//请求
+	private GameObject _dialog;
 
-	private GameObject panelCreateDialog;
-//界面上打开的dialog
-	/// <summary>
-	/// 这个字段是作为消息显示的列表 ，如果要想通过管理后台随时修改通知信息，
-	/// 请接收服务器的数据，并重新赋值给这个字段就行了。
-	/// </summary>
 	private bool startFlag = false;
 	private int showNum = 0;
 
@@ -45,8 +36,6 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	public void close (object data = null)
 	{
-		removeListener ();
-		Destroy (this);
 		Destroy (gameObject);
 	}
 
@@ -55,55 +44,45 @@ public class HomeView : MonoBehaviour,ISceneView
 	void Start ()
 	{
 		initUI ();
-		checkEnterInRoom ();
-		addListener ();
+		GameManager.getInstance ().Server.onResponse += onResponse;
+		GlobalData.getInstance ().noticeChange += onNoticeChange;
 	}
 
 
 	// Update is called once per frame
 	void Update ()
 	{
-		
 		if (Input.GetKeyDown (KeyCode.Escape)) { //Android系统监听返回键，由于只有Android和ios系统所以无需对系统做判断
 			MyDebug.Log ("Input.GetKey(KeyCode.Escape)");
-			if (panelCreateDialog != null) {
-				Destroy (panelCreateDialog);
+			if (_dialog != null) {
+				Destroy (_dialog);
 			} else {
 				exitApp ();
 			}
 		}
 
-
-
 	}
-
-	//增加服务器返沪数据监听
-	public void  addListener ()
+	void onResponse (ClientResponse response)
 	{
-		SocketEventHandle.getInstance ().cardChangeNotice += cardChangeNotice;
-		SocketEventHandle.getInstance ().contactInfoResponse += contactInfoResponse;
-			
-		GlobalData.getInstance ().noticeChange += gameBroadcastNotice;
+		switch (response.headCode) {
+		case APIS.CARD_CHANGE_NOTIFY://房卡数据变化
+			onCardChangeNotify (response);
+			break;
+		case APIS.CONTACT_INFO_RESPONSE://联系方式回调
+			onContactInfoResponse (response);
+			break;
+		}
 	}
-
-	public void removeListener ()
-	{
-		SocketEventHandle.getInstance ().cardChangeNotice -= cardChangeNotice;
-		SocketEventHandle.getInstance ().contactInfoResponse -= contactInfoResponse;
-
-		GlobalData.getInstance ().noticeChange -= gameBroadcastNotice;
-	}
-
 
 
 	//房卡变化处理
-	private void cardChangeNotice (ClientResponse response)
+	private void onCardChangeNotify (ClientResponse response)
 	{
 		cardCountText.text = response.message;
 		GlobalData.getInstance ().myAvatarVO.account.roomcard = int.Parse (response.message);
 	}
 
-	private void gameBroadcastNotice ()
+	private void onNoticeChange ()
 	{
 		showNum = 0;
 		if (!startFlag) {
@@ -142,11 +121,12 @@ public class HomeView : MonoBehaviour,ISceneView
 	 */
 	private void initUI ()
 	{
-		if (GlobalData.getInstance ().myAvatarVO != null) {
-			headIcon = GlobalData.getInstance ().myAvatarVO.account.headicon;
-			cardCountText.text = GlobalData.getInstance ().myAvatarVO.account.roomcard.ToString ();
-			nickNameText.text = GlobalData.getInstance ().myAvatarVO.account.nickname;
-			IpText.text = "ID:" + GlobalData.getInstance ().myAvatarVO.account.uuid;
+		var avo = GlobalData.getInstance ().myAvatarVO;
+		if (avo != null) {
+			headIcon = avo.account.headicon;
+			cardCountText.text = avo.account.roomcard.ToString ();
+			nickNameText.text = avo.account.nickname;
+			IpText.text = "ID:" + avo.account.uuid;
 		}
 		StartCoroutine (LoadImg ());
 
@@ -164,7 +144,7 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	}
 
-	private void contactInfoResponse (ClientResponse response)
+	private void onContactInfoResponse (ClientResponse response)
 	{
 		contactInfoContent.text = response.message;
 		contactInfoPanel.SetActive (true);
@@ -175,15 +155,6 @@ public class HomeView : MonoBehaviour,ISceneView
 		contactInfoPanel.SetActive (false);
 	}
 
-	/****
-	 * 判断进入房间
-	 */
-	private void checkEnterInRoom ()
-	{
-		if (GlobalData.getInstance ().roomVO != null && GlobalData.getInstance ().roomVO.roomId != 0) {
-			SceneManager.getInstance ().changeToScene (SceneType.GAME);
-		}
-	}
 
 
 	/***
@@ -250,31 +221,28 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	private void  loadPerfab (string perfabName)
 	{
-		panelCreateDialog = Instantiate (Resources.Load (perfabName)) as GameObject;
-		panelCreateDialog.transform.parent = gameObject.transform;
-		panelCreateDialog.transform.localScale = Vector3.one;
+		_dialog = Instantiate (Resources.Load (perfabName)) as GameObject;
+		_dialog.transform.parent = gameObject.transform;
+		_dialog.transform.localScale = Vector3.one;
 		//panelCreateDialog.transform.localPosition = new Vector3 (200f,150f);
-		panelCreateDialog.GetComponent<RectTransform> ().offsetMax = new Vector2 (0f, 0f);
-		panelCreateDialog.GetComponent<RectTransform> ().offsetMin = new Vector2 (0f, 0f);
+		_dialog.GetComponent<RectTransform> ().offsetMax = new Vector2 (0f, 0f);
+		_dialog.GetComponent<RectTransform> ().offsetMin = new Vector2 (0f, 0f);
 	}
 
 
 	private IEnumerator LoadImg ()
 	{ 
 		//开始下载图片
-		if (headIcon != null && headIcon != "") {
+		if (!string.IsNullOrEmpty(headIcon)) {
 			WWW www = new WWW (headIcon);
 			yield return www;
 
-			try {
+			if(string.IsNullOrEmpty(www.error)) {
 				Texture2D texture2D = www.texture;
 //				byte[] bytes = texture2D.EncodeToPNG();
 				//将图片赋给场景上的Sprite
 				headIconImg.sprite = Sprite.Create (texture2D, new Rect (0, 0, texture2D.width, texture2D.height), new Vector2 (0, 0));
 
-			} catch (Exception e) {
-				
-				MyDebug.Log ("LoadImg" + e.Message);
 			}
 		}
 	}
@@ -285,5 +253,8 @@ public class HomeView : MonoBehaviour,ISceneView
 	{
 		SceneManager.getInstance ().showExitPanel ();
 	}
-
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
+		GlobalData.getInstance ().noticeChange -= onNoticeChange;
+	}
 }

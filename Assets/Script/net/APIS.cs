@@ -84,7 +84,7 @@ namespace AssemblyCSharp
 		public const int MessageBox_Notice = 204;
 
 		public const int QUITE_LOGIN=0x555555;//退出登录调用，仅限于正常登录
-		public const int CARD_CHANGE=0x777777;
+		public const int CARD_CHANGE_NOTIFY=0x777777;
 
 		public const int OFFLINE_NOTICE = 0x000015;
 	    public const int ONLINE_NOTICE = 0x001111;

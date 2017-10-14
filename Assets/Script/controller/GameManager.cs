@@ -105,6 +105,12 @@ namespace AssemblyCSharp
 				disConnetNotice ();
 				TipsManager.getInstance ().setTips ("你的账号在其他设备登录");
 				break;
+			case APIS.TIP_MESSAGE:
+				TipsManager.getInstance ().setTips (response.message);
+				break;
+			case APIS.CLOSE_RESPONSE:
+				TipsManager.getInstance ().setTips ("服务器关闭了");
+				break;
 			case APIS.ERROR_RESPONSE:
 				TipsManager.getInstance ().setTips (response.message);
 				break;
@@ -126,12 +132,10 @@ namespace AssemblyCSharp
 		}
 		public void FixedUpdate(){
 			server.FixedUpdate ();
-			SocketEventHandle.getInstance ().FixedUpdate ();
 		}
 
 		private void  disConnetNotice(){
 			SceneManager.getInstance ().changeToScene (SceneType.LOGIN);
-			SocketEventHandle.getInstance ().clearListener ();
 		}
 
 		public string getIpAddress()

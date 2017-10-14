@@ -119,7 +119,6 @@ namespace AssemblyCSharp
 		private void onSocketData (ClientResponse response)
 		{
 			_cache.Add (response);
-			SocketEventHandle.getInstance ().addResponse (response);
 		}
 
 		public void FixedUpdate ()

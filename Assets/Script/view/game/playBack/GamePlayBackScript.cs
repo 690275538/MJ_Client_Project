@@ -56,22 +56,23 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		addListener ();
+		GameManager.getInstance ().Server.onResponse += onResponse;
 		initArrayList ();
 	}
-
-	private void addListener(){
-		SocketEventHandle.getInstance ().gameBackPlayResponse += gameBackPlayResponse;
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.GAME_BACK_PLAY_RESPONSE://回放
+			aa = JsonMapper.ToObject<GamePlayResponseVo> (response.message);
+			setRoomRemark (aa.roomvo);
+			getMyIndex ();
+			chongZu ();
+			initall ();
+			initCard ();
+			break;
+		}
 	}
 
-	private  void gameBackPlayResponse(ClientResponse response){
-		aa = JsonMapper.ToObject<GamePlayResponseVo> (response.message);
-		setRoomRemark (aa.roomvo);
-		getMyIndex ();
-		chongZu ();
-		initall ();
-		initCard ();
-	}
 	void initall(){
 		for (int i = 0; i < aa.playerItems.Count; i++) {
 			PlayerBackVO player = aa.playerItems [i];
@@ -493,8 +494,6 @@ public class GamePlayBackScript : MonoBehaviour {
 	}
 
 	public void exitSure_Click(){
-		SocketEventHandle.getInstance ().gameBackPlayResponse -= gameBackPlayResponse;
-		Destroy (this);
 		Destroy (gameObject);
 	}
 
@@ -937,5 +936,9 @@ public class GamePlayBackScript : MonoBehaviour {
 
 	private int getCurIndex(int index){
 		return indexList[myIndex][index];
+	}
+
+	void OnDestroy(){
+		GameManager.getInstance ().Server.onResponse -= onResponse;
 	}
 }
