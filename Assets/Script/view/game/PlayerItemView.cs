@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AssemblyCSharp;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace AssemblyCSharp
 {
@@ -99,7 +100,8 @@ namespace AssemblyCSharp
 			WWW www = new WWW (avatarVO.account.headicon);
 			yield return www;
 			//下载完成，保存图片到路径filePath
-			if (www != null && www.texture != null) {
+
+			if (string.IsNullOrEmpty(www.error)) {
 				Texture2D texture2D = www.texture;
 				//byte[] bytes = texture2D.EncodeToPNG ();
 
@@ -107,11 +109,9 @@ namespace AssemblyCSharp
 				Sprite tempSp = Sprite.Create (texture2D, new Rect (0, 0, texture2D.width, texture2D.height), new Vector2 (0, 0));
 				headerIcon.sprite = tempSp;
 			} else {
-				MyDebug.Log ("没有加载到图片");
+				//Debug.Log ("加载头像出错 url:"+ avatarVO.account.headicon);
 			}
 		}
-
-
 
 		public void setBankerIconVisible (bool flag)
 		{
@@ -172,9 +172,7 @@ namespace AssemblyCSharp
 
 		public void displayAvatorIp ()
 		{
-			//userInfoPanel.SetActive (true);
-			GameObject obj = PrefabManage.loadPerfab ("Prefab/userInfo");
-			obj.GetComponent<ShowUserInfoScript> ().setUIData (avatarVO);
+			SceneManager.getInstance ().showUserInfoPanel (avatarVO);
 		}
 
 		public void setHuFlagDisplay ()

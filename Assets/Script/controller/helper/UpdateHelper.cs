@@ -27,7 +27,7 @@ public class UpdateHelper{
 		yield return www;
 		byte[] buffer = www.bytes;
 
-		if (! string.IsNullOrEmpty(www.error)) {
+		if (string.IsNullOrEmpty(www.error)) {
 			string returnxml = System.Text.Encoding.UTF8.GetString (buffer);
 			MyDebug.Log ("returnxml  =  " + returnxml);
 			XmlDocument xmlDoc = new XmlDocument ();

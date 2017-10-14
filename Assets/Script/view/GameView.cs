@@ -641,7 +641,7 @@ namespace AssemblyCSharp
 		public int checkAvarHupai (HupaiResponseItem itemData)
 		{
 			string hupaiStr = itemData.totalInfo.hu;
-			HuipaiObj hupaiObj = new HuipaiObj ();
+			THuInfo hupaiObj = new THuInfo ();
 			if (hupaiStr != null && hupaiStr.Length > 0) {
 				hupaiObj.uuid = hupaiStr.Split (new char[1]{ ':' }) [0];
 				hupaiObj.cardPiont = int.Parse (hupaiStr.Split (new char[1]{ ':' }) [1]);
@@ -793,8 +793,10 @@ namespace AssemblyCSharp
 				_uiHelper.hideReadyIcon ();
 				cleanGameplayUI ();
 
+
 				for (int i = 0; i < _data.AvatarList.Count; i++) {
 					AvatarVO avo = avatarList [i];
+					var hand = avo.paiArray [0];
 					//HandCard
 					_uiHelper.addOtherHandCards (i, avo.commonCards);
 					//TableCard
@@ -806,56 +808,40 @@ namespace AssemblyCSharp
 					}
 					//GangCard
 					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.GANG)) {
-						string gangString = avo.huReturnObjectVO.totalInfo.gang;
-						if (gangString != null) {
-							string[] gangArray = gangString.Split (new char[1]{ ',' });
-							for (int j = 0; j < gangArray.Length; j++) {
-								string item = gangArray [j];
-								string[] vals = item.Split (new char[1]{ ':' });
-								GangpaiObj gangpaiObj = new GangpaiObj ();
-								gangpaiObj.uuid = vals [0];
-								gangpaiObj.cardPiont = int.Parse (vals [1]);
-								gangpaiObj.type = vals [2];
-								//增加判断是否为自己的杠牌的操作
-								avo.paiArray [0] [gangpaiObj.cardPiont] -= 4;
-								if (gangpaiObj.type == "an") {
-									_uiHelper.addPGCCards (i, gangpaiObj.cardPiont, 3);
+						var gangs = avo.huReturnObjectVO.totalInfo.getGangInfos ();
+						for (int j = 0; j < gangs.Length; j++) {
+							var info = gangs [j];
+							hand [info.cardPoint] -= 4;
+							if (info.type == "an") {
+								_uiHelper.addPGCCards (i, info.cardPoint, 3);
+							} else {
+								_uiHelper.addPGCCards (i, info.cardPoint, 2);
 
-								} else {
-									_uiHelper.addPGCCards (i, gangpaiObj.cardPiont, 2);
-
-								}
 							}
 						}
 					}
 					//PengCard
 					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.PENG)) {
 						for (int j = 0; j < avo.paiArray[1].Length; j++) {
-							if (avo.paiArray[1] [j] == 1 && avo.paiArray [0] [j] > 0) {
-								avo.paiArray [0] [j] -= 3;
+							if (avo.paiArray[1] [j] == 1 && hand [j] > 0) {
+								hand [j] -= 3;
 								_uiHelper.addPGCCards (i, j, 1);
 							}
 						}
 					}
 					//ChiCard
 					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.CHI)) {
-						string chiString = avo.huReturnObjectVO.totalInfo.chi;
-						if (chiString != null) {
-							string[] chiArray = chiString.Split (new char[1]{ ',' });
-							for (int j = 0; j < chiArray.Length; j++) {
-								string item = chiArray [j];
-								string[] vals = item.Split (new char[1]{ ':' });
-								int a = int.Parse (vals [1]);
-								int b = int.Parse (vals [2]);
-								int c = int.Parse (vals [3]);
-
-								//增加判断是否为自己的杠牌的操作
-								avo.paiArray [0] [a] -= 1;
-								avo.paiArray [0] [b] -= 1;
-								avo.paiArray [0] [c] -= 1;
-								a = Math.Min (Math.Min (b, c), a);
-								_uiHelper.addPGCCards (i, a, 4);
-							}
+						var chis = avo.huReturnObjectVO.totalInfo.getChiInfos ();
+						for (int j = 0; j < chis.Length; j++) {
+							var info = chis [j];
+							int a = info.cardPionts [0];
+							int b = info.cardPionts [1];
+							int c = info.cardPionts [2];
+							hand [a] -= 1;
+							hand [b] -= 1;
+							hand [c] -= 1;
+							a = Math.Min (Math.Min (b, c), a);
+							_uiHelper.addPGCCards (i, a, 4);
 						}
 					}
 				}

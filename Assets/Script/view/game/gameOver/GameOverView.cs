@@ -85,7 +85,7 @@ public class GameOverView : MonoBehaviour
 				itemdata.setMaPoints (allMasList [i]);
 
 				GameObject cell = Instantiate (Resources.Load ("Prefab/Panel_GCurCellRenderUI")) as GameObject;
-				cell.transform.parent = curContainer.transform;
+				cell.transform.SetParent (curContainer.transform);
 				cell.transform.localScale = Vector3.one;
 				cell.GetComponent<GCurCellRenderView> ().setUI (itemdata, _hvo.validMas, _data.BankerUuid);
 			}
@@ -181,11 +181,7 @@ public class GameOverView : MonoBehaviour
 					item.setIcon (account.headicon);
 					item.setNickname (account.nickname);
 				}
-				if (owerUuid == uuid) {
-					item.setIsMain (true);
-				} else {
-					item.setIsMain (false);
-				}
+				item.setIsMain (owerUuid == uuid);
 
 			}
 			_fvo.totalInfo [lastTopIndex].setIsWiner (true);

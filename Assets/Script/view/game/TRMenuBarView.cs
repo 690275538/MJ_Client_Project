@@ -115,7 +115,7 @@ namespace AssemblyCSharp
 			string plyerName = dvo.accountName;
 			if (dvo.type == "0") {
 				_isDissoliving = true;
-				_dissoDialog = PrefabManage.loadPerfab ("Prefab/Panel_Apply_Exit");
+				_dissoDialog = SceneManager.getInstance().loadPerfab ("Prefab/Panel_Apply_Exit");
 				_dissoDialog.GetComponent<VoteView> ().iniUI (plyerName);
 			} else if (dvo.type == "3") {
 

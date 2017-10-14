@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22409598}
   m_Layer: 5
-  m_Name: GameObject_Left
+  m_Name: Ma_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24,7 +24,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22494528}
   m_Layer: 5
-  m_Name: GameObject_Top
+  m_Name: Ma_T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,7 +41,7 @@ GameObject:
   - 222: {fileID: 22271822}
   - 114: {fileID: 11400174}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flag_T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22498784}
   m_Layer: 5
-  m_Name: GameObject_Right
+  m_Name: Ma_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ GameObject:
   - 222: {fileID: 22254278}
   - 114: {fileID: 11499198}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flag_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -107,7 +107,7 @@ GameObject:
   - 222: {fileID: 22299398}
   - 114: {fileID: 11441210}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flag_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,7 +140,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22456602}
   m_Layer: 5
-  m_Name: GameObject_Bottom
+  m_Name: Ma_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ GameObject:
   - 222: {fileID: 22293642}
   - 114: {fileID: 11422858}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Flag_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -272,6 +272,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e60f9fefb27b0458552cb7237ac9b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maParents:
+  - {fileID: 22456602}
+  - {fileID: 22498784}
+  - {fileID: 22494528}
+  - {fileID: 22409598}
+  zhongFlags:
+  - {fileID: 152254}
+  - {fileID: 191848}
+  - {fileID: 136770}
+  - {fileID: 166494}
   bottomContaner: {fileID: 176244}
   topContaner: {fileID: 121428}
   leftContaner: {fileID: 119224}
@@ -486,7 +496,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_Children: []
   m_Father: {fileID: 22412800}
   m_RootOrder: 7
@@ -595,7 +605,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071067}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_Children: []
   m_Father: {fileID: 22412800}
   m_RootOrder: 6

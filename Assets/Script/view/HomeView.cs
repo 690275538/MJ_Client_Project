@@ -154,9 +154,7 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	public void showUserInfoPanel ()
 	{
-		
-		GameObject obj = PrefabManage.loadPerfab ("Prefab/userInfo");
-		obj.GetComponent<ShowUserInfoScript> ().setUIData (GlobalData.getInstance ().myAvatarVO);
+		SceneManager.getInstance ().showUserInfoPanel (GlobalData.getInstance ().myAvatarVO);
 	}
 
 

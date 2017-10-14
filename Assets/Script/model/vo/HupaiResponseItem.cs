@@ -13,6 +13,7 @@ namespace AssemblyCSharp
 		public string nickname;
 		public int gangScore;
 		public int totalScore;
+		public int fanScore;
 		public int uuid;
 		private List<int> maPonits;
 		public HupaiResponseItem ()

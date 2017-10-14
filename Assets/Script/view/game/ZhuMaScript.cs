@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using AssemblyCSharp;
 using UnityEngine.UI;
 public class ZhuMaScript : MonoBehaviour {
+	public List<Transform> maParents;
+	public List<GameObject> zhongFlags;
 
 	public GameObject bottomContaner;
 	public GameObject topContaner;
@@ -27,15 +29,6 @@ public class ZhuMaScript : MonoBehaviour {
 
 	public void init(GamingData data){
 		_data = data;
-	}
-	void Start () {
-
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 
 

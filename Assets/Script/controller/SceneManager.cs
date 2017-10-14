@@ -41,7 +41,7 @@ namespace AssemblyCSharp
 			curSceneType = SceneType.LOGIN;
 			curScenePanel = login;
 		}
-
+		/** 切换场景 **/
 		public void changeToScene(SceneType type){
 			if (curSceneType == type)
 				return;
@@ -68,14 +68,15 @@ namespace AssemblyCSharp
 			curScenePanel = newScenePanel;
 			curSceneType = type;
 		}
-		private GameObject loadPerfab(string perfabName){
+		public GameObject loadPerfab(string perfabName){
 			GameObject g = GameObject.Instantiate (Resources.Load(perfabName)) as GameObject;
-			g.transform.parent = parent;
+			g.transform.SetParent( parent);
 			g.transform.localScale = Vector3.one;
 			g.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
 			g.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
 			return g;
 		}
+		/**显示退出app面板**/
 		public void showExitPanel(){
 			if (exitPanel == null) {
 				exitPanel = GameObject.Instantiate (Resources.Load("Prefab/Panel_Exit_View")) as GameObject;
@@ -85,7 +86,13 @@ namespace AssemblyCSharp
 			exitPanel.GetComponent<RectTransform>().offsetMax = new Vector2(0f, 0f);
 			exitPanel.GetComponent<RectTransform>().offsetMin = new Vector2(0f, 0f);
 		}
+		/**显示用户信息面板**/
+		public void showUserInfoPanel(AvatarVO avo){
+			GameObject g = loadPerfab ("Prefab/userInfo");
+			g.GetComponent<ShowUserInfoScript> ().setUIData (avo);
+		}
 
+		/**显示 game over 结算面板**/
 		public void showGameOverView(int type,GamingData data){
 			if (gameOverPanel != null) {
 				GameObject.Destroy (gameOverPanel);
