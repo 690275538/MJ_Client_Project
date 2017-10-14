@@ -119,11 +119,11 @@ public class GameOverView : MonoBehaviour
 			paiList.RemoveAt (0);
 			int referIndex = _data.toAvatarIndex (int.Parse (uuid));
 
-			int resultIndex = 0;
+
 			for (int i = 0; i < paiList.Count; i++) {
 				int cardPoint = int.Parse (paiList [i]);
 				int positionIndex = (cardPoint + 1) % 9;
-
+				int resultIndex = 0;
 				if (cardPoint != 31) {
 					switch (positionIndex) {
 					case 1:

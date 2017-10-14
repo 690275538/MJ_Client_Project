@@ -58,7 +58,7 @@ GameObject:
   - 222: {fileID: 22210010}
   - 114: {fileID: 11469636}
   m_Layer: 5
-  m_Name: Panel_Ma_Pai
+  m_Name: MapaiContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -125,7 +125,7 @@ GameObject:
   - 114: {fileID: 11411366}
   - 114: {fileID: 11426896}
   m_Layer: 5
-  m_Name: Panel_ZhuaMa
+  m_Name: Panel_ZhuaMaUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ GameObject:
   - 222: {fileID: 22257188}
   - 114: {fileID: 11465836}
   m_Layer: 5
-  m_Name: Panel_Init_Mas
+  m_Name: Bg_Mapai
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -282,16 +282,11 @@ MonoBehaviour:
   - {fileID: 191848}
   - {fileID: 136770}
   - {fileID: 166494}
-  bottomContaner: {fileID: 176244}
-  topContaner: {fileID: 121428}
-  leftContaner: {fileID: 119224}
-  rightContaner: {fileID: 143804}
-  imgL: {fileID: 11441210}
-  imgB: {fileID: 11499198}
-  imgR: {fileID: 11422858}
-  imgT: {fileID: 11400174}
   mapaiContaner: {fileID: 139374}
   mapaiBg: {fileID: 194462}
+  validMas: 
+  paiList: []
+  uuid: 
 --- !u!114 &11441210
 MonoBehaviour:
   m_ObjectHideFlags: 1

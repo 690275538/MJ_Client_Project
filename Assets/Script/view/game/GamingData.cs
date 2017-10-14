@@ -101,10 +101,12 @@ namespace AssemblyCSharp
 		{
 			
 		}
-
-		public Direction toGameDir(int avatarIndex){
-			int i = (avatarIndex + 4 - myIndex) % 4;
+		static public Direction ToGameDir(int avatarIndex,int refAvatarIndex){
+			int i = (avatarIndex + 4 - refAvatarIndex) % 4;
 			return (Direction)i;
+		}
+		public Direction toGameDir(int avatarIndex){
+			return ToGameDir (avatarIndex, myIndex);
 		}
 		public Direction toGameDir2(int uuid){
 			int i = toAvatarIndex (uuid);

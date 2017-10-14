@@ -26,10 +26,10 @@ public class GCurCellRenderView : MonoBehaviour
 	private HupaiResponseItem _itemData;
 
 
-	public void setUI (HupaiResponseItem itemData, List<int> validMasParm, int mainuuid)
+	public void setUI (HupaiResponseItem itemData, List<int> validMas, int mainuuid)
 	{
 		_itemData = itemData;
-		validMas = validMasParm;
+		this.validMas = validMas;
 
 		nickName.text = itemData.nickname;
 		totalScroe.text = itemData.totalScore.ToString ();

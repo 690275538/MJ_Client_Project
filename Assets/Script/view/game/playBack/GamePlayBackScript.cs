@@ -894,8 +894,8 @@ public class GamePlayBackScript : MonoBehaviour {
 		}
 		if (zhuamaPanel == null) {
 			
-			zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
-			zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, vailedMa);
+			zhuamaPanel = SceneManager.getInstance().loadPerfab ("prefab/Panel_ZhuaMa");
+			zhuamaPanel.GetComponent<ZhuaMaView> ().arrageMas (allMas, vailedMa);
 		}
 		Invoke ("frontZhuaMa",7);
 	}

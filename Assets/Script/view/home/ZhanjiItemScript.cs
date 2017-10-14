@@ -48,7 +48,7 @@ namespace AssemblyCSharp
 		public void  openGamePlay(){
 			string id = mZhanjiDataItemVo.id + "";
 			GameManager.getInstance().Server.requset (new GameBackPlayRequest (id));
-			PrefabManage.loadPerfab ("Prefab/Panel_GamePlayBack");
+			SceneManager.getInstance().loadPerfab ("Prefab/Panel_GamePlayBack");
 
 		}
 	}

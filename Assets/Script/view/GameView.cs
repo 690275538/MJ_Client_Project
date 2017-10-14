@@ -81,7 +81,7 @@ namespace AssemblyCSharp
 
 
 			if (zhuamaPanel != null) {
-				Destroy (zhuamaPanel.GetComponent<ZhuMaScript> ());
+				Destroy (zhuamaPanel.GetComponent<ZhuaMaView> ());
 				Destroy (zhuamaPanel);
 			}
 
@@ -609,9 +609,9 @@ namespace AssemblyCSharp
 				string allMas = hvo.allMas;
 				if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.getInstance ().roomVO.roomType == GameType.GI_PING_HU) {//只有转转麻将才显示抓码信息
 					if (GlobalData.getInstance ().roomVO.ma > 0 && allMas != null && allMas.Length > 0) {
-						zhuamaPanel = PrefabManage.loadPerfab ("prefab/Panel_ZhuaMa");
-						zhuamaPanel.GetComponent<ZhuMaScript> ().init (_data);
-						zhuamaPanel.GetComponent<ZhuMaScript> ().arrageMas (allMas, hvo.validMas);
+						zhuamaPanel = SceneManager.getInstance().loadPerfab ("prefab/Panel_ZhuaMa");
+						zhuamaPanel.GetComponent<ZhuaMaView> ().init (_data);
+						zhuamaPanel.GetComponent<ZhuaMaView> ().arrageMas (allMas, hvo.validMas);
 						Invoke ("openGameOverView", 7);
 					} else {
 						Invoke ("openGameOverView", 3);
