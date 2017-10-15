@@ -378,6 +378,7 @@ namespace AssemblyCSharp
 			} else {//其他人吃牌
 				_uiHelper.removeOtherHandCard (_data.pickIndex, 2);
 				_uiHelper.rangeOtherHandCard (_data.pickIndex, 1);
+				_uiHelper.rangeMyHandCard (false);
 			}
 			_uiHelper.addPGCCards (_data.pickIndex, cardPoint, 4);
 		}
@@ -392,7 +393,7 @@ namespace AssemblyCSharp
 			SoundManager.getInstance ().playSoundByAction ("peng", avatarList [_data.pickIndex].account.sex);
 
 			_uiHelper.removeLastPutoutCard ();
-
+			MyHandCardView.isChi = false;
 
 			if (_data.pickIndex == _data.myIndex) {  //自己碰牌
 				_data.paiArray [0] [cardPoint]++;
@@ -404,7 +405,7 @@ namespace AssemblyCSharp
 			} else {//其他人碰牌
 				_uiHelper.removeOtherHandCard (_data.pickIndex, 2);
 				_uiHelper.rangeOtherHandCard (_data.pickIndex, 1);
-
+				_uiHelper.rangeMyHandCard (false);
 			}
 			_uiHelper.addPGCCards (_data.pickIndex, cardPoint, 1);
 		}
@@ -418,6 +419,7 @@ namespace AssemblyCSharp
 			_data.pickIndex = gvo.avatarId;
 			_actionHlpr.showEffect (ActionType.GANG);
 			SoundManager.getInstance ().playSoundByAction ("gang", avatarList [_data.pickIndex].account.sex);
+			MyHandCardView.isChi = false;
 
 			if (_uiHelper.findIndexInPGC (_data.pickIndex, cardPoint) == -1) {//判断有没有碰过了，
 				_uiHelper.removeOtherHandCard(_data.pickIndex,3);//消耗3只牌
@@ -459,6 +461,10 @@ namespace AssemblyCSharp
 		public void myPassBtnClick ()
 		{
 			_actionHlpr.cleanBtnShow ();
+			if (MyHandCardView.isChi) {
+				MyHandCardView.isChi = false;
+				_uiHelper.rangeMyHandCard (false);
+			}
 
 			if (_data.pickIndex == _data.myIndex) {
 				MyHandCardView.isPutout = true;
@@ -520,6 +526,7 @@ namespace AssemblyCSharp
 			}
 			_uiHelper.rangeMyHandCard (false);
 			MyHandCardView.isPutout = true;
+			MyHandCardView.isChi = false;
 		}
 
 

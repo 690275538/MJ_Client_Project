@@ -67,19 +67,24 @@ namespace AssemblyCSharp
 			var cgo = getCardGOs (Direction.B);
 			for (int i = 0; i < cardPoints.Length; i++) {
 				for (int j = 0; j < cardPoints [i]; j++) {
-					GameObject card = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
-					card.transform.SetParent (cgo.HandParent);
-					card.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
-					card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
-					card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
-					card.GetComponent<MyHandCardView> ().onMyHandCardChiChange += onMyHandCardChiChange;
-					card.GetComponent<MyHandCardView> ().setPoint (i);        
-
+					GameObject card = newMyHandCard (i);    
 					cgo.Hand.Add (card);//增加游戏对象
 
 				}
 			}
 			rangeMyHandCard (false);
+		}
+		private GameObject newMyHandCard(int cardPoint){
+			var cgo = getCardGOs (Direction.B);
+			GameObject card = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
+			card.transform.SetParent (cgo.HandParent);
+			card.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
+			card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
+			card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
+			card.GetComponent<MyHandCardView> ().onMyHandCardChiChange += onMyHandCardChiChange;
+			card.GetComponent<MyHandCardView> ().setPoint (cardPoint);
+
+			return card;
 		}
 
 		public void onMyHandCardPutout (GameObject card)//
@@ -107,46 +112,6 @@ namespace AssemblyCSharp
 		public void showChiCard(){
 			MyHandCardView.isChi = true;
 			_showChiCard ();
-		}
-		public bool checkChi(){
-			int cardPoint = _data.putoutPoint;
-			int i = cardPoint % 9;
-			List<int> activePoints = new List<int> (){-1,-1,-1,-1};
-			if (i - 2 >= 0) {
-				activePoints[0] = (cardPoint - 2);
-			}
-			if (i - 1 > 0) {
-				activePoints[1] = (cardPoint - 1);
-			}
-			if (i + 1 < 9) {
-				activePoints[2] = (cardPoint + 1);
-			}
-			if (i + 2 < 9) {
-				activePoints[3] = (cardPoint + 2);
-			}
-			var Hand = getCardGOs (Direction.B).Hand;
-			List<int> points = new List<int> ();
-			for (i = 0; i < Hand.Count; i++) {
-				int a = Hand [i].GetComponent<MyHandCardView> ().getPoint ();
-				if ((int)a / 9 == (int)cardPoint / 9) {
-					points.Add (a);
-				}
-			}
-
-			bool hasL = false;
-			bool hasC = false;
-			bool hasR = false;
-
-			if (points.Contains (activePoints [1]) && points.Contains (activePoints [2])) {
-				hasC = true;
-			}
-			if (points.Contains (activePoints [0]) && points.Contains (activePoints [1])) {
-				hasL = true;
-			}
-			if (points.Contains (activePoints [2]) && points.Contains (activePoints [3])) {
-				hasR = true;
-			}
-			return hasC || hasL || hasR;
 		}
 		public void _showChiCard(int selectPiont=-2){
 			int cardPoint = _data.putoutPoint;
@@ -461,11 +426,6 @@ namespace AssemblyCSharp
 			switch (dir) {
 			case Direction.B:
 				var cvo = getCardGOs (dir);
-				var card = GameObject.Instantiate (Resources.Load ("prefab/card/Bottom_B")) as GameObject;
-
-				card.name = "pickCardItem";
-				card.transform.SetParent (cvo.HandParent);
-				card.transform.localScale = new Vector3 (1.1f, 1.1f, 1);
 				card.transform.localPosition = new Vector3 (580f, -292f);
 				card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
 				card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
