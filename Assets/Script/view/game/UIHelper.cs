@@ -426,11 +426,8 @@ namespace AssemblyCSharp
 			switch (dir) {
 			case Direction.B:
 				var cvo = getCardGOs (dir);
+				var card = newMyHandCard (cardPoint);
 				card.transform.localPosition = new Vector3 (580f, -292f);
-				card.GetComponent<MyHandCardView> ().onMyHandCardPutout += onMyHandCardPutout;
-				card.GetComponent<MyHandCardView> ().onMyHandCardSelectedChange += onMyHandCardSelectedChange;
-				card.GetComponent<MyHandCardView> ().setPoint (cardPoint); 
-
 				var Hand = cvo.Hand;
 				for (int i = 0; i < Hand.Count; i++) {
 					int cc = Hand [i].GetComponent<MyHandCardView> ().getPoint ();
