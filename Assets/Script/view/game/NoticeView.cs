@@ -42,9 +42,9 @@ namespace AssemblyCSharp
 
 		private void playNoticeAction ()
 		{
-			ui.SetActive (true);
 
 			var noticeMsgs = GlobalData.getInstance ().NoticeMsgs;
+			ui.SetActive (noticeMsgs.Count != 0);
 			if (noticeMsgs.Count != 0) {
 				noticeText.transform.localPosition = new Vector3 (500, noticeText.transform.localPosition.y);
 				noticeText.text = noticeMsgs [showNoticeNumber];

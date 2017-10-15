@@ -291,19 +291,23 @@ namespace AssemblyCSharp
 		/// <param name="response">Response.</param>
 		public void onActionBtnNotify (ClientResponse response)
 		{
+			_data.huCardPoint = -1;
+			_data.gangCardPoint = -1;
+
 			string[] strs = response.message.Split (new char[1]{ ',' });
 
 
 			for (int i = 0; i < strs.Length; i++) {
-				if (strs [i].Equals ("hu")) {
-					_actionHlpr.showBtn (ActionType.HU);
-
-				} else if (strs [i].Contains ("qianghu")) {
-
-					_data.pgcCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [1]);
-
+				if (strs [i].Contains ("qianghu")) {
+					_data.huCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [1]);
 					_actionHlpr.showBtn (ActionType.HU);
 					_data.isQiangHu = true;
+
+				} else if (strs [i].Contains ("hu")) {
+
+					_data.huCardPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [1]);
+
+					_actionHlpr.showBtn (ActionType.HU);
 				} else if (strs [i].Contains ("peng")) {
 					_actionHlpr.showBtn (ActionType.PENG);
 					//_data.putoutPoint = int.Parse (strs [i].Split (new char[1]{ ':' }) [2]); //可以不用管
@@ -492,7 +496,7 @@ namespace AssemblyCSharp
 			GangBackVO gvo = JsonMapper.ToObject<GangBackVO> (response.message);
 			int gangKind = gvo.type;
 			if (gvo.cardList.Count == 0) {
-				int cardPoint = _data.pgcCardPoint;
+				int cardPoint = _data.gangCardPoint;
 //				_data.paiArray[1][cardPoint] |= PaiArrayType.GANG;
 				if (gangKind == 0) {//明杠
 					
@@ -522,9 +526,9 @@ namespace AssemblyCSharp
 		public void myGangBtnClick ()
 		{
 			//TODO 多张可以杠的牌
-			_data.pgcCardPoint = int.Parse (_data.gangPaiList [0]);
+			_data.gangCardPoint = int.Parse (_data.gangPaiList [0]);
 			_data.gangPaiList = null;
-			GameManager.getInstance ().Server.requset (new GangPaiRequest (_data.pgcCardPoint, 0));
+			GameManager.getInstance ().Server.requset (new GangPaiRequest (_data.gangCardPoint, 0));
 			SoundManager.getInstance ().playSoundByAction ("gang", GlobalData.getInstance ().myAvatarVO.account.sex);
 			_actionHlpr.cleanBtnShow ();
 			_actionHlpr.showEffect (ActionType.GANG);
@@ -562,15 +566,15 @@ namespace AssemblyCSharp
 	 */ 
 		public void myHuBtnClick ()
 		{
-			if (_data.pgcCardPoint != -1) {
-				CardVO requestVo = new CardVO ();
+			if (_data.huCardPoint != -1) {
+				CardVO cvo = new CardVO ();
+				cvo.cardPoint = _data.huCardPoint;
 
 				if (_data.isQiangHu) {
-					requestVo.type = "qianghu";
+					cvo.type = "qianghu";
 					_data.isQiangHu = false;
-					requestVo.cardPoint = _data.pgcCardPoint;
 				}
-				string sendMsg = JsonMapper.ToJson (requestVo);
+				string sendMsg = JsonMapper.ToJson (cvo);
 				GameManager.getInstance ().Server.requset (new HupaiRequest (sendMsg));
 				_actionHlpr.cleanBtnShow ();
 			}

@@ -222,7 +222,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	private void  loadPerfab (string perfabName)
 	{
 		_dialog = Instantiate (Resources.Load (perfabName)) as GameObject;
-		_dialog.transform.parent = gameObject.transform;
+		_dialog.transform.SetParent( gameObject.transform);
 		_dialog.transform.localScale = Vector3.one;
 		//panelCreateDialog.transform.localPosition = new Vector3 (200f,150f);
 		_dialog.GetComponent<RectTransform> ().offsetMax = new Vector2 (0f, 0f);

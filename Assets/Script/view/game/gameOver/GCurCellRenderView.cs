@@ -64,6 +64,8 @@ public class GCurCellRenderView : MonoBehaviour
 			var info = pengs [i];
 			if (paiArray [info.cardPoint] >= 3) {
 				paiArray [info.cardPoint] -= 3;
+			} else {
+				pengs [i] = null;
 			}
 		}
 
@@ -122,13 +124,18 @@ public class GCurCellRenderView : MonoBehaviour
 		}
 		startPosition = startPosition + (gangs.Length > 0 ? 8f : 0f);
 
+		var ii = 0;
 		for (int i = 0; i < pengs.Length; i++) {
-			for (int j = 0; j < 3; j++) {
-				createCard (pengs [i].cardPoint, startPosition);
-				startPosition += 36f;
+			if (pengs [i] != null) {
+				for (int j = 0; j < 3; j++) {
+					createCard (pengs [i].cardPoint, startPosition);
+					startPosition += 36f;
+				}
+			} else {
+				ii++;
 			}
 		}
-		startPosition = startPosition + (pengs.Length > 0 ? 8f : 0f);
+		startPosition = startPosition + (pengs.Length-ii > 0 ? 8f : 0f);
 
 		for (int i = 0; i < chis.Length; i++) {
 			TChiInfo info = chis [i];

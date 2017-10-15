@@ -54,16 +54,18 @@ namespace AssemblyCSharp
 				return _pickIndex;
 			}
 		}
-		/**上一个打出的牌**/
+		/**打出的牌**/
 		public int putoutPoint;
 		/**摸到的牌**/
 		public int pickPoint;
 
 		/**服务器下发的可杠的牌**/
 		public string[] gangPaiList;
-		/**被碰吃杠的牌,杠可以在手牌中有多组，胡牌时可以自摸，可以胡别人**/
-		public int pgcCardPoint;
-
+		/**客户端选择杠的牌**/
+		public int gangCardPoint;
+		/**服务器下发的胡的牌**/
+		public int huCardPoint = -1;
+		/**客户端选择吃的牌组**/
 		public int[] chiPoints;
 
 		public bool isQiangHu = false;

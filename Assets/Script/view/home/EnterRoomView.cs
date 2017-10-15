@@ -34,7 +34,7 @@ public class EnterRoomView : MonoBehaviour{
 	void onResponse (ClientResponse response)
 	{
 		switch (response.headCode) {
-		case APIS.CREATEROOM_RESPONSE://加入房间
+		case APIS.JOIN_ROOM_RESPONSE://加入房间
 			onJoinRoomResponse (response);
 			break;
 		}
