@@ -35,6 +35,9 @@ public class GlobalData
 	/**是否由用用户选择退出而退出的游戏**/
 	public static bool isOverByPlayer = false;
 
+	public static Language lang = Language.YUEYU;
+
+
 
 
 	/**房间游戏规则信息**/

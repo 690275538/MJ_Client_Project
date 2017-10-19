@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#define TEST
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using AssemblyCSharp;
@@ -14,7 +15,8 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	public Toggle agreeToggle;
 	public Text versionText;
-    public InputField uinInput;
+	public InputField uinInput;
+	public InputField roomIDInput;
 
 	public GameObject watingPanel;
 
@@ -54,8 +56,10 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	}
 
+	#if TEST
+
 	public void login(){
-		
+
 		if (!GameManager.getInstance().Server.Connected) {
 			GameManager.getInstance ().Server.connect ();
 			TipsManager.getInstance ().setTips ("正在连接服务器...");
@@ -64,8 +68,6 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 		GlobalData.getInstance().reinitData ();//初始化界面数据
 		if (agreeToggle.isOn) {
-			//GlobalDataScript.getInstance ().wechatOperate.login ();//TODO 
-			//watingPanel.SetActive(true);
 			if (uinInput.text != "" ) {
 				GameManager.getInstance().WechatAPI.testLogin (uinInput.text);
 				watingPanel.SetActive(true);
@@ -76,7 +78,51 @@ public class LoginView : MonoBehaviour, ISceneView {
 			TipsManager.getInstance ().setTips ("请先同意用户使用协议");
 		}
 
+	}
+	void onResponse (ClientResponse response)
+	{
+		switch (response.headCode) {
+		case APIS.LOGIN_RESPONSE://登录回包
+			if (roomIDInput.text != "") {
+				RoomJoinVo roomJoinVo = new  RoomJoinVo ();
+				roomJoinVo.roomId =int.Parse(roomIDInput.text);
+				string sendMsg = JsonMapper.ToJson (roomJoinVo);
+				GameManager.getInstance().Server.requset(new JoinRoomRequest(sendMsg));
+			} else {
+				onLoginResponse (response);
+			}
+			break;
+		case APIS.BACK_LOGIN_RESPONSE://掉线登录回包
+			onBackLoginResponse (response);
+			break;
+		case APIS.JOIN_ROOM_RESPONSE://加入房间
+			if (response.status == 1) {
+				RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
+				GameManager.getInstance ().DataMgr.updateRoomVO (vo);
 
+				SceneManager.getInstance ().changeToScene (SceneType.GAME);
+			} else {
+				TipsManager.getInstance ().setTips (response.message);
+			}
+			break;
+		}
+	}
+	#else
+	public void login(){
+
+		if (!GameManager.getInstance().Server.Connected) {
+			GameManager.getInstance ().Server.connect ();
+			TipsManager.getInstance ().setTips ("正在连接服务器...");
+			return;
+		}
+
+		GlobalData.getInstance().reinitData ();//初始化界面数据
+		if (agreeToggle.isOn) {
+			GameManager.getInstance().WechatAPI.login ();
+			watingPanel.SetActive(true);
+		} else {
+			TipsManager.getInstance ().setTips ("请先同意用户使用协议");
+		}
 
 	}
 
@@ -91,6 +137,8 @@ public class LoginView : MonoBehaviour, ISceneView {
 			break;
 		}
 	}
+
+	#endif
 	private void onLoginResponse(ClientResponse response){
 		watingPanel.SetActive(false);
 

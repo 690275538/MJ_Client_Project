@@ -13,7 +13,6 @@ public class ExitView: MonoBehaviour {
 
 	public void cancle(){
 
-		Destroy (this);
 		Destroy (gameObject);
 	}
 }

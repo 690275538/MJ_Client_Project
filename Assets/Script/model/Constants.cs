@@ -5,6 +5,7 @@ namespace AssemblyCSharp
 	public delegate void OnData(ClientResponse response);
 	public delegate void OnStatus(SocketStatus status);
 	public delegate void Change();
+	public delegate void OnClick();
 	public class Constants
 	{
 		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;
@@ -51,6 +52,10 @@ namespace AssemblyCSharp
 		HU,
 		LIUJU,
 		GEN_ZHUANG
+	}
+	public enum Language{
+		YUEYU =1,
+		PU_TONG_HUA=2
 	}
 
 }

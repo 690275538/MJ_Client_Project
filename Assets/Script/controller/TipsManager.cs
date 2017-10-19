@@ -31,12 +31,12 @@ namespace AssemblyCSharp
 		}
 
 
-		public void loadDialog(string titlestr,string msgstr,DialogPanelScript.ButtonOnClick yesCallBack,DialogPanelScript.ButtonOnClick noCallBack){
-			GameObject temp = GameObject.Instantiate (Resources.Load ("Prefab/Image_Base_Dialog") as GameObject);
+		public void loadDialog(string titlestr,string msgstr,OnClick yesCallBack,OnClick noCallBack){
+			GameObject temp = GameObject.Instantiate (Resources.Load ("Prefab/W_DialogUI") as GameObject);
 			temp.transform.SetParent(parent);
 			temp.transform.localScale = Vector3.one;
 			temp.transform.localPosition = Vector3.zero;
-			temp.GetComponent<DialogPanelScript> ().setContent (titlestr,msgstr,true,yesCallBack,noCallBack);
+			temp.GetComponent<BaseDialogView> ().setContent (titlestr,msgstr,true,yesCallBack,noCallBack);
 		}
 
 

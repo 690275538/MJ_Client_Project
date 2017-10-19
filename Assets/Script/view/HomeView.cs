@@ -21,7 +21,7 @@ public class HomeView : MonoBehaviour,ISceneView
 
 
 	public GameObject contactInfoPanel;
-	WWW www;
+
 	private GameObject _dialog;
 
 	private bool startFlag = false;

@@ -79,7 +79,7 @@ namespace AssemblyCSharp
 		/**显示退出app面板**/
 		public void showExitPanel(){
 			if (exitPanel == null) {
-				exitPanel = GameObject.Instantiate (Resources.Load("Prefab/Panel_Exit_View")) as GameObject;
+				exitPanel = GameObject.Instantiate (Resources.Load("Prefab/W_ExitUI")) as GameObject;
 			}
 			exitPanel.transform.parent = curScenePanel.transform;
 			exitPanel.transform.localScale = Vector3.one;
@@ -88,8 +88,8 @@ namespace AssemblyCSharp
 		}
 		/**显示用户信息面板**/
 		public void showUserInfoPanel(AvatarVO avo){
-			GameObject g = loadPerfab ("Prefab/userInfo");
-			g.GetComponent<ShowUserInfoScript> ().setUIData (avo);
+			GameObject g = loadPerfab ("Prefab/W_UserInfoUI");
+			g.GetComponent<UserInfoView> ().setUIData (avo);
 		}
 
 		/**显示 game over 结算面板**/
