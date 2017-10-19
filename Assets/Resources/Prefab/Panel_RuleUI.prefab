@@ -186,7 +186,7 @@ GameObject:
   - 114: {fileID: 11439666}
   - 114: {fileID: 11416018}
   m_Layer: 5
-  m_Name: Panel_Game_Rule_Dialog
+  m_Name: Panel_RuleUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

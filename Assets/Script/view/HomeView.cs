@@ -193,7 +193,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	public void onRuleBtnClick ()
 	{
 		
-		loadPerfab ("Prefab/Panel_Game_Rule_Dialog");
+		loadPerfab ("Prefab/Panel_RuleUI");
 	}
 
 	/**
