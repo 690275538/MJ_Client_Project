@@ -63,7 +63,7 @@ public class GameOverView : MonoBehaviour
 			titleText.text = "转转麻将";
 		} else if (GlobalData.getInstance ().roomVO.roomType == GameType.HUA_SHUI) {//划水麻将
 			titleText.text = "划水麻将";
-		} else if (GlobalData.getInstance ().roomVO.roomType == GameType.GI_PING_HU) {
+		} else if (GlobalData.getInstance ().roomVO.roomType == GameType.JI_PING_HU) {
 			titleText.text = "鸡平胡";
 		}
 		roundText.text = "局数：" + (GlobalData.getInstance ().roomVO.roundNumber - GlobalData.getInstance ().remainRoundCount) + "/" + GlobalData.getInstance ().roomVO.roundNumber;

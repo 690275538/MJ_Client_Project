@@ -359,7 +359,7 @@ public class GamePlayBackScript : MonoBehaviour {
 				str += "转转麻将\n";
 			} else if (roomvo.roomType == GameType.HUA_SHUI){
 				str += "划水麻将\n";
-			}else if (roomvo.roomType == GameType.GI_PING_HU){
+			}else if (roomvo.roomType == GameType.JI_PING_HU){
 				str += "鸡平胡\n";
 			}
 		}

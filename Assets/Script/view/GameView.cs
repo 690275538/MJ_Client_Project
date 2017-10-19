@@ -618,7 +618,7 @@ namespace AssemblyCSharp
 				}
 
 				string allMas = hvo.allMas;
-				if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.getInstance ().roomVO.roomType == GameType.GI_PING_HU) {//只有转转麻将才显示抓码信息
+				if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN || GlobalData.getInstance ().roomVO.roomType == GameType.JI_PING_HU) {//只有转转麻将才显示抓码信息
 					if (GlobalData.getInstance ().roomVO.ma > 0 && allMas != null && allMas.Length > 0) {
 						zhuamaPanel = SceneManager.getInstance().loadPerfab ("prefab/Panel_ZhuaMa");
 						zhuamaPanel.GetComponent<ZhuaMaView> ().init (_data);

@@ -658,7 +658,7 @@ namespace AssemblyCSharp
 				if (rvo.addWordCard) {
 					_data.remainCardNum = 136;
 				}
-			} else if (type == GameType.GI_PING_HU) {
+			} else if (type == GameType.JI_PING_HU) {
 				_data.remainCardNum = 136;
 			}
 			_data.remainCardNum = _data.remainCardNum - 53;

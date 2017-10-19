@@ -188,7 +188,7 @@ namespace AssemblyCSharp
 						str += "转转麻将,";
 					} else if (roomvo.roomType == GameType.HUA_SHUI) {
 						str += "划水麻将,";
-					} else if (roomvo.roomType == GameType.GI_PING_HU) {
+					} else if (roomvo.roomType == GameType.JI_PING_HU) {
 						str += "鸡平胡,";
 					}
 				}

@@ -55,11 +55,11 @@ public class CrateRoomView : MonoBehaviour {
 		zzBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_ZhuanZhuan);
 		huaShuiBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_Hua_Shui);
 		closeBt.GetComponent<Button> ().onClick.AddListener (onClickBtn_Close);
-		switchSetting (GameType.GI_PING_HU);
+		switchSetting (GameType.JI_PING_HU);
 	}
 
 	private void onClickBtn_GiPingHu(){
-		switchSetting (GameType.GI_PING_HU);
+		switchSetting (GameType.JI_PING_HU);
 	}
 	private void onClickBtn_ZhuanZhuan(){
 		switchSetting (GameType.ZHUAN_ZHUAN);
@@ -74,7 +74,7 @@ public class CrateRoomView : MonoBehaviour {
 		panelHuashuiSetting.SetActive (false);
 		panelDevoloping.SetActive (false);
 		switch (type) {
-		case GameType.GI_PING_HU:
+		case GameType.JI_PING_HU:
 			panelJiPingHuSetting.SetActive (true);
 			break;
 		case GameType.ZHUAN_ZHUAN:
@@ -111,7 +111,7 @@ public class CrateRoomView : MonoBehaviour {
 		}
 
 		roomVO = new RoomVO ();
-		roomVO.roomType = GameType.GI_PING_HU;
+		roomVO.roomType = GameType.JI_PING_HU;
 
 		roomVO.magnification = maCount;
 

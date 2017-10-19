@@ -78,7 +78,7 @@ namespace AssemblyCSharp
 			string str = "房间号：\n" + rvo.roomId + "\n";
 			str += "圈数：" + rvo.roundNumber + "\n";
 
-			if (rvo.roomType == GameType.GI_PING_HU) {
+			if (rvo.roomType == GameType.JI_PING_HU) {
 				str += "鸡平胡\n";
 			} else {
 

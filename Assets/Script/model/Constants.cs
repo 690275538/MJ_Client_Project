@@ -18,7 +18,7 @@ namespace AssemblyCSharp
 	public enum GameType{
 		ZHUAN_ZHUAN=1,
 		HUA_SHUI=2,
-		GI_PING_HU=3
+		JI_PING_HU=3
 	}
 	public enum SceneType{
 		LOGIN,

@@ -138,7 +138,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	}
 
 
-	public void showRoomCardPanel ()
+	public void showContactInfoPanel ()
 	{
 		GameManager.getInstance ().Server.requset (new GetContactInfoRequest ());
 
@@ -150,7 +150,7 @@ public class HomeView : MonoBehaviour,ISceneView
 		contactInfoPanel.SetActive (true);
 	}
 
-	public void closeRoomCardPanel ()
+	public void closeContactInfoPanel ()
 	{
 		contactInfoPanel.SetActive (false);
 	}
