@@ -648,12 +648,12 @@ namespace AssemblyCSharp
 			RoomVO rvo = GlobalData.getInstance ().roomVO;
 
 			var type = rvo.roomType;
-			if (type == GameType.ZHUAN_ZHUAN) {//转转麻将
+			if (type == GameType.ZHUAN_ZHUAN) {
 				_data.remainCardNum = 108;
 				if (rvo.hong) {
 					_data.remainCardNum = 112;
 				}
-			} else if (type == GameType.HUA_SHUI) {//划水麻将
+			} else if (type == GameType.HUA_SHUI) {
 				_data.remainCardNum = 108;
 				if (rvo.addWordCard) {
 					_data.remainCardNum = 136;

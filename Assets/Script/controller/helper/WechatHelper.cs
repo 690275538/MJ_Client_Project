@@ -27,13 +27,6 @@ namespace AssemblyCSharp
 		}
 
 
-		void Update ()
-		{
-	
-		}
-
-
-
 		/**
 	 * 登录，提供给button使用
 	 * 
@@ -41,8 +34,6 @@ namespace AssemblyCSharp
 		public void login ()
 		{
 			shareSdk.GetUserInfo (PlatformType.WeChat);
-	
-
 		}
 
 		/**
@@ -55,34 +46,34 @@ namespace AssemblyCSharp
 
 			if (data != null) {
 				MyDebug.Log (data.toJson ());
-				LoginVo loginvo = new LoginVo ();
+				LoginVo lvo = new LoginVo ();
 				try {
 
-					loginvo.openId = (string)data ["openid"];
-					loginvo.nickName = (string)data ["nickname"];
-					loginvo.headIcon = (string)data ["headimgurl"];
-					loginvo.unionid = (string)data ["unionid"];
-					loginvo.province = (string)data ["province"];
-					loginvo.city = (string)data ["city"];
+					lvo.openId = (string)data ["openid"];
+					lvo.nickName = (string)data ["nickname"];
+					lvo.headIcon = (string)data ["headimgurl"];
+					lvo.unionid = (string)data ["unionid"];
+					lvo.province = (string)data ["province"];
+					lvo.city = (string)data ["city"];
 					string sex = data ["sex"].ToString ();
-					loginvo.sex = int.Parse (sex);
-					loginvo.IP = GameManager.getInstance ().getIpAddress ();
-					String msg = JsonMapper.ToJson (loginvo);
+					lvo.sex = int.Parse (sex);
+					lvo.IP = GameManager.getInstance ().getIpAddress ();
+					String msg = JsonMapper.ToJson (lvo);
 
 					GameManager.getInstance ().Server.requset (new LoginRequest (msg));
 
-					AvatarVO myAvatarVO = new AvatarVO ();
-					myAvatarVO.account = new Account ();
-					myAvatarVO.account.city = loginvo.city;
-					myAvatarVO.account.openid = loginvo.openId;
-					myAvatarVO.account.nickname = loginvo.nickName;
-					myAvatarVO.account.headicon = loginvo.headIcon;
-					myAvatarVO.account.unionid = loginvo.city;
-					myAvatarVO.account.sex = loginvo.sex;
-					myAvatarVO.IP = loginvo.IP;
-					GlobalData.getInstance ().myAvatarVO = myAvatarVO;
+					AvatarVO avo = new AvatarVO ();
+					avo.account = new Account ();
+					avo.account.city = lvo.city;
+					avo.account.openid = lvo.openId;
+					avo.account.nickname = lvo.nickName;
+					avo.account.headicon = lvo.headIcon;
+					avo.account.unionid = lvo.city;
+					avo.account.sex = lvo.sex;
+					avo.IP = lvo.IP;
+					GlobalData.getInstance ().myAvatarVO = avo;
 
-					MyDebug.Log (" loginvo.nickName:" + loginvo.nickName);
+					MyDebug.Log (" loginvo.nickName:" + lvo.nickName);
 
 				} catch (Exception e) {
 					MyDebug.Log ("微信接口有变动！" + e.Message);
@@ -125,13 +116,13 @@ namespace AssemblyCSharp
 	 */ 
 		private void shareAchievement (PlatformType platformType)
 		{
-			ShareContent customizeShareParams = new ShareContent ();
-			customizeShareParams.SetText ("");
-			customizeShareParams.SetImagePath (picPath);
-			customizeShareParams.SetShareType (ContentType.Image);
-			customizeShareParams.SetObjectID ("");
-			customizeShareParams.SetShareContentCustomize (platformType, customizeShareParams);
-			shareSdk.ShareContent (platformType, customizeShareParams);
+			ShareContent s = new ShareContent ();
+			s.SetText ("");
+			s.SetImagePath (picPath);
+			s.SetShareType (ContentType.Image);
+			s.SetObjectID ("");
+			s.SetShareContentCustomize (platformType, s);
+			shareSdk.ShareContent (platformType, s);
 		}
 
 		/**
@@ -176,85 +167,51 @@ namespace AssemblyCSharp
 
 		public void inviteFriend ()
 		{
-			RoomVO roomvo = GlobalData.getInstance ().roomVO;
-			if (roomvo != null) {
+			RoomVO rvo = GlobalData.getInstance ().roomVO;
+			if (rvo != null) {
 				
-				string str = "";
 
-				if (roomvo.hong) {
-					str += "红中麻将,";
-				} else {
-					if (roomvo.roomType == GameType.ZHUAN_ZHUAN) {
-						str += "转转麻将,";
-					} else if (roomvo.roomType == GameType.HUA_SHUI) {
-						str += "划水麻将,";
-					} else if (roomvo.roomType == GameType.JI_PING_HU) {
-						str += "鸡平胡,";
-					}
-				}
 
-				str += "大战" + roomvo.roundNumber + "局,";
-				if (roomvo.ziMo == 1) {
-					str += "只能自摸,";
-				} else {
-					str += "可抢杠胡,";
-				}
-				if (roomvo.addWordCard) {
-					str += "有风牌,";
-				}
-
-				if (roomvo.xiaYu > 0) {
-					str += "下鱼" + roomvo.xiaYu + "条,";
-				}
-
-				if (roomvo.ma > 0) {
-					str += "抓" + roomvo.ma + "个码,";
-				}
-				if (roomvo.magnification > 0) {
-					str += "倍率" + roomvo.magnification;
-				}
-				str += "有胆，你就来！";
-
-				string title = "铁脚麻将    " + "房间号：" + roomvo.roomId;
-				ShareContent customizeShareParams = new ShareContent ();
-				customizeShareParams.SetTitle (title);
-				customizeShareParams.SetText (str);
-				customizeShareParams.SetUrl (APIS.Download_URL);
-				customizeShareParams.SetImageUrl (APIS.ImgUrl + "icon96.png");
-				customizeShareParams.SetShareType (ContentType.Webpage);
-				customizeShareParams.SetObjectID ("");
-				shareSdk.ShowShareContentEditor (PlatformType.WeChat, customizeShareParams);
+				string title = "铁脚麻将    " + "房间号：" + rvo.roomId;
+				ShareContent s = new ShareContent ();
+				s.SetTitle (title);
+				s.SetText (GameHelper.getHelper ().getInviteRuleStr (rvo));
+				s.SetUrl (APIS.Download_URL);
+				s.SetImageUrl (APIS.ImgUrl + "icon96.png");
+				s.SetShareType (ContentType.Webpage);
+				s.SetObjectID ("");
+				shareSdk.ShowShareContentEditor (PlatformType.WeChat, s);
 			}
 		}
 
 
 		public void testLogin (string uin)
 		{
-			LoginVo loginvo = new LoginVo ();
+			LoginVo lvo = new LoginVo ();
 			try {
 
-				loginvo.openId = "" + uin;
-				loginvo.nickName = "" + uin;
-				loginvo.headIcon = "";
-				loginvo.unionid = "" + uin;
-				loginvo.province = "广东省";
-				loginvo.city = "深圳";
-				loginvo.sex = 1;
-				loginvo.IP = GameManager.getInstance ().getIpAddress ();
-				String msg = JsonMapper.ToJson (loginvo);
+				lvo.openId = "" + uin;
+				lvo.nickName = "" + uin;
+				lvo.headIcon = "";
+				lvo.unionid = "" + uin;
+				lvo.province = "广东省";
+				lvo.city = "深圳";
+				lvo.sex = 1;
+				lvo.IP = GameManager.getInstance ().getIpAddress ();
+				String msg = JsonMapper.ToJson (lvo);
 
 				GameManager.getInstance ().Server.requset (new LoginRequest (msg));
 
-				AvatarVO myAvatarVO = new AvatarVO ();
-				myAvatarVO.account = new Account ();
-				myAvatarVO.account.city = loginvo.city;
-				myAvatarVO.account.openid = loginvo.openId;
-				myAvatarVO.account.nickname = loginvo.nickName;
-				myAvatarVO.account.headicon = loginvo.headIcon;
-				myAvatarVO.account.unionid = loginvo.city;
-				myAvatarVO.account.sex = loginvo.sex;
-				myAvatarVO.IP = loginvo.IP;
-				GlobalData.getInstance ().myAvatarVO = myAvatarVO;
+				AvatarVO avo = new AvatarVO ();
+				avo.account = new Account ();
+				avo.account.city = lvo.city;
+				avo.account.openid = lvo.openId;
+				avo.account.nickname = lvo.nickName;
+				avo.account.headicon = lvo.headIcon;
+				avo.account.unionid = lvo.city;
+				avo.account.sex = lvo.sex;
+				avo.IP = lvo.IP;
+				GlobalData.getInstance ().myAvatarVO = avo;
 			} catch (Exception e) {
 				Debug.Log (e.ToString ());
 				TipsManager.getInstance ().setTips ("请先打开你的微信客户端");

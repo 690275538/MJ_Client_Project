@@ -80,26 +80,9 @@ public class GCurCellRenderView : MonoBehaviour
 
 		var hu = totalInfo.getHuInfo ();
 		if (hu != null) {
-			if (hu.type.Contains ("d_other")) {
-				mdesCribe += "点炮";
-			} else {
-				if (hu.type == "zi_common") {
-					mdesCribe += "自摸";
-				} else if (hu.type == "d_self") {
-					mdesCribe += "接炮";
-				} else if (hu.type == "qiyise") {
-					mdesCribe += "清一色";
-				} else if (hu.type == "zi_qingyise") {
-					mdesCribe += "自摸清一色";
-				} else if (hu.type == "qixiaodui") {
-					mdesCribe += "七小对";
-				} else if (hu.type == "self_qixiaodui") {
-					mdesCribe += "自摸七小对";
-				} else if (hu.type == "gangshangpao") {
-					mdesCribe += "杠上炮";
-				} else if (hu.type == "gangshanghua") {
-					mdesCribe += "杠上花";
-				}
+
+			mdesCribe += GameHelper.getHelper ().getHuString (hu.type);
+			if (! hu.type.Contains ("d_other")) {
 				huFlag.SetActive (true);
 				paiArray [hu.cardPiont] -= 1;
 			}
@@ -162,8 +145,7 @@ public class GCurCellRenderView : MonoBehaviour
 		startPosition += 8f;
 
 		if (hu != null) {
-			if (hu.type == "zi_common" || hu.type == "d_self" || hu.type == "qiyise" || hu.type == "zi_qingyise"
-			    || hu.type == "qixiaodui" || hu.type == "self_qixiaodui" || hu.type == "gangshanghua") {
+			if (GameHelper.getHelper().isHu(hu.type)) {
 
 				createCard (hu.cardPiont, startPosition);
 			}

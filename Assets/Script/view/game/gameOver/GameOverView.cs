@@ -59,13 +59,8 @@ public class GameOverView : MonoBehaviour
 		_fvo = data.finalGameEndVo;
 		timeText.text = DateTime.Now.ToString ("yyyy-MM-dd");
 		roomText.text = "房间号：" + GlobalData.getInstance ().roomVO.roomId;
-		if (GlobalData.getInstance ().roomVO.roomType == GameType.ZHUAN_ZHUAN) {//转转麻将
-			titleText.text = "转转麻将";
-		} else if (GlobalData.getInstance ().roomVO.roomType == GameType.HUA_SHUI) {//划水麻将
-			titleText.text = "划水麻将";
-		} else if (GlobalData.getInstance ().roomVO.roomType == GameType.JI_PING_HU) {
-			titleText.text = "鸡平胡";
-		}
+
+		titleText.text = GameHelper.getHelper ().getName ();
 		roundText.text = "局数：" + (GlobalData.getInstance ().roomVO.roundNumber - GlobalData.getInstance ().remainRoundCount) + "/" + GlobalData.getInstance ().roomVO.roundNumber;
 		if (dispalyFlag == 0) {
 			curContainer.SetActive (true);

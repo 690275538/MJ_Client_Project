@@ -75,47 +75,8 @@ namespace AssemblyCSharp
 		public void updateRule ()
 		{
 			RoomVO rvo = GlobalData.getInstance ().roomVO;
-			string str = "房间号：\n" + rvo.roomId + "\n";
-			str += "圈数：" + rvo.roundNumber + "\n";
 
-			if (rvo.roomType == GameType.JI_PING_HU) {
-				str += "鸡平胡\n";
-			} else {
-
-				if (rvo.roomType == GameType.ZHUAN_ZHUAN) {
-					if (rvo.hong) {
-						str += "红中麻将\n";
-					} else {
-						str += "转转麻将\n";
-					}
-
-				} else if (rvo.roomType == GameType.HUA_SHUI) {
-					str += "划水麻将\n";
-				}
-				if (rvo.ziMo == 1) {
-					str += "只能自摸\n";
-				} else {
-					str += "可抢杠胡\n";
-				}
-				if (rvo.sevenDouble && rvo.roomType != GameType.HUA_SHUI) {
-					str += "可胡七对\n";
-				}
-
-				if (rvo.addWordCard) {
-					str += "有风牌\n";
-				}
-				if (rvo.xiaYu > 0) {
-					str += "下鱼数：" + rvo.xiaYu + "";
-				}
-
-				if (rvo.ma > 0) {
-					str += "抓码数：" + rvo.ma + "";
-				}
-			}
-			if (rvo.magnification > 0) {
-				str += "倍率：" + rvo.magnification + "";
-			}
-			roomRemarkText.text = str;
+			roomRemarkText.text = GameHelper.getHelper().getRuleStr(rvo);
 		}
 	}
 }

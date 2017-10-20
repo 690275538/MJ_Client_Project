@@ -52,16 +52,23 @@ public class RuleView : MonoBehaviour {
 			map [gt] = text;
 		}
 		ruleContent.text = map [gt];
+		titleText.text = GameHelper.getHelper (gt).getName ();
+
+		RectTransform ctf = (RectTransform)ruleContent.rectTransform;
+		RectTransform ptf = (RectTransform)ruleContent.rectTransform.parent;
+
 		if (gt == GameType.JI_PING_HU) {
-			ruleContent.rectTransform.sizeDelta = new Vector2 (1087, 2600);
-			titleText.text = "鸡平胡";
+			ctf.SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, 2600);
+			ptf.GetComponent<ScrollRect> ().scrollSensitivity = 8;
 		}else if (gt == GameType.ZHUAN_ZHUAN) {
-			ruleContent.rectTransform.sizeDelta = new Vector2 (1087, 644);
-			titleText.text = "转转麻将";
+			ctf.SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, 644);
+			ptf.GetComponent<ScrollRect> ().scrollSensitivity = 1;
 		}else if (gt == GameType.HUA_SHUI) {
-			ruleContent.rectTransform.sizeDelta = new Vector2 (1087, 644);
-			titleText.text = "划水麻将";
+			ctf.SetSizeWithCurrentAnchors (RectTransform.Axis.Vertical, 644);
+			ptf.GetComponent<ScrollRect> ().scrollSensitivity = 1;
 		}
+		var delta = ptf.rect.height - ctf.rect.height;
+		ctf.localPosition = new Vector3 (0, delta, 0);
 	}
 
 }
