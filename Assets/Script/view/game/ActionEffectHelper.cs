@@ -71,25 +71,16 @@ namespace AssemblyCSharp
 			} else if (type == ActionType.CHI) {
 				chiEffect.SetActive (true);
 			} else if (type == ActionType.GEN_ZHUANG) {
-
+				genZhuangEffect.SetActive (true);
+				Invoke ("hideGenzhuang", 2f);
 			}
-			invokeHidePengGangHuEff ();
-		}
-		private void gameFollowBanderNotice (ClientResponse response)
-		{
-			genZhuangEffect.SetActive (true);
-			Invoke ("hideGenzhuang", 2f);
+			Invoke ("hidePengGangHuEff", 1f);
 		}
 
 		private void hideGenzhuang ()
 		{
 			genZhuangEffect.SetActive (false);
 		}
-		private void invokeHidePengGangHuEff ()
-		{
-			Invoke ("hidePengGangHuEff", 1f);
-		}
-
 		private void hidePengGangHuEff ()
 		{
 			pengEffect.SetActive (false);

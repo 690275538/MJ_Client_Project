@@ -99,10 +99,19 @@ public class GCurCellRenderView : MonoBehaviour
 		GameObject card;
 
 		for (int i = 0; i < gangs.Length; i++) {
-			TGangInfo itemgangData = gangs [i];
-			for (int j = 0; j < 4; j++) {
-				createCard (itemgangData.cardPoint, startPosition);
+			TGangInfo info = gangs [i];
+			if (info.type == "an") {
+				for (int j = 0; j < 3; j++) {
+					createCard (info.cardPoint, startPosition,true);
+					startPosition += 36f;
+				}
+				createCard (info.cardPoint, startPosition);
 				startPosition += 36f;
+			} else {
+				for (int j = 0; j < 4; j++) {
+					createCard (info.cardPoint, startPosition);
+					startPosition += 36f;
+				}
 			}
 		}
 		startPosition = startPosition + (gangs.Length > 0 ? 8f : 0f);
@@ -179,14 +188,15 @@ public class GCurCellRenderView : MonoBehaviour
 
 	}
 
-	private void createCard (int cardPoint, float startPosition)
+	private void createCard (int cardPoint, float startPosition,bool isback=false)
 	{
-
-		GameObject card = Instantiate (Resources.Load ("Prefab/ThrowCard/TopAndBottomCard")) as GameObject;
+		string path = isback ? "Prefab/PengGangCard/GangBack_T" : "Prefab/ThrowCard/TopAndBottomCard";
+		GameObject card = Instantiate (Resources.Load (path)) as GameObject;
 		card.transform.SetParent( paiArrayPanel.transform);
 		//itemTemp.transform.localScale = new Vector3(0.8f,0.8f,1f);
 		card.transform.localScale = Vector3.one;
-		card.GetComponent<PutoutCardView> ().setPoint (cardPoint);
+		if (!isback)
+			card.GetComponent<PutoutCardView> ().setPoint (cardPoint);
 
 		card.transform.localPosition = new Vector3 (startPosition, 0, 0);
 	}
