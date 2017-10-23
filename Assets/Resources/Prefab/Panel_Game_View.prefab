@@ -129,7 +129,6 @@ GameObject:
   - 222: {fileID: 22236104}
   - 114: {fileID: 11414744}
   - 95: {fileID: 9502514}
-  - 114: {fileID: 11443288}
   m_Layer: 5
   m_Name: GangEffect_B
   m_TagString: Untagged
@@ -317,7 +316,6 @@ GameObject:
   - 222: {fileID: 22285322}
   - 114: {fileID: 11415050}
   - 95: {fileID: 9536944}
-  - 114: {fileID: 11454526}
   m_Layer: 5
   m_Name: ChiEffect_B
   m_TagString: Untagged
@@ -1332,7 +1330,6 @@ GameObject:
   - 222: {fileID: 22249484}
   - 114: {fileID: 11456124}
   - 95: {fileID: 9521222}
-  - 114: {fileID: 11475176}
   m_Layer: 5
   m_Name: PengEffect_B
   m_TagString: Untagged
@@ -2552,7 +2549,6 @@ GameObject:
   - 222: {fileID: 22245892}
   - 114: {fileID: 11423404}
   - 95: {fileID: 9545938}
-  - 114: {fileID: 11444394}
   m_Layer: 5
   m_Name: HuEffect_B
   m_TagString: Untagged
@@ -4976,17 +4972,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11443288
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 108882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d175d1d4880876c4a9bb45b9bee971f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11443568
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5010,17 +4995,6 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!114 &11444394
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 196514}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d175d1d4880876c4a9bb45b9bee971f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11444766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5424,17 +5398,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11454526
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 117924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d175d1d4880876c4a9bb45b9bee971f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11454548
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -6663,17 +6626,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11475176
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 158204}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d175d1d4880876c4a9bb45b9bee971f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &11475452
 MonoBehaviour:
   m_ObjectHideFlags: 1
