@@ -178,7 +178,7 @@ namespace AssemblyCSharp
 			case APIS.OUT_ROOM_RESPONSE://退出房间回调
 				outRoomCallbak (response);
 				break;
-			case APIS.PrepareGame_MSG_RESPONSE://准备游戏通知返回
+			case APIS.READY_NOTIFY://准备游戏通知返回
 				gameReadyNotice (response);
 				break;
 			case APIS.OFFLINE_NOTICE://离线通知
@@ -251,10 +251,6 @@ namespace AssemblyCSharp
 			_tableView.setTableVisible (true);
 		}
 
-		/// <summary>
-		/// 别人摸牌通知
-		/// </summary>
-		/// <param name="response">Response.</param>
 		public void onOtherPickCard (ClientResponse response)
 		{
 			_tableView.resetTimer ();
@@ -264,11 +260,6 @@ namespace AssemblyCSharp
 			_uiHelper.updateRemainCardNum ();
 		}
 
-
-		/// <summary>
-		/// 自己摸牌
-		/// </summary>
-		/// <param name="response">Response.</param>
 		public void onMyPickCard (ClientResponse response)
 		{
 
@@ -282,13 +273,8 @@ namespace AssemblyCSharp
 			_uiHelper.updateRemainCardNum ();
 			MyHandCardView.isPutout = true;
 
-			MyDebug.Log ("摸牌:" + cardPoint);
 		}
 
-		/// <summary>
-		/// 胡，杠，碰，吃，pass按钮显示.
-		/// </summary>
-		/// <param name="response">Response.</param>
 		public void onActionBtnNotify (ClientResponse response)
 		{
 			_data.huCardPoint = -1;
@@ -450,14 +436,11 @@ namespace AssemblyCSharp
 			_data.putoutPoint = cardPoint;
 			createPutOutCardAndPlayAction (_data.putoutPoint, _data.putoutIndex);
 			//========================================================================
-			CardVO cardvo = new CardVO ();
-			cardvo.cardPoint = cardPoint;
-			GameManager.getInstance ().Server.requset (new PutOutCardRequest (cardvo));
+			CardVO cvo = new CardVO ();
+			cvo.cardPoint = cardPoint;
+			GameManager.getInstance ().Server.requset (APIS.CHUPAI_REQUEST,JsonMapper.ToJson(cvo));
 		}
 
-		/// <summary>
-		/// 点击放弃按钮
-		/// </summary>
 		public void myPassBtnClick ()
 		{
 			_actionHlpr.cleanBtnShow ();
@@ -469,16 +452,16 @@ namespace AssemblyCSharp
 			if (_data.pickIndex == _data.myIndex) {
 				MyHandCardView.isPutout = true;
 			}
-			GameManager.getInstance ().Server.requset (new GaveUpRequest ());
+			GameManager.getInstance ().Server.requset (APIS.GAVEUP_REQUEST,"gaveup");
 		}
 
 		public void myPengBtnClick ()
 		{
 			MyHandCardView.isPutout = true;
 			_tableView.resetTimer ();
-			CardVO cardvo = new CardVO ();
-			cardvo.cardPoint = _data.putoutPoint;
-			GameManager.getInstance ().Server.requset (new PengPaiRequest (cardvo));
+			CardVO cvo = new CardVO ();
+			cvo.cardPoint = _data.putoutPoint;
+			GameManager.getInstance ().Server.requset (APIS.PENGPAI_REQUEST,JsonMapper.ToJson (cvo));
 			_actionHlpr.cleanBtnShow ();
 		}
 
@@ -487,11 +470,11 @@ namespace AssemblyCSharp
 			MyHandCardView.isPutout = true;
 			MyHandCardView.isChi = false;
 			_tableView.resetTimer ();
-			CardVO cardvo = new CardVO ();
-			cardvo.cardPoint = _data.putoutPoint;
-			cardvo.onePoint = _data.chiPoints[0];
-			cardvo.twoPoint = _data.chiPoints[1];
-			GameManager.getInstance ().Server.requset (new ChiPaiRequest (cardvo));
+			CardVO cvo = new CardVO ();
+			cvo.cardPoint = _data.putoutPoint;
+			cvo.onePoint = _data.chiPoints[0];
+			cvo.twoPoint = _data.chiPoints[1];
+			GameManager.getInstance ().Server.requset (APIS.CHIPAI_REQUEST,JsonMapper.ToJson (cvo));
 			_actionHlpr.cleanBtnShow ();
 		}
 
@@ -535,11 +518,13 @@ namespace AssemblyCSharp
 			//TODO 多张可以杠的牌
 			_data.gangCardPoint = int.Parse (_data.gangPaiList [0]);
 			_data.gangPaiList = null;
-			GameManager.getInstance ().Server.requset (new GangPaiRequest (_data.gangCardPoint, 0));
+			GangRequestVO vo = new GangRequestVO ();
+			vo.cardPoint = _data.gangCardPoint;
+			vo.gangType = 0;
+			GameManager.getInstance ().Server.requset (APIS.GANGPAI_REQUEST, JsonMapper.ToJson (vo));
 			SoundManager.getInstance ().playSoundByAction ("gang", GlobalData.getInstance ().myAvatarVO.account.sex);
 			_actionHlpr.cleanBtnShow ();
 			_actionHlpr.showEffect (ActionType.GANG);
-
 
 		}
 
@@ -555,7 +540,7 @@ namespace AssemblyCSharp
 			}
 			_tableView.updateRule ();
 			GlobalData.getInstance ().gameStatus = GameStatus.READYING;
-			GameManager.getInstance ().Server.requset (new GameReadyRequest ());
+			GameManager.getInstance ().Server.requset (APIS.READY_REQUEST,"ss");
 			markselfReadyGame ();
 		}
 
@@ -569,8 +554,8 @@ namespace AssemblyCSharp
 
 
 		/**
-	 * 胡牌请求
-	 */ 
+		 * 胡牌请求
+		 */ 
 		public void myHuBtnClick ()
 		{
 			if (_data.huCardPoint != -1) {
@@ -582,7 +567,7 @@ namespace AssemblyCSharp
 					_data.isQiangHu = false;
 				}
 				string sendMsg = JsonMapper.ToJson (cvo);
-				GameManager.getInstance ().Server.requset (new HupaiRequest (sendMsg));
+				GameManager.getInstance ().Server.requset (APIS.HUPAI_REQUEST, sendMsg);
 				_actionHlpr.cleanBtnShow ();
 			}
 		}
@@ -590,8 +575,8 @@ namespace AssemblyCSharp
 
 
 		/**
-	 * 胡牌请求回调
-	 */ 
+		 * 胡牌请求回调
+		 */ 
 		private void onHuNotify (ClientResponse response)
 		{
 			HupaiResponseVo hvo = JsonMapper.ToObject<HupaiResponseVo> (response.message);
@@ -728,8 +713,7 @@ namespace AssemblyCSharp
 		{
 			OutRoomRequestVo vo = new OutRoomRequestVo ();
 			vo.roomId = GlobalData.getInstance ().roomVO.roomId;
-			string sendMsg = JsonMapper.ToJson (vo);
-			GameManager.getInstance ().Server.requset (new OutRoomRequest (sendMsg));
+			GameManager.getInstance ().Server.requset (APIS.OUT_ROOM_REQUEST, JsonMapper.ToJson (vo));
 		}
 
 		public void outRoomCallbak (ClientResponse response)
@@ -858,7 +842,7 @@ namespace AssemblyCSharp
 				}
 				_data.AvatarList = GlobalData.getInstance ().playerList;
 				_uiHelper.addMyHandCards (_data.paiArray [0]);
-				GameManager.getInstance ().Server.requset (new CurrentStatusRequest ());
+				GameManager.getInstance ().Server.requset (APIS.RETURN_ONLINE_REQUEST,"dd");
 			}
 
 		} 

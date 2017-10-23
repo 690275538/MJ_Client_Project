@@ -63,8 +63,8 @@ namespace AssemblyCSharp
 		public const int DISSOLIVE_ROOM_REQUEST = 0X000113;//申请解散房间
 		public const int DISSOLIVE_ROOM_RESPONSE = 0X000114;//解散房间回调
 
-		public const int  PrepareGame_MSG_REQUEST = 0x333333;//
-		public const int  PrepareGame_MSG_RESPONSE = 0x444444;//
+		public const int  READY_REQUEST = 0x333333;//
+		public const int  READY_NOTIFY = 0x444444;//
 
 		public const int ERROR_RESPONSE = 0xffff09;//错误回调
 
@@ -73,8 +73,8 @@ namespace AssemblyCSharp
 
 		public const int LoginChat_Request = 202;
 
-		public const int MessageBox_Request = 203;
-		public const int MessageBox_Notice = 204;
+		public const int QUICK_MSG_REQUEST = 203;
+		public const int QUICK_MSG_NOTIFY = 204;
 
 		public const int QUITE_LOGIN=0x555555;//退出登录调用，仅限于正常登录
 		public const int CARD_CHANGE_NOTIFY=0x777777;

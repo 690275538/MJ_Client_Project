@@ -101,8 +101,7 @@ namespace AssemblyCSharp
 			DissoliveRoomRequestVo vo = new DissoliveRoomRequestVo ();
 			vo.roomId = GlobalData.getInstance ().roomVO.roomId;
 			vo.type = "0";
-			string sendMsg = JsonMapper.ToJson (vo);
-			GameManager.getInstance ().Server.requset (new DissoliveRoomRequest (sendMsg));
+			GameManager.getInstance ().Server.requset (APIS.DISSOLIVE_ROOM_REQUEST, JsonMapper.ToJson (vo));
 			_isDissoliving = true;
 		}
 

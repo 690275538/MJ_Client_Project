@@ -13,7 +13,7 @@ public class QuickMsgView : MonoBehaviour {
 	void onResponse (ClientResponse response)
 	{
 		switch (response.headCode) {
-		case APIS.MessageBox_Notice:
+		case APIS.QUICK_MSG_NOTIFY:
 			string[] arr = response.message.Split (new char[1]{ '|' });
 			int uuid = int.Parse (arr [1]);
 			int msgIndex = int.Parse (arr [0]);
@@ -24,7 +24,7 @@ public class QuickMsgView : MonoBehaviour {
 		}
 	}
 	public void btnClick(int index){
-		GameManager.getInstance().Server.requset (new QuickMsgRequest(index,GlobalData.getInstance().myAvatarVO.account.uuid));
+		GameManager.getInstance ().Server.requset (APIS.QUICK_MSG_REQUEST, index + "|" + GlobalData.getInstance ().myAvatarVO.account.uuid);
 
 		ClientResponse res = new ClientResponse ();
 		res.message = index + "|" + GlobalData.getInstance ().myAvatarVO.account.uuid;

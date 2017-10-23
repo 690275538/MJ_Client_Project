@@ -60,7 +60,13 @@ namespace AssemblyCSharp
 				List<int> uuidList = getUserList ();
 				if (uuidList.Count > 0 && outData != null) {
 					_host.UIHelper.getCardGOs (Direction.B).PlayerItem.showChatAction ();
-					GameManager.getInstance().Server.requset (new MicInputRequest (uuidList, outData));
+					var request = new ChatRequest ();
+					request.headCode = APIS.MicInput_Request;
+					request.myUUid = GlobalData.getInstance().myAvatarVO.account.uuid;
+					request.ChatSound = outData;
+					request.userList = uuidList;
+					GameManager.getInstance().Server.requset (request);
+
 				} else {
 					
 				}

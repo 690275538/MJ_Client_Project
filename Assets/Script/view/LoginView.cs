@@ -146,7 +146,12 @@ public class LoginView : MonoBehaviour, ISceneView {
 		if (response.status == 1) {
 			
 			GlobalData.getInstance().myAvatarVO = JsonMapper.ToObject<AvatarVO> (response.message);
-			GameManager.getInstance().Server.requset (new LoginChatRequest (GlobalData.getInstance().myAvatarVO.account.uuid));
+
+			var request = new ChatRequest ();
+			request.headCode = APIS.LoginChat_Request;
+			request.userList = new List<int> ();
+			request.userList.Add (GlobalData.getInstance ().myAvatarVO.account.uuid);
+			GameManager.getInstance().Server.requset (request);
 
 			SceneManager.getInstance ().changeToScene (SceneType.HOME);
 
@@ -162,7 +167,13 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 		RoomJoinResponseVo vo = JsonMapper.ToObject<RoomJoinResponseVo> (response.message);
 		GameManager.getInstance ().DataMgr.updateRoomVO (vo);
-		GameManager.getInstance().Server.requset (new LoginChatRequest(GlobalData.getInstance().myAvatarVO.account.uuid));
+
+		var request = new ChatRequest ();
+		request.headCode = APIS.LoginChat_Request;
+		request.userList = new List<int> ();
+		request.userList.Add (GlobalData.getInstance ().myAvatarVO.account.uuid);
+		GameManager.getInstance().Server.requset (request);
+
 		SceneManager.getInstance ().changeToScene (SceneType.GAME);
 		SceneManager.getInstance ().CurScenePanel.GetComponent<GameView> ().Data.isReEnter = true;
 	}

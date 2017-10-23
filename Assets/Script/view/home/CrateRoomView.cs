@@ -208,8 +208,7 @@ public class CrateRoomView : MonoBehaviour {
 	private void createRoom(RoomVO roomVO,int roomCardNum){
 		if (GlobalData.getInstance().myAvatarVO.account.roomcard >= roomCardNum) {
 			roomVO.roundNumber = roomCardNum * 8;
-			string sendmsgstr = JsonMapper.ToJson (roomVO);
-			GameManager.getInstance().Server.requset (new CreateRoomRequest (sendmsgstr));
+			GameManager.getInstance().Server.requset (APIS.CREATEROOM_REQUEST, JsonMapper.ToJson (roomVO));
 		} else {
 			TipsManager.getInstance ().setTips ("你的房卡数量不足，不能创建房间");
 		}

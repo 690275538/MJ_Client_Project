@@ -37,8 +37,7 @@ namespace AssemblyCSharp
 		}
 
 		public void  openGamePlay(){
-			string id = dvo.id + "";
-			GameManager.getInstance().Server.requset (new GameBackPlayRequest (id));
+			GameManager.getInstance ().Server.requset (APIS.GAME_BACK_PLAY_REQUEST, dvo.id.ToString());
 			SceneManager.getInstance().loadPerfab ("Prefab/Panel_GamePlayBack");
 
 		}

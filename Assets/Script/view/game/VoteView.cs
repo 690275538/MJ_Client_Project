@@ -107,8 +107,7 @@ public class VoteView : MonoBehaviour {
 		DissoliveRoomRequestVo dvo = new DissoliveRoomRequestVo ();
 		dvo.roomId = GlobalData.getInstance().roomVO.roomId;
 		dvo.type = dissolveType;
-		string sendMsg = JsonMapper.ToJson (dvo);
-		GameManager.getInstance().Server.requset(new DissoliveRoomRequest(sendMsg));
+		GameManager.getInstance ().Server.requset (APIS.DISSOLIVE_ROOM_REQUEST, JsonMapper.ToJson (dvo));
 
 	}
 	public void  clickOk(){

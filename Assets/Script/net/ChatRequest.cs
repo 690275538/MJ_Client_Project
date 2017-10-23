@@ -21,31 +21,18 @@ namespace AssemblyCSharp
 		{
 		}
 
-		/// <summary>
-		/// 写入大端序的int
-		/// </summary>
-		/// <param name="value"></param>
 		public byte[] WriterInt(int value)
 		{
 			byte[] bs = BitConverter.GetBytes(value);
 			Array.Reverse(bs);
 			return bs;
 		}
-		/// <summary>
-		/// Writes the short.
-		/// </summary>
-		/// <returns>The short.</returns>
-		/// <param name="value">Value.</param>
 		public byte[] WriteShort(short value){
 			byte[] bs = BitConverter.GetBytes(value);
 			Array.Reverse(bs);
 			return bs;
 		}
 
-		/// <summary>
-		///  转换为 byte[]
-		/// </summary>
-		/// <returns></returns>
 		public byte[] ToBytes()
 		{
 			byte[] _bytes; //自定义字节数组，用以装载消息协议

@@ -46,7 +46,7 @@ namespace AssemblyCSharp
 
 			if (data != null) {
 				MyDebug.Log (data.toJson ());
-				LoginVo lvo = new LoginVo ();
+				LoginVO lvo = new LoginVO ();
 				try {
 
 					lvo.openId = (string)data ["openid"];
@@ -187,7 +187,7 @@ namespace AssemblyCSharp
 
 		public void testLogin (string uin)
 		{
-			LoginVo lvo = new LoginVo ();
+			LoginVO lvo = new LoginVO ();
 			try {
 
 				lvo.openId = "" + uin;

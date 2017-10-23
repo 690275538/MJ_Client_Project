@@ -6,7 +6,7 @@
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class LoginVo
+	public class LoginVO
 	{
 		public String openId;
 
@@ -24,7 +24,7 @@ namespace AssemblyCSharp
 
 		public string IP;
 
-		public LoginVo ()
+		public LoginVO ()
 		{
 		}
 

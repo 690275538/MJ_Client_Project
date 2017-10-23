@@ -204,7 +204,7 @@ public class GameOverView : MonoBehaviour
 		}
 
 		if (GlobalData.getInstance ().remainRoundCount > 0) {
-			GameManager.getInstance ().Server.requset (new GameReadyRequest ());
+			GameManager.getInstance ().Server.requset (APIS.READY_REQUEST,"ss");
 			//TODO 这个后面要补一下 gameview.markselfReadyGame
 			closeDialog ();
 
