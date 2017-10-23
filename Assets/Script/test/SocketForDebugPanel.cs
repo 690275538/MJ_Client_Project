@@ -18,7 +18,7 @@ namespace AssemblyCSharp
 		{
 			try {
 				socket = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-				socket.Connect(APIS.socketUrl,1101);
+				socket.Connect(Constants.socketUrl,1101);
 				if (socket.Connected)
 				{
 					socket.BeginReceive(m_receiveBuffer, 0, m_receiveBuffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallBack), null);

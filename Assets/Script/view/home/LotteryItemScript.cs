@@ -20,7 +20,7 @@ public class LotteryItemScript : MonoBehaviour
 
 	private IEnumerator loadImg(){
 		if (imgUrl != null && imgUrl != "") {
-			WWW www = new WWW(APIS.PIC_PATH+ imgUrl);
+			WWW www = new WWW(Constants.PIC_PATH+ imgUrl);
 
 			yield return www;
 			//下载完成，保存图片到路径filePath

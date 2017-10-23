@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define JM
+using System;
 using System.Collections.Generic;
 
 namespace AssemblyCSharp
@@ -10,6 +11,24 @@ namespace AssemblyCSharp
 	public class Constants
 	{
 		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;
+		#if JM
+
+
+		public const string UPDATE_INFO_JSON_URL = "http://192.168.1.41:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+		public const string chatSocketUrl = "192.168.1.41";
+		public const string socketUrl = "192.168.1.41";
+		public const string PIC_PATH = "http://192.168.1.41:8080/";
+		public const string ImgUrl = "http://192.168.1.41:8080/MaJiangManage/images";
+		public const string Download_URL = "http://192.168.1.41:8080/download/index.html";
+		#else
+		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+		public const string chatSocketUrl = "whyzx.com";
+		public const string socketUrl = "whyzx.com";
+		public const string PIC_PATH = "http://whyzx.com:8080/";
+		public const string ImgUrl = "http://whyzx.com:8080/MaJiangManage/images";
+		public const string Download_URL = "http://whyzx.com:8080/download/index.html";
+
+		#endif
 
 
 	

@@ -26,7 +26,16 @@ public class RecordCRView :MonoBehaviour
 		indexText.text = index.ToString ();
 		roomIdText.text = _data.roomId.ToString ();
 		timeText.text = formatDate (_data.data.createtime);
-		pareseContent (_data.data.content);
+
+		string content = _data.data.content;
+		if (!string.IsNullOrEmpty(content)) {
+			string[] p = content.Split (new char[1]{ ',' });
+			for (int i = 0; i < p.Length - 1; i++) {
+				var arr = p [i].Split (new char[1]{ ':' });
+				names [i].text = arr [0];
+				scores [i].text = arr [1];
+			}
+		}
 
 	}
 
@@ -43,20 +52,7 @@ public class RecordCRView :MonoBehaviour
 	
 	}
 
-	private void pareseContent (string content)
-	{
-		if (content != null && content != "") {
-			string[] infoList = content.Split (new char[1]{ ',' });
-			for (int i = 0; i < infoList.Length - 1; i++) {
-				string name = infoList [i].Split (new char[1]{ ':' }) [0];
-				string score = infoList [i].Split (new char[1]{ ':' }) [1];
-				names [i].text = name;
-				scores [i].text = score;
-			}
-		}
-	}
-
-	public void clickItem ()
+	public void onClick ()
 	{
 		GameManager.getInstance ().Server.requset (new ClientRequest (APIS.RECORD_REQUEST, _data.data.id.ToString ()));
 	}

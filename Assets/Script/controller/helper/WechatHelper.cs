@@ -176,8 +176,8 @@ namespace AssemblyCSharp
 				ShareContent s = new ShareContent ();
 				s.SetTitle (title);
 				s.SetText (GameHelper.getHelper ().getInviteRuleStr (rvo));
-				s.SetUrl (APIS.Download_URL);
-				s.SetImageUrl (APIS.ImgUrl + "icon96.png");
+				s.SetUrl (Constants.Download_URL);
+				s.SetImageUrl (Constants.ImgUrl + "icon96.png");
 				s.SetShareType (ContentType.Webpage);
 				s.SetObjectID ("");
 				shareSdk.ShowShareContentEditor (PlatformType.WeChat, s);

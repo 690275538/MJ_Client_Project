@@ -29,7 +29,7 @@ GameObject:
   - 114: {fileID: 11456938}
   - 114: {fileID: 11409156}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Button_Detail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ GameObject:
   - 114: {fileID: 11408338}
   - 114: {fileID: 11415748}
   m_Layer: 5
-  m_Name: ZhanRoomItem
+  m_Name: RecordCR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -369,7 +369,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 11415748}
-          m_MethodName: clickItem
+          m_MethodName: onClick
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}

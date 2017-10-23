@@ -83,7 +83,7 @@ public class ChatSocket{
             _tcpclient.NoDelay = true;
 			StateObject state = new StateObject();
 			state.client = _tcpclient;
-			_tcpclient.BeginConnect(APIS.chatSocketUrl, 10112, new AsyncCallback(ConnectCallback), state);
+			_tcpclient.BeginConnect(Constants.chatSocketUrl, 10112, new AsyncCallback(ConnectCallback), state);
         }
         catch(Exception e)
         {

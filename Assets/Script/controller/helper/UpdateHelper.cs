@@ -23,7 +23,7 @@ public class UpdateHelper{
 	 * 检测升级
 	 */
 	public IEnumerator  updateCheck () {
-		WWW www = new WWW (APIS.UPDATE_INFO_JSON_URL);
+		WWW www = new WWW (Constants.UPDATE_INFO_JSON_URL);
 		yield return www;
 		byte[] buffer = www.bytes;
 

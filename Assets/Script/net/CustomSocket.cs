@@ -81,7 +81,7 @@ public class CustomSocket{
             _tcpclient.NoDelay = true;
 			StateObject state = new StateObject();
 			state.client = _tcpclient;
-			_tcpclient.BeginConnect(APIS.socketUrl, 10122, new AsyncCallback(ConnectCallback), state);
+			_tcpclient.BeginConnect(Constants.socketUrl, 10122, new AsyncCallback(ConnectCallback), state);
         }
         catch(Exception e)
         {

@@ -73,11 +73,11 @@ public class RecordView : MonoBehaviour
 
 			for (int i = 0; i < vos.Count; i++) {
 				RecordVO rvo = vos [i];
-				GameObject itemTemp = Instantiate (Resources.Load ("Prefab/record/RecordCR")) as GameObject;
-				itemTemp.transform.parent = recordContainer.transform;
-				itemTemp.transform.localScale = Vector3.one;
-				itemTemp.GetComponent<RecordCRView> ().setUI (rvo, i + 1);
-				recordList.Add (itemTemp);
+				GameObject cell = Instantiate (Resources.Load ("Prefab/record/RecordCR")) as GameObject;
+				cell.transform.SetParent( recordContainer.transform);
+				cell.transform.localScale = Vector3.one;
+				cell.GetComponent<RecordCRView> ().setUI (rvo, i + 1);
+				recordList.Add (cell);
 		
 			}
 		}
@@ -107,11 +107,11 @@ public class RecordView : MonoBehaviour
 		}
 		for (int i = 0; i < vos.Count; i++) {
 			DetailRecordVO dvo = vos [i];
-			GameObject itemTemp = Instantiate (Resources.Load ("Prefab/ZhanItem")) as GameObject;
-			itemTemp.transform.parent = detailContainer.transform;
-			itemTemp.transform.localScale = Vector3.one;
-			itemTemp.GetComponent<ZhanjiItemScript> ().setUI (dvo, i + 1);
-			detailList.Add (itemTemp);
+			GameObject cell = Instantiate (Resources.Load ("Prefab/record/DetailRecordCR")) as GameObject;
+			cell.transform.SetParent (detailContainer.transform);
+			cell.transform.localScale = Vector3.one;
+			cell.GetComponent<DetailRecordCRView> ().setUI (dvo, i + 1);
+			detailList.Add (cell);
 		}
 
 	}
