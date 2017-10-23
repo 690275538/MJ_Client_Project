@@ -51,12 +51,8 @@ namespace AssemblyCSharp
 		}
 
 		public void requset(int cmd,string msg=""){
-			requset (new ClientRequest (cmd, msg));
-		}
-		public void requset (ClientRequest q)
-		{
-			Debug.Log("req: "+q.headCode.ToString ("x8")+" , "+q.msg);
-			_socket.sendMsg (q);
+			Debug.Log ("req: " + cmd.ToString ("x8") + " , " + msg);
+			_socket.sendMsg (new ClientRequest (cmd, msg));
 		}
 		public void requset (ChatRequest q)
 		{

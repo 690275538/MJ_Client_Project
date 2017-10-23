@@ -54,7 +54,7 @@ public class RecordCRView :MonoBehaviour
 
 	public void onClick ()
 	{
-		GameManager.getInstance ().Server.requset (new ClientRequest (APIS.RECORD_REQUEST, _data.data.id.ToString ()));
+		GameManager.getInstance ().Server.requset (APIS.RECORD_REQUEST, _data.data.id.ToString ());
 	}
 
 }
