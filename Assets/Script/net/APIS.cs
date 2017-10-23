@@ -10,8 +10,8 @@ namespace AssemblyCSharp
 		}
 
 
-		public const int head = 0x000030;
-		public const int headRESPONSE = 0x000031;
+		public const int HEART_REQUEST = 0x000030;
+		public const int HEART_RESPONSE = 0x000031;
 
 		//游戏关闭返回
 		public const int CLOSE_RESPONSE = 0x000000;
@@ -82,8 +82,8 @@ namespace AssemblyCSharp
 		public const int OFFLINE_NOTICE = 0x000015;
 	    public const int ONLINE_NOTICE = 0x001111;
 
-        public const int PRIZE_RESPONSE = 0x999999;//抽奖接口
-		public const int GET_PRIZE=0x888888;//抽奖请求接口
+        public const int LOTTERY_RESPONSE = 0x999999;//抽奖接口
+		public const int LOTTERY_REQUEST=0x888888;//抽奖请求接口
 
 		public const int RETURN_ONLINE_RESPONSE = 0x001003;//断线重连返回最后一次打牌数据
 		public const int RETURN_ONLINE_REQUEST = 0x001004;//申请最后打牌数据数据

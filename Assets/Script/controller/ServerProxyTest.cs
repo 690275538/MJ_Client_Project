@@ -36,7 +36,7 @@ namespace AssemblyCSharp
 			}
 
 		}
-		public void requset(int cmd,string msg){
+		public void requset(int cmd,string msg=""){
 			requset (new ClientRequest (cmd, msg));
 		}
 		public void requset (ChatRequest q)

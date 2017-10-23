@@ -26,7 +26,7 @@ GameObject:
   - 224: {fileID: 22467468}
   - 114: {fileID: 11400558}
   m_Layer: 5
-  m_Name: GameObject_Rank_Classfy
+  m_Name: tabbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ GameObject:
   - 222: {fileID: 22234686}
   - 114: {fileID: 11473716}
   m_Layer: 5
-  m_Name: Text
+  m_Name: label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -77,7 +77,7 @@ GameObject:
   - 222: {fileID: 22256486}
   - 114: {fileID: 11402746}
   m_Layer: 5
-  m_Name: Text_Self_Rank_Des
+  m_Name: Text_MyRank
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ GameObject:
   - 222: {fileID: 22268358}
   - 114: {fileID: 11442936}
   m_Layer: 5
-  m_Name: Text_Self_Rank
+  m_Name: Text_MyRankDes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,7 +128,7 @@ GameObject:
   - 222: {fileID: 22286568}
   - 114: {fileID: 11431660}
   m_Layer: 5
-  m_Name: Image_dialog_bg
+  m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -147,7 +147,7 @@ GameObject:
   - 114: {fileID: 11471918}
   - 114: {fileID: 11401646}
   m_Layer: 5
-  m_Name: Panel (2)
+  m_Name: scroll_m
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -198,7 +198,7 @@ GameObject:
   - 222: {fileID: 22249764}
   - 114: {fileID: 11451710}
   m_Layer: 5
-  m_Name: Text_Self_Score
+  m_Name: Text_MyScore
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -216,7 +216,7 @@ GameObject:
   - 114: {fileID: 11401440}
   - 114: {fileID: 11452136}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Button_Award
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233,7 +233,7 @@ GameObject:
   - 222: {fileID: 22271728}
   - 114: {fileID: 11402098}
   m_Layer: 5
-  m_Name: Image
+  m_Name: frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -267,7 +267,7 @@ GameObject:
   - 222: {fileID: 22296176}
   - 114: {fileID: 11444800}
   m_Layer: 5
-  m_Name: Image_Self_Icon
+  m_Name: icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -371,7 +371,7 @@ GameObject:
   - 114: {fileID: 11453070}
   - 114: {fileID: 11421708}
   m_Layer: 5
-  m_Name: Panel_Rank_Dialog
+  m_Name: Panel_RankUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2056,7 +2056,7 @@ GameObject:
   - 222: {fileID: 222000010059782192}
   - 114: {fileID: 114000014226549734}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Container_d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2073,7 +2073,7 @@ GameObject:
   - 222: {fileID: 222000011204413620}
   - 114: {fileID: 114000012436587816}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: Container_w
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2092,7 +2092,7 @@ GameObject:
   - 114: {fileID: 114000011564215926}
   - 114: {fileID: 114000012263380418}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: scroll_d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2109,7 +2109,7 @@ GameObject:
   - 222: {fileID: 222000013813404552}
   - 114: {fileID: 114000014042661530}
   m_Layer: 5
-  m_Name: Panel (2)
+  m_Name: Container_m
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2128,7 +2128,7 @@ GameObject:
   - 114: {fileID: 114000012828976034}
   - 114: {fileID: 114000011097420594}
   m_Layer: 5
-  m_Name: Panel (1)
+  m_Name: scroll_w
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

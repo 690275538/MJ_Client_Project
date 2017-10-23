@@ -6,7 +6,7 @@ namespace AssemblyCSharp
 	[Serializable]
 	public class GiftList
 	{
-		public List<GiftItemVo> data;
+		public List<GiftItemVO> data;
 		public string type;
 
 		public GiftList ()

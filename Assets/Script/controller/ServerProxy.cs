@@ -50,7 +50,7 @@ namespace AssemblyCSharp
 			}
 		}
 
-		public void requset(int cmd,string msg){
+		public void requset(int cmd,string msg=""){
 			requset (new ClientRequest (cmd, msg));
 		}
 		public void requset (ClientRequest q)
@@ -71,7 +71,7 @@ namespace AssemblyCSharp
 		public void FixedUpdate ()
 		{
 			while (_cache.Count > 0) {
-				if (_cache [0].headCode != APIS.headRESPONSE)
+				if (_cache [0].headCode != APIS.HEART_RESPONSE)
 					Debug.Log ("res: " + _cache [0].headCode.ToString ("x8") + " , " + _cache [0].message);
 				try {
 					onResponse (_cache [0]);
@@ -107,7 +107,7 @@ namespace AssemblyCSharp
 
 		private void sendHeartbeat ()
 		{
-			_socket.sendMsg (new HeadRequest ());
+			requset (APIS.HEART_REQUEST, "");
 			Thread.Sleep (20000);//20秒发一次心跳
 			sendHeartbeat ();
 		}

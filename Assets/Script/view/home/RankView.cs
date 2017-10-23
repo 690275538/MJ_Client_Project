@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class PanelRankDialogScript : MonoBehaviour {
+public class RankView : MonoBehaviour {
 	public Transform itemParent;
 	public Text selfRank;
 	public Image selfHeaderIcon;
@@ -13,19 +13,15 @@ public class PanelRankDialogScript : MonoBehaviour {
 	void Start () {
 		setRankData ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 
 	/**设置排行榜中的数据
 	 * 
 	 */ 
 	public void setRankData(){
 		for (int i = 0; i < 20; i++) {
-			GameObject itemTemp = Instantiate (Resources.Load("Prefab/Rank_List_Item")) as GameObject;
-			itemTemp.transform.parent = itemParent;
+			GameObject itemTemp = Instantiate (Resources.Load("Prefab/home/RankCR")) as GameObject;
+			itemTemp.transform.SetParent( itemParent);
 			itemTemp.transform.localScale = Vector3.one;
 		}
 	}

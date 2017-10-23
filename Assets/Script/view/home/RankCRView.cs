@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class RankListItemScript : MonoBehaviour {
+public class RankCRView : MonoBehaviour {
 
 	public Image ranIcon;
 	public Text rankText;

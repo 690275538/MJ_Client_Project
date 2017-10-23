@@ -3,7 +3,7 @@
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class GiftItemVo
+	public class GiftItemVO
 	{
 		public int id;
 		public int indexId;
@@ -12,7 +12,7 @@ namespace AssemblyCSharp
 		public int probability;
 		public string status;
 		public string notice;
-		public GiftItemVo ()
+		public GiftItemVO ()
 		{
 		}
 	}

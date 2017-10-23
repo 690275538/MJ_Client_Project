@@ -52,10 +52,10 @@ public class HomeView : MonoBehaviour,ISceneView
 	// Update is called once per frame
 	void Update ()
 	{
-		if (Input.GetKeyDown (KeyCode.Escape)) { //Android系统监听返回键，由于只有Android和ios系统所以无需对系统做判断
-			MyDebug.Log ("Input.GetKey(KeyCode.Escape)");
+		if (Input.GetKeyDown (KeyCode.Escape)) { 
 			if (_dialog != null) {
 				Destroy (_dialog);
+				_dialog = null;
 			} else {
 				exitApp ();
 			}
@@ -140,7 +140,7 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	public void showContactInfoPanel ()
 	{
-		GameManager.getInstance ().Server.requset (new GetContactInfoRequest ());
+		GameManager.getInstance ().Server.requset (APIS.CONTACT_INFO_REQUEST);
 
 	}
 
@@ -164,7 +164,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	public void openCreateRoomDialog ()
 	{
 		if (GlobalData.getInstance ().roomVO.roomId == 0) {
-			loadPerfab ("Prefab/Panel_Create_Room_View");
+			loadPerfab ("Prefab/home/Panel_CreateRoomUI");
 		} else {
 		
 			TipsManager.getInstance ().setTips ("当前正在房间状态，无法创建房间");
@@ -180,7 +180,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	{
 		
 		if (GlobalData.getInstance ().roomVO == null || GlobalData.getInstance ().roomVO.roomId == 0) {
-			loadPerfab ("Prefab/Panel_Enter_Room");
+			loadPerfab ("Prefab/home/Panel_EnterRoomUI");
 
 		} else {
 			TipsManager.getInstance ().setTips ("当前正在房间状态，无法加入新的房间");
@@ -193,7 +193,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	public void onRuleBtnClick ()
 	{
 		
-		loadPerfab ("Prefab/Panel_RuleUI");
+		loadPerfab ("Prefab/home/Panel_RuleUI");
 	}
 
 	/**
@@ -201,7 +201,7 @@ public class HomeView : MonoBehaviour,ISceneView
 	 */ 
 	public void onRankBtnClick ()
 	{
-		loadPerfab ("Prefab/Panel_Rank_Dialog");
+		loadPerfab ("Prefab/home/Panel_RankUI");
 	}
 
 
@@ -211,16 +211,19 @@ public class HomeView : MonoBehaviour,ISceneView
 	*/
 	public void onLotteryBtnClick ()
 	{
-		loadPerfab ("Prefab/Panel_Lottery");
+		loadPerfab ("Prefab/home/Panel_LotteryUI");
 	}
 
 	public void onRecordBtnClick ()
 	{
-		loadPerfab ("Prefab/Panel_RecordUI");
+		loadPerfab ("Prefab/home/Panel_RecordUI");
 	}
 
 	private void  loadPerfab (string perfabName)
 	{
+		if (_dialog != null) {
+			Destroy (_dialog);
+		}
 		_dialog = Instantiate (Resources.Load (perfabName)) as GameObject;
 		_dialog.transform.SetParent( gameObject.transform);
 		_dialog.transform.localScale = Vector3.one;
@@ -232,15 +235,12 @@ public class HomeView : MonoBehaviour,ISceneView
 
 	private IEnumerator LoadImg ()
 	{ 
-		//开始下载图片
 		if (!string.IsNullOrEmpty(headIcon)) {
 			WWW www = new WWW (headIcon);
 			yield return www;
 
 			if(string.IsNullOrEmpty(www.error)) {
 				Texture2D texture2D = www.texture;
-//				byte[] bytes = texture2D.EncodeToPNG();
-				//将图片赋给场景上的Sprite
 				headIconImg.sprite = Sprite.Create (texture2D, new Rect (0, 0, texture2D.width, texture2D.height), new Vector2 (0, 0));
 
 			}
