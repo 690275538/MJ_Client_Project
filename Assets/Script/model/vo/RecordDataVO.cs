@@ -5,13 +5,13 @@
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class ZhanjiOneRoomData
+	public class RecordDataVO
 	{
 		public int id;
 		public int roomid;
 		public string  content;
 		public long createtime;
-		public ZhanjiOneRoomData ()
+		public RecordDataVO ()
 		{
 			
 		}

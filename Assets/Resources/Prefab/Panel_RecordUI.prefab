@@ -12,7 +12,7 @@ GameObject:
   - 222: {fileID: 22253318}
   - 114: {fileID: 11423790}
   m_Layer: 5
-  m_Name: GameObject_Windowns
+  m_Name: mc_mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ GameObject:
   - 114: {fileID: 11450106}
   - 114: {fileID: 11438930}
   m_Layer: 5
-  m_Name: zhanwindow
+  m_Name: mc_mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ GameObject:
   - 222: {fileID: 22282716}
   - 114: {fileID: 11417044}
   m_Layer: 5
-  m_Name: Text (2)
+  m_Name: label_time
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ GameObject:
   - 222: {fileID: 22277716}
   - 114: {fileID: 11400436}
   m_Layer: 5
-  m_Name: Text
+  m_Name: lable_index
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +81,7 @@ GameObject:
   - 224: {fileID: 22427486}
   - 114: {fileID: 11458640}
   m_Layer: 5
-  m_Name: GameObject
+  m_Name: gruop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,7 +98,7 @@ GameObject:
   - 114: {fileID: 11456690}
   - 114: {fileID: 11478960}
   m_Layer: 5
-  m_Name: GameObject_Detail_Contaner
+  m_Name: Detail_List_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ GameObject:
   - 222: {fileID: 22299734}
   - 114: {fileID: 11465358}
   m_Layer: 5
-  m_Name: Text (7)
+  m_Name: label_space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -151,7 +151,7 @@ GameObject:
   - 114: {fileID: 11453988}
   - 114: {fileID: 11490034}
   m_Layer: 5
-  m_Name: ZhanList
+  m_Name: Record_List_Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,7 +185,7 @@ GameObject:
   - 222: {fileID: 22266802}
   - 114: {fileID: 11413420}
   m_Layer: 5
-  m_Name: Text (1)
+  m_Name: label_space
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -236,7 +236,7 @@ GameObject:
   - 222: {fileID: 22207964}
   - 114: {fileID: 11487706}
   m_Layer: 5
-  m_Name: ZhanjiRoomPanel
+  m_Name: RecordPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -884,8 +884,8 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 480.77988, y: -30}
-  m_SizeDelta: {x: 171.52716, y: 60}
+  m_AnchoredPosition: {x: 476.19562, y: -30}
+  m_SizeDelta: {x: 172.79059, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22420012
 RectTransform:
@@ -900,7 +900,7 @@ RectTransform:
   m_Children:
   - {fileID: 22481350}
   m_Father: {fileID: 224000011100176828}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -50}
@@ -947,8 +947,8 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 823.8342, y: -30}
-  m_SizeDelta: {x: 171.52716, y: 60}
+  m_AnchoredPosition: {x: 821.77686, y: -30}
+  m_SizeDelta: {x: 172.79059, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22451344
 RectTransform:
@@ -965,8 +965,8 @@ RectTransform:
   m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 652.307, y: -30}
-  m_SizeDelta: {x: 171.52716, y: 60}
+  m_AnchoredPosition: {x: 648.9862, y: -30}
+  m_SizeDelta: {x: 172.79059, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22451500
 RectTransform:
@@ -983,8 +983,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 345.12228, y: -30}
-  m_SizeDelta: {x: 99.78804, y: 60}
+  m_AnchoredPosition: {x: 340.418, y: -30}
+  m_SizeDelta: {x: 98.76461, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22465144
 RectTransform:
@@ -1001,8 +1001,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 73.80707, y: -30}
-  m_SizeDelta: {x: 147.61414, y: 60}
+  m_AnchoredPosition: {x: 72.75893, y: -30}
+  m_SizeDelta: {x: 145.51785, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22476180
 RectTransform:
@@ -1019,8 +1019,8 @@ RectTransform:
   m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1144.0625, y: -30}
-  m_SizeDelta: {x: 125.875, y: 60}
+  m_AnchoredPosition: {x: 1143.9813, y: -30}
+  m_SizeDelta: {x: 126.03734, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22477316
 RectTransform:
@@ -1037,8 +1037,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 221.4212, y: -30}
-  m_SizeDelta: {x: 147.61414, y: 60}
+  m_AnchoredPosition: {x: 218.27678, y: -30}
+  m_SizeDelta: {x: 145.51785, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22478946
 RectTransform:
@@ -1110,8 +1110,8 @@ RectTransform:
   m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 995.3613, y: -30}
-  m_SizeDelta: {x: 171.52716, y: 60}
+  m_AnchoredPosition: {x: 994.5674, y: -30}
+  m_SizeDelta: {x: 172.79059, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &100100000
 Prefab:
@@ -1135,7 +1135,7 @@ GameObject:
   - 222: {fileID: 222000012319390636}
   - 114: {fileID: 114000012401120954}
   m_Layer: 5
-  m_Name: Text
+  m_Name: label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1170,7 +1170,7 @@ GameObject:
   - 114: {fileID: 114000010562937176}
   - 114: {fileID: 114000013000445112}
   m_Layer: 5
-  m_Name: BackSpace
+  m_Name: Button_Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1204,7 +1204,7 @@ GameObject:
   - 222: {fileID: 222000012699579992}
   - 114: {fileID: 114000013141173452}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1222,7 +1222,7 @@ GameObject:
   - 114: {fileID: 114000011723700096}
   - 114: {fileID: 114000014006935916}
   m_Layer: 5
-  m_Name: Panel_Report
+  m_Name: Panel_RecordUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1239,7 +1239,7 @@ GameObject:
   - 222: {fileID: 222000011692103144}
   - 114: {fileID: 114000011815681110}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1256,7 +1256,7 @@ GameObject:
   - 222: {fileID: 222000012995541032}
   - 114: {fileID: 114000010541593548}
   m_Layer: 5
-  m_Name: Panel_Huifang
+  m_Name: Dialog_Replay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1290,7 +1290,7 @@ GameObject:
   - 222: {fileID: 222000013600031620}
   - 114: {fileID: 114000011162580662}
   m_Layer: 5
-  m_Name: ZhanjiText
+  m_Name: title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1308,7 +1308,7 @@ GameObject:
   - 114: {fileID: 114000013305914854}
   - 114: {fileID: 114000011835138986}
   m_Layer: 5
-  m_Name: Sure_Button
+  m_Name: Button_OK
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1377,7 +1377,7 @@ GameObject:
   - 222: {fileID: 222000013643970786}
   - 114: {fileID: 114000011164624820}
   m_Layer: 5
-  m_Name: Image
+  m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1395,7 +1395,7 @@ GameObject:
   - 114: {fileID: 114000012311836270}
   - 114: {fileID: 114000014252872958}
   m_Layer: 5
-  m_Name: Button_Other_Huifang
+  m_Name: Button_Replay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1412,7 +1412,7 @@ GameObject:
   - 222: {fileID: 222000012897062762}
   - 114: {fileID: 114000010831088722}
   m_Layer: 5
-  m_Name: YellowLine
+  m_Name: yellowLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1427,7 +1427,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 224000011140934302}
   m_Layer: 5
-  m_Name: ListTitle
+  m_Name: mc_titles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1444,7 +1444,7 @@ GameObject:
   - 222: {fileID: 222000011663961424}
   - 114: {fileID: 114000012014090150}
   m_Layer: 5
-  m_Name: ZhanjiDetailPanel
+  m_Name: DetailPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1859,7 +1859,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114000014006935916}
-        m_MethodName: sureClick
+        m_MethodName: onOKBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2064,7 +2064,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114000014006935916}
-        m_MethodName: closeRoomIdDialog
+        m_MethodName: onCancleBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2143,7 +2143,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114000014006935916}
-        m_MethodName: BackSpaceBtnClick
+        m_MethodName: onCloseBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2247,13 +2247,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f4eda26de482974f865fc5c6fd2d7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RoomPanel: {fileID: 194402}
-  DetailPanel: {fileID: 1000014260641688}
-  roomcontaner: {fileID: 164298}
-  playercontaner: {fileID: 141710}
-  roomIdInputDialog: {fileID: 1000011593751364}
+  recordPage: {fileID: 194402}
+  detailPage: {fileID: 1000014260641688}
+  recordContainer: {fileID: 164298}
+  detailContainer: {fileID: 141710}
+  replayDialogUI: {fileID: 1000011593751364}
   inputField: {fileID: 114000010263056334}
-  playerTexts:
+  names:
   - {fileID: 11444380}
   - {fileID: 11483714}
   - {fileID: 11446124}
@@ -2298,7 +2298,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114000014006935916}
-        m_MethodName: openRoomIdInput
+        m_MethodName: onReplayBtn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2509,10 +2509,10 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224000013747722508}
-  - {fileID: 22420012}
   - {fileID: 224000012807350320}
-  - {fileID: 224000014041601772}
   - {fileID: 224000014153610394}
+  - {fileID: 22420012}
+  - {fileID: 224000014041601772}
   - {fileID: 224000011468804660}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -2667,7 +2667,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 224000011100176828}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -560, y: 325}
@@ -2781,7 +2781,7 @@ RectTransform:
   - {fileID: 224000011140934302}
   - {fileID: 22401126}
   m_Father: {fileID: 224000011100176828}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -49.99994}
@@ -2800,7 +2800,7 @@ RectTransform:
   m_Children:
   - {fileID: 224000012342869468}
   m_Father: {fileID: 224000011100176828}
-  m_RootOrder: 4
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 548, y: 325}

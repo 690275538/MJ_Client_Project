@@ -87,7 +87,7 @@ public class LoginView : MonoBehaviour, ISceneView {
 				RoomJoinVo roomJoinVo = new  RoomJoinVo ();
 				roomJoinVo.roomId =int.Parse(roomIDInput.text);
 				string sendMsg = JsonMapper.ToJson (roomJoinVo);
-				GameManager.getInstance().Server.requset(new JoinRoomRequest(sendMsg));
+				GameManager.getInstance().Server.requset(APIS.JOIN_ROOM_REQUEST,sendMsg);
 			} else {
 				onLoginResponse (response);
 			}

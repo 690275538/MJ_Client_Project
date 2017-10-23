@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public GetContactInfoRequest ()
 		{
 			headCode = APIS.CONTACT_INFO_REQUEST;
-			messageContent = "";
+			msg = "";
 		}
 	}
 }

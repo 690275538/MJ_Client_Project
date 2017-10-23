@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public CurrentStatusRequest ()
 		{
 			headCode = APIS.RETURN_ONLINE_REQUEST;
-			messageContent = "dd";
+			msg = "dd";
 		}
 	}
 }

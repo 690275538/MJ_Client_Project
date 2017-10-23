@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public GameReadyRequest ()
 		{
 			headCode = APIS.PrepareGame_MSG_REQUEST;
-			messageContent = "ss";
+			msg = "ss";
 		}
 	}
 }

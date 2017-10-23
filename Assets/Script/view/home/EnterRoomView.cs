@@ -84,7 +84,7 @@ public class EnterRoomView : MonoBehaviour{
 		RoomJoinVo roomJoinVo = new  RoomJoinVo ();
 		roomJoinVo.roomId =int.Parse(roomNumber);
 		string sendMsg = JsonMapper.ToJson (roomJoinVo);
-		GameManager.getInstance().Server.requset(new JoinRoomRequest(sendMsg));
+		GameManager.getInstance().Server.requset(APIS.JOIN_ROOM_REQUEST,sendMsg);
 
 	}
 

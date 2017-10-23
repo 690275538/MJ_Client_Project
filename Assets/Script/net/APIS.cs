@@ -102,10 +102,10 @@ namespace AssemblyCSharp
 		public const int CONTACT_INFO_REQUEST= 0x156666;//添加房卡请求数据
 		public const int CONTACT_INFO_RESPONSE = 0x155555;//添加房卡返回数据
 		public const int HOST_UPDATEDRAW_RESPONSE = 0x010111;//抽奖信息变化
-		public const int ZHANJI_REPOTER_REQUEST = 0x002001;//战绩请求
-		public const int ZHANJI_REPORTER_REPONSE=0x002002;//房间战绩返回数据
-		public const int ZHANJI_DETAIL_REPORTER_REPONSE=0x002003;//某个房间详细每局战绩
-		public const int ZHANJI_SEARCH_REQUEST= 0x002004;//搜索房间对应战绩
+		public const int RECORD_REQUEST = 0x002001;//战绩请求
+		public const int RECORD_RESPONSE=0x002002;//房间战绩返回数据
+		public const int DETAIL_RECORD_REPONSE=0x002003;//某个房间详细每局战绩
+		public const int DETAIL_RECORD_REQUEST= 0x002004;//搜索房间对应战绩
 
 		public const int GAME_BACK_PLAY_REQUEST=0x003001;//回放请求
 		public const int GAME_BACK_PLAY_RESPONSE = 0x003002;//回放返回数据

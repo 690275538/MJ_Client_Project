@@ -6,7 +6,7 @@ public class ExitView: MonoBehaviour {
 
 
 	public void exit(){
-		GameManager.getInstance().Server.requset(new LoginRequest());
+		GameManager.getInstance().Server.requset(APIS.QUITE_LOGIN,GlobalData.getInstance().myAvatarVO.account.uuid.ToString());
 		Application.Quit ();
 
 	}

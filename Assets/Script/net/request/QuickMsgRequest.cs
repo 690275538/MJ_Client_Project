@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public QuickMsgRequest (int codeIndex,int uuid)
 		{
 			headCode = APIS.MessageBox_Request;
-			messageContent = codeIndex + "|"+uuid;
+			msg = codeIndex + "|"+uuid;
 		}
 	}
 }

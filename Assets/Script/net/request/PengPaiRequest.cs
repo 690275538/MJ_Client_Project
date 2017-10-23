@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public PengPaiRequest (CardVO cardvo)
 		{
 			headCode = APIS.PENGPAI_REQUEST;
-			messageContent = JsonMapper.ToJson (cardvo);;
+			msg = JsonMapper.ToJson (cardvo);;
 		}
 	}
 }

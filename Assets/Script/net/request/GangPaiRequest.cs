@@ -10,7 +10,7 @@ namespace AssemblyCSharp
             GangRequestVO vo = new GangRequestVO();
 		    vo.cardPoint = cardPoint;
 		    vo.gangType = gangType;
-		    messageContent = JsonMapper.ToJson(vo);
+		    msg = JsonMapper.ToJson(vo);
 		}
 	}
 }

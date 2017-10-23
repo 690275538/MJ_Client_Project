@@ -4,11 +4,11 @@ using System.Collections.Generic;
 namespace AssemblyCSharp
 {
 	[Serializable]
-	public class ZhanjiRoomDataItem
+	public class RecordVO
 	{
-		public ZhanjiOneRoomData data;
+		public RecordDataVO data;
 		public int roomId;
-		public ZhanjiRoomDataItem ()
+		public RecordVO ()
 		{
 		}
 	}

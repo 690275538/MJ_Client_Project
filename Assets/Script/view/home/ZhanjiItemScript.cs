@@ -10,13 +10,13 @@ namespace AssemblyCSharp
 		public Text indexText;
 		public Text timeText;
 		public List<Text> scoresText;
-		private ZhanjiDataItemVo mZhanjiDataItemVo;
+		private DetailRecordVO mZhanjiDataItemVo;
 
 		public ZhanjiItemScript ()
 		{
 		}
 
-		public void setUI(ZhanjiDataItemVo zhanjiDataItemVo,int index){
+		public void setUI(DetailRecordVO zhanjiDataItemVo,int index){
 			mZhanjiDataItemVo = zhanjiDataItemVo;
 			indexText.text = index + "";
 			timeText.text = parseDateSpan (mZhanjiDataItemVo.createtime);

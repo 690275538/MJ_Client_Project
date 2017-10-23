@@ -214,9 +214,9 @@ public class HomeView : MonoBehaviour,ISceneView
 		loadPerfab ("Prefab/Panel_Lottery");
 	}
 
-	public void onScoreBtnClick ()
+	public void onRecordBtnClick ()
 	{
-		loadPerfab ("Prefab/Panel_Report");
+		loadPerfab ("Prefab/Panel_RecordUI");
 	}
 
 	private void  loadPerfab (string perfabName)

@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public CreateRoomRequest (string sendMsg)
 		{
 			headCode = APIS.CREATEROOM_REQUEST;
-			messageContent = sendMsg;
+			msg = sendMsg;
 		}
 
 	}

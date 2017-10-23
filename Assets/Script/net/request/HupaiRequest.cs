@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public HupaiRequest (string sendMsg)
 		{
 			headCode = APIS.HUPAI_REQUEST;
-			messageContent = sendMsg;
+			msg = sendMsg;
 		}
 	}
 }

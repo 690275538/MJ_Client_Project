@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public ChiPaiRequest (CardVO cardVO)
 		{
 			headCode = APIS.CHIPAI_REQUEST;
-			messageContent = JsonMapper.ToJson (cardVO);
+			msg = JsonMapper.ToJson (cardVO);
 		}
 	}
 }

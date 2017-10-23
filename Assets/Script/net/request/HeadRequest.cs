@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public HeadRequest ()
 		{
 			headCode = APIS.head;
-			messageContent = "";
+			msg = "";
 
 		}
 			

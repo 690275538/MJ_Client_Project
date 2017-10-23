@@ -33,7 +33,7 @@ public class DebugPanelScript : MonoBehaviour {
 			SocketForDebugPanel tempsocket = new SocketForDebugPanel ();
 			tempsocket.LoginCallBack_debug += loginCallBack;
 			socketList.Add (tempsocket);
-			tempsocket.sendMsg (new LoginRequest(null));
+			tempsocket.sendMsg (new ClientRequest(APIS.LOGIN_REQUEST,null));
 		}
 	}
 
@@ -43,7 +43,7 @@ public class DebugPanelScript : MonoBehaviour {
 			RoomJoinVo roomJoinVo = new  RoomJoinVo ();
 			roomJoinVo.roomId = RoomId;
 			for (int i = 0; i < socketList.Count; i++) {
-				socketList [i].sendMsg (new JoinRoomRequest (JsonMapper.ToJson (roomJoinVo)));
+				socketList [i].sendMsg (new ClientRequest (APIS.JOIN_ROOM_REQUEST,JsonMapper.ToJson (roomJoinVo)));
 			}
 		} else {
 			remarkText.text = "请输入正确的房间号";

@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public DissoliveRoomRequest (string msg)
 		{
 			headCode = APIS.DISSOLIVE_ROOM_REQUEST;
-			messageContent = msg;
+			this.msg = msg;
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public GaveUpRequest ()
 		{
 			headCode = APIS.GAVEUP_REQUEST;
-			messageContent = "gaveup";
+			msg = "gaveup";
 		}
 	}
 }

@@ -10,13 +10,17 @@ namespace AssemblyCSharp
 		private byte Flag = 1;
 		protected int Len = 0;
 		public int headCode;
-		protected short messageContentLength;
-		public string messageContent="";
+		private short msgLen;
+		public string msg="";
 		public int totelLenght;
 		public ClientRequest ()
 		{
 		}
-
+		public ClientRequest (int cmd,string msg)
+		{
+			this.headCode = cmd;
+			this.msg = msg;
+		}
 		public void setData(){
 
 		}
@@ -60,19 +64,19 @@ namespace AssemblyCSharp
 			using (MemoryStream memoryStream = new MemoryStream()) //创建内存流
 			{
 				BinaryWriter binaryWriter = new BinaryWriter(memoryStream,UTF8Encoding.Default); //以二进制写入器往这个流里写内容
-				messageContentLength = (short)Encoding.UTF8.GetBytes(messageContent).Length;
-				if (messageContentLength > 0) {
-					Len =( 6 + messageContentLength);
+				msgLen = (short)Encoding.UTF8.GetBytes(msg).Length;
+				if (msgLen > 0) {
+					Len =( 6 + msgLen);
 				} else {
-					Len =( 4 + messageContentLength);
+					Len =( 4 + msgLen);
 				}
 				binaryWriter.Write(Flag); //写入协议一级标志，占1个字节
 				binaryWriter.Write(WriterInt(Len));//占4个字节
 				binaryWriter.Write(WriterInt(headCode)); //写入实际消息长度，占4个字节
-				if (messageContentLength > 0)
+				if (msgLen > 0)
 				{
-					binaryWriter.Write (WriteShort(messageContentLength));
-					binaryWriter.Write(WriterString( messageContent)); //写入实际消息内容
+					binaryWriter.Write (WriteShort(msgLen));
+					binaryWriter.Write(WriterString( msg)); //写入实际消息内容
 				}
 				_bytes = memoryStream.ToArray(); //将流内容写入自定义字节数组
 				binaryWriter.Close(); //关闭写入器释放资源

@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public PutOutCardRequest (CardVO cardvo)
 		{
 			headCode = APIS.CHUPAI_REQUEST;
-			messageContent = JsonMapper.ToJson (cardvo);;
+			msg = JsonMapper.ToJson (cardvo);;
 		}
 	}
 }

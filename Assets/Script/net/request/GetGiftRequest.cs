@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 		public GetGiftRequest (string msg)
 		{
 			headCode = APIS.GET_PRIZE;
-			messageContent = msg;
+			this.msg = msg;
 		}
 	}
 }

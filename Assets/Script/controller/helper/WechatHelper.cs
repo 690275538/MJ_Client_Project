@@ -60,7 +60,7 @@ namespace AssemblyCSharp
 					lvo.IP = GameManager.getInstance ().getIpAddress ();
 					String msg = JsonMapper.ToJson (lvo);
 
-					GameManager.getInstance ().Server.requset (new LoginRequest (msg));
+					GameManager.getInstance ().Server.requset (APIS.LOGIN_REQUEST,msg);
 
 					AvatarVO avo = new AvatarVO ();
 					avo.account = new Account ();
@@ -200,7 +200,7 @@ namespace AssemblyCSharp
 				lvo.IP = GameManager.getInstance ().getIpAddress ();
 				String msg = JsonMapper.ToJson (lvo);
 
-				GameManager.getInstance ().Server.requset (new LoginRequest (msg));
+				GameManager.getInstance ().Server.requset (APIS.LOGIN_REQUEST,msg);
 
 				AvatarVO avo = new AvatarVO ();
 				avo.account = new Account ();

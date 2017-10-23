@@ -8,7 +8,7 @@ namespace AssemblyCSharp
 		public GameBackPlayRequest (string id)
 		{
 			headCode = APIS.GAME_BACK_PLAY_REQUEST;
-			messageContent = id;
+			msg = id;
 		}
 	}
 }
