@@ -21,12 +21,11 @@ namespace AssemblyCSharp
 			this.parent = parent;
 		}
 		public void setTips(string str){
-			GameObject temp = GameObject.Instantiate (Resources.Load ("Prefab/TipPanel") as GameObject);
-			temp.transform.SetParent( GameManager.getInstance().Stage.transform);
+			GameObject temp = GameObject.Instantiate (Resources.Load ("Prefab/W_TipsUI") as GameObject);
+			temp.transform.SetParent( parent);
 			temp.transform.localScale = Vector3.one;
 			temp.transform.localPosition =new Vector3 (0,-300);
-			temp.GetComponent<TipPanelScript> ().setText (str);
-			temp.GetComponent<TipPanelScript> ().startAction();
+			temp.GetComponent<TipsView> ().show (str);
 
 		}
 
