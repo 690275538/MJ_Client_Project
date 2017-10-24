@@ -74,14 +74,14 @@ namespace AssemblyCSharp
 				genZhuangEffect.SetActive (true);
 				Invoke ("hideGenzhuang", 2f);
 			}
-			Invoke ("hidePengGangHuEff", 1f);
+			Invoke ("hideEffects", 1f);
 		}
 
 		private void hideGenzhuang ()
 		{
 			genZhuangEffect.SetActive (false);
 		}
-		private void hidePengGangHuEff ()
+		private void hideEffects ()
 		{
 			pengEffect.SetActive (false);
 			gangEffect.SetActive (false);

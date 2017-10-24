@@ -18,6 +18,27 @@ namespace AssemblyCSharp
 			}
 			return _map [gt];
 		}
+		public static int getInitRemainCardNum (RoomVO rvo)
+		{
+
+			int remainCardNum = 0;
+			var type = rvo.roomType;
+			if (type == GameType.ZHUAN_ZHUAN) {
+				remainCardNum = 108;
+				if (rvo.hong) {
+					remainCardNum = 112;
+				}
+			} else if (type == GameType.HUA_SHUI) {
+				remainCardNum = 108;
+				if (rvo.addWordCard) {
+					remainCardNum = 136;
+				}
+			} else if (type == GameType.JI_PING_HU) {
+				remainCardNum = 136;
+			}
+
+			return remainCardNum - 53;
+		}
 
 
 		protected string name;

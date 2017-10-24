@@ -100,8 +100,8 @@ namespace AssemblyCSharp
 		public const int DETAIL_RECORD_REPONSE=0x002003;//某个房间详细每局战绩
 		public const int DETAIL_RECORD_REQUEST= 0x002004;//搜索房间对应战绩
 
-		public const int GAME_BACK_PLAY_REQUEST=0x003001;//回放请求
-		public const int GAME_BACK_PLAY_RESPONSE = 0x003002;//回放返回数据
+		public const int REPLAY_REQUEST=0x003001;//回放请求
+		public const int REPLAY_RESPONSE = 0x003002;//回放返回数据
 		public const int TIP_MESSAGE = 0x160016;
 
 		public const int OTHER_TELE_LOGIN = 0x211211;//其他设备登录

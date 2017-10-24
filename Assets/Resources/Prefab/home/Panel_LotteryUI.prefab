@@ -702,7 +702,7 @@ GameObject:
   - 114: {fileID: 11471040}
   - 114: {fileID: 11416760}
   m_Layer: 5
-  m_Name: Panel_Lottery
+  m_Name: Panel_LotteryUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -906,7 +906,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11436584}
   nameTxt: {fileID: 11496674}
-  Num: 1
 --- !u!114 &11402268
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1026,7 +1025,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11458042}
   nameTxt: {fileID: 11459522}
-  Num: 1
 --- !u!114 &11404904
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1100,7 +1098,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11417996}
   nameTxt: {fileID: 11456562}
-  Num: 1
 --- !u!114 &11414968
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1345,7 +1342,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11446546}
   nameTxt: {fileID: 11499320}
-  Num: 1
 --- !u!114 &11430804
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1552,7 +1548,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11487068}
   nameTxt: {fileID: 11462846}
-  Num: 1
 --- !u!114 &11446546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1812,7 +1807,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11457822}
   nameTxt: {fileID: 11457688}
-  Num: 1
 --- !u!114 &11457822
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2145,7 +2139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11402268}
   nameTxt: {fileID: 11493030}
-  Num: 1
 --- !u!114 &11476070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2371,7 +2364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11494806}
   nameTxt: {fileID: 11471316}
-  Num: 1
 --- !u!114 &11492042
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2385,7 +2377,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11454456}
   nameTxt: {fileID: 11451048}
-  Num: 1
 --- !u!114 &11492456
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2399,7 +2390,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   img: {fileID: 11458282}
   nameTxt: {fileID: 11404904}
-  Num: 1
 --- !u!114 &11493030
 MonoBehaviour:
   m_ObjectHideFlags: 1

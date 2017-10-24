@@ -329,11 +329,11 @@ namespace AssemblyCSharp
 
 		private void createPutOutCardAndPlayAction (int cardPoint, int avatarIndex)
 		{
-			SoundManager.getInstance ().playSound (_data.putoutPoint, avatarList [_data.putoutIndex].account.sex);
+			
 
-			_uiHelper.addPutoutCardEffect (_data.putoutIndex, _data.putoutPoint);
+			_uiHelper.addPutoutCardEffect (avatarIndex, cardPoint);
 
-			_uiHelper.lastCardOnTable = _uiHelper.addCardToTable (_data.putoutIndex, _data.putoutPoint);
+			_uiHelper.lastCardOnTable = _uiHelper.addCardToTable (avatarIndex, cardPoint);
 			_uiHelper.addPointer (_uiHelper.lastCardOnTable);
 		}
 

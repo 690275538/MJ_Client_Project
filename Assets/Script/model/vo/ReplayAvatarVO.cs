@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AssemblyCSharp
 {
-	public class PlayerBackVO
+	public class ReplayAvatarVO
 	{
 		public int id;
 		public string accountName;//		玩家名
@@ -17,7 +17,7 @@ namespace AssemblyCSharp
 		public int uuid;
 		public int missType;
 		private int[] pai;
-		public PlayerBackVO ()
+		public ReplayAvatarVO ()
 		{
 		}
 		/// <summary>

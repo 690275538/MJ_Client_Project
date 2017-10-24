@@ -476,6 +476,8 @@ namespace AssemblyCSharp
 		/**提示用，打出的牌，1秒后会自动销毁**/
 		public GameObject addPutoutCardEffect (int avatarIndex,int cardPoint)
 		{
+			SoundManager.getInstance ().playSound (cardPoint, _data.AvatarList [avatarIndex].account.sex);
+
 			Vector3 position = new Vector3 (0, 0);
 			Direction dir = _data.toGameDir (avatarIndex);
 			switch (dir) {
@@ -498,9 +500,8 @@ namespace AssemblyCSharp
 			card.transform.localScale = Vector3.one;
 			card.GetComponent<PutoutCardView> ().setPoint (cardPoint, Direction.B);
 
-			if (card != null) {
-				GameObject.Destroy (card, 1f);
-			}
+
+			GameObject.Destroy (card, 1f);
 
 			putOutCard = card;
 			return card;
@@ -647,21 +648,7 @@ namespace AssemblyCSharp
 			
 			RoomVO rvo = GlobalData.getInstance ().roomVO;
 
-			var type = rvo.roomType;
-			if (type == GameType.ZHUAN_ZHUAN) {
-				_data.remainCardNum = 108;
-				if (rvo.hong) {
-					_data.remainCardNum = 112;
-				}
-			} else if (type == GameType.HUA_SHUI) {
-				_data.remainCardNum = 108;
-				if (rvo.addWordCard) {
-					_data.remainCardNum = 136;
-				}
-			} else if (type == GameType.JI_PING_HU) {
-				_data.remainCardNum = 136;
-			}
-			_data.remainCardNum = _data.remainCardNum - 53;
+			_data.remainCardNum = GameHelper.getInitRemainCardNum (rvo);
 
 		}
 

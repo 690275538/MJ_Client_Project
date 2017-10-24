@@ -7,7 +7,7 @@ namespace AssemblyCSharp
 	{
 		public List<GameBehaviourVO> behavieList;
 
-		public List<PlayerBackVO> playerItems;
+		public List<ReplayAvatarVO> playerItems;
 
 		public RoomVO roomvo;
 

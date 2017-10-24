@@ -390,7 +390,7 @@ GameObject:
   - 224: {fileID: 224000012789131082}
   - 114: {fileID: 11448306}
   m_Layer: 5
-  m_Name: ZhanItem
+  m_Name: DetailRecordCR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

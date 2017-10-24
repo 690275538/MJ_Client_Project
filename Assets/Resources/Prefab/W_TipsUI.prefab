@@ -44,7 +44,7 @@ GameObject:
   - 4: {fileID: 497430}
   - 114: {fileID: 11494070}
   m_Layer: 0
-  m_Name: TipPanel
+  m_Name: W_TipsUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
