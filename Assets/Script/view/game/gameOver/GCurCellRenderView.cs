@@ -34,7 +34,7 @@ public class GCurCellRenderView : MonoBehaviour
 		nickName.text = itemData.nickname;
 		totalScroe.text = itemData.totalScore.ToString ();
 		gangScore.text = itemData.gangScore.ToString ();
-		fanCount.text = itemData.fanScore.ToString ();
+		fanCount.text = itemData.fanCount.ToString ();
 
 		huFlag.SetActive (false);
 		zhongMaFlag.SetActive (false);
@@ -81,7 +81,7 @@ public class GCurCellRenderView : MonoBehaviour
 		var hu = totalInfo.getHuInfo ();
 		if (hu != null) {
 
-			mdesCribe += GameHelper.getHelper ().getHuString (hu.type);
+			mdesCribe += GameHelper.getHelper ().getHuString (hu);
 			if (! hu.type.Contains ("d_other")) {
 				huFlag.SetActive (true);
 				paiArray [hu.cardPiont] -= 1;

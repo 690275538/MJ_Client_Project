@@ -22,6 +22,7 @@ namespace AssemblyCSharp
 		/**出牌人**/
 		public string uuid;
 		public string type;
+		public int jphType = 0;
 	}
 
 	public class TChiInfo
@@ -112,6 +113,8 @@ namespace AssemblyCSharp
 				info.uuid = ss [0];
 				info.cardPiont = int.Parse (ss [1]);
 				info.type = ss [2];
+				if (ss.Length == 4)
+					info.jphType = int.Parse (ss [3]);
 			}
 			return info;
 		}

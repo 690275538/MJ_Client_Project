@@ -45,7 +45,8 @@ namespace AssemblyCSharp
 		public string getName(){
 			return name;
 		}
-		virtual public string getHuString(string type){
+		virtual public string getHuString(THuInfo hu){
+			string type = hu.type;
 			if (type == "d_other") {
 				return "点炮";
 			}
@@ -149,46 +150,62 @@ namespace AssemblyCSharp
 		public JPHHelper(){
 			name = "鸡平胡";
 		}
-		override public string getHuString (string type)
+		override public string getHuString (THuInfo hu)
 		{
-			var i = int.Parse (type);
-			if (i > 0) {
-				switch ((JPHType)i) {
+			string str = "  ";
+			if (hu.jphType > 0) {
+				switch ((JPHType) hu.jphType) {
 				case JPHType.JH:
-					return "鸡胡";
+					str += "鸡胡";
+					break;
 				case JPHType.PH:
-					return "平胡";
+					str += "平胡";
+					break;
 				case JPHType.PPH:
-					return "碰碰胡";
+					str += "碰碰胡";
+					break;
 				case JPHType.HYS:
-					return "混一色";
+					str += "混一色";
+					break;
 				case JPHType.QYS:
-					return "清一色";
+					str += "清一色";
+					break;
 				case JPHType.HP:
-					return "混碰";
+					str += "混碰";
+					break;
 				case JPHType.QP:
-					return "清碰";
+					str += "清碰";
+					break;
 				case JPHType.HYJ:
-					return "混幺九";
+					str += "混幺九";
+					break;
 				case JPHType.XSY:
-					return "小三元";
+					str += "小三元";
+					break;
 				case JPHType.XSX:
-					return "小四喜";
+					str += "小四喜";
+					break;
 				case JPHType.ZYS:
-					return "字一色";
+					str += "字一色";
+					break;
 				case JPHType.QYJ:
-					return "清幺九";
+					str += "清幺九";
+					break;
 				case JPHType.DSY:
-					return "大三元";
+					str += "大三元";
+					break;
 				case JPHType.DSX:
-					return "大四喜";
+					str += "大四喜";
+					break;
 				case JPHType.JLBD:
-					return "九莲宝灯";
+					str += "九莲宝灯";
+					break;
 				case JPHType.SSY:
-					return "十三幺";
+					str += "十三幺";
+					break;
 				}
 			}
-			return base.getHuString (type);
+			return base.getHuString (hu) + str;
 		}
 	}
 	class HSHelper:GameHelper{
