@@ -45,6 +45,19 @@ namespace AssemblyCSharp
 		public string getName(){
 			return name;
 		}
+		public HuType getHuType(THuInfo hu){
+			if (hu != null) {
+				string type = hu.type;
+				if (type == "d_other") {
+					return HuType.DIAN_PAO;
+				} else if (type == "zi_common") {
+					return HuType.ZI_MO;
+				} else if (type == "d_self") {
+					return HuType.JIE_PAO;
+				}
+			}//other_common
+			return HuType.UNDEFINE;
+		}
 		virtual public string getHuString(THuInfo hu){
 			string type = hu.type;
 			if (type == "d_other") {
@@ -54,7 +67,7 @@ namespace AssemblyCSharp
 				return "自摸";
 			} else if (type == "d_self") {
 				return "接炮";
-			} else if (type == "qiyise") {
+			}/* else if (type == "qiyise") {
 				return "清一色";
 			} else if (type == "zi_qingyise") {
 				return "自摸清一色";
@@ -66,7 +79,7 @@ namespace AssemblyCSharp
 				return "杠上炮";
 			} else if (type == "gangshanghua") {
 				return "杠上花";
-			}
+			}*/
 			return "";
 		}
 		public bool isHu(string type){
@@ -153,7 +166,7 @@ namespace AssemblyCSharp
 		override public string getHuString (THuInfo hu)
 		{
 			string str = "  ";
-			if (hu.jphType > 0) {
+			if ((getHuType(hu) == HuType.ZI_MO || getHuType(hu) == HuType.JIE_PAO) && hu.jphType > 0) {
 				switch ((JPHType) hu.jphType) {
 				case JPHType.JH:
 					str += "鸡胡";

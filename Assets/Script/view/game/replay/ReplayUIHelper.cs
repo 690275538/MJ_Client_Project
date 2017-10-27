@@ -47,7 +47,7 @@ namespace AssemblyCSharp
 						GameObject temp = null;
 						for (int b = 0; b < tempPai [a]; b++) {
 							temp = newGameObject ("Prefab/playBack/HandCard_"+ dir.ToString(), cgo.HandParent, Vector3.one);
-							temp.GetComponent<PutoutCardView> ().setPoint (a);
+							temp.GetComponent<PutoutCardView> ().setPoint (a ,_data.toGameDir(i) );
 
 							if (dir == Direction.R) {
 								temp.transform.SetSiblingIndex (0);
@@ -232,7 +232,7 @@ namespace AssemblyCSharp
 			var Hand = getCardGOs (avatarIndex).Hand;
 			for (int i = 0; i < Hand.Count; i++) {
 				GameObject card = Hand [i];
-				int point = card.GetComponent<MyHandCardView> ().getPoint ();
+				int point = card.GetComponent<PutoutCardView> ().getPoint ();
 				if (point == cardPoint) {
 
 					Hand.RemoveAt (i);

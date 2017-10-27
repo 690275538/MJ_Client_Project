@@ -513,7 +513,7 @@ GameObject:
   - 222: {fileID: 22200440}
   - 114: {fileID: 11443824}
   m_Layer: 5
-  m_Name: Leaved1
+  m_Name: bg_remain_round
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -767,7 +767,7 @@ GameObject:
   - 222: {fileID: 22248052}
   - 114: {fileID: 11436412}
   m_Layer: 5
-  m_Name: Image_game_start_weipai
+  m_Name: bg_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1011,7 +1011,7 @@ GameObject:
   - 222: {fileID: 22271180}
   - 114: {fileID: 11405708}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text_remainRound
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1079,7 +1079,7 @@ GameObject:
   - 222: {fileID: 22219946}
   - 114: {fileID: 11429718}
   m_Layer: 5
-  m_Name: Leaved
+  m_Name: bg_remain_card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1235,6 +1235,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 22415538}
   - 114: {fileID: 11413326}
+  - 114: {fileID: 11483974}
   m_Layer: 5
   m_Name: Panel_ReplayUI
   m_TagString: Untagged
@@ -1273,7 +1274,7 @@ GameObject:
   - 114: {fileID: 11461210}
   - 114: {fileID: 11425496}
   m_Layer: 5
-  m_Name: RoomText
+  m_Name: Text_RoomRemark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1803,7 +1804,7 @@ GameObject:
   - 222: {fileID: 22278022}
   - 114: {fileID: 11418762}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Text_RemainCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1906,7 +1907,7 @@ GameObject:
   - 114: {fileID: 11454338}
   - 114: {fileID: 11470962}
   m_Layer: 5
-  m_Name: Number
+  m_Name: Text_TimeLeft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2129,7 +2130,7 @@ GameObject:
   - 222: {fileID: 22280208}
   - 114: {fileID: 11404558}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3381,44 +3382,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9444246d7342d6b48b9cbbaa7d46ad75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastTime: 0
-  Number: {fileID: 0}
-  roomRemark: {fileID: 11457780}
   liujuEffectGame: {fileID: 175666}
-  otherPengCard: 0
-  otherGangCard: 0
-  parentList:
-  - {fileID: 22458078}
-  - {fileID: 22496526}
-  - {fileID: 22484174}
-  - {fileID: 22404204}
-  outparentList:
-  - {fileID: 22470354}
-  - {fileID: 22466390}
-  - {fileID: 22403060}
-  - {fileID: 22450948}
-  dirGameList:
-  - {fileID: 126928}
-  - {fileID: 142016}
-  - {fileID: 146666}
-  - {fileID: 165524}
-  playerItems:
-  - {fileID: 11415228}
-  - {fileID: 11470972}
-  - {fileID: 11456842}
-  - {fileID: 11444592}
-  LeavedCastNumText: {fileID: 11418762}
-  LeavedRoundNumText: {fileID: 11405708}
   playBtn: {fileID: 125380}
   stopBtn: {fileID: 123640}
   processText: {fileID: 11496702}
-  pengGangParentList:
+  genZhuang: {fileID: 129202}
+  exitPanel: {fileID: 185332}
+  PGCParents:
   - {fileID: 22433258}
   - {fileID: 22472236}
   - {fileID: 22440434}
   - {fileID: 22453186}
-  genZhuang: {fileID: 129202}
-  exitPanel: {fileID: 185332}
+  HandParents:
+  - {fileID: 22458078}
+  - {fileID: 22496526}
+  - {fileID: 22484174}
+  - {fileID: 22404204}
+  TableParents:
+  - {fileID: 22470354}
+  - {fileID: 22466390}
+  - {fileID: 22403060}
+  - {fileID: 22450948}
+  PlayerItemViews:
+  - {fileID: 11415228}
+  - {fileID: 11470972}
+  - {fileID: 11456842}
+  - {fileID: 11444592}
 --- !u!114 &11413520
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4099,7 +4088,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 58ff0bda6952dc24c93d589b4e205d24, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4e96105e1c9c6457a8daccfb6621e5f8, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5945,6 +5934,26 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &11483974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 156456}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92818c02ffd454b80b4ceca717895a0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeLeft: {fileID: 11454338}
+  roomRemarkText: {fileID: 11457780}
+  remainCardText: {fileID: 11418762}
+  remainRoundText: {fileID: 11405708}
+  dirGameList:
+  - {fileID: 126928}
+  - {fileID: 142016}
+  - {fileID: 146666}
+  - {fileID: 165524}
 --- !u!114 &11484012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -7964,16 +7973,16 @@ RectTransform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 148478}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 22465492}
-  m_RootOrder: 0
+  m_Father: {fileID: 22445910}
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11.500004, y: 0.9330009}
+  m_AnchoredPosition: {x: 134.49997, y: 0.9330009}
   m_SizeDelta: {x: 23, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22432040
@@ -8021,12 +8030,12 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_Children:
   - {fileID: 22402982}
   - {fileID: 22479288}
   m_Father: {fileID: 22445910}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.0000038147, y: 32.9}
@@ -8216,10 +8225,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 22481994}
+  m_Children: []
   m_Father: {fileID: 22445910}
-  m_RootOrder: 7
+  m_RootOrder: 10
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -124, y: 0}
@@ -8273,14 +8281,16 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 22415536}
-  - {fileID: 22446682}
   - {fileID: 22460564}
-  - {fileID: 22467750}
+  - {fileID: 22431372}
+  - {fileID: 22481994}
   - {fileID: 22495084}
+  - {fileID: 22446682}
   - {fileID: 22433658}
+  - {fileID: 22467750}
+  - {fileID: 22411684}
   - {fileID: 22465492}
   - {fileID: 22444052}
-  - {fileID: 22411684}
   m_Father: {fileID: 22415538}
   m_RootOrder: 2
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -8320,7 +8330,7 @@ RectTransform:
   - {fileID: 22491408}
   - {fileID: 22487676}
   m_Father: {fileID: 22445910}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 33.500004, y: -1.7}
@@ -8702,7 +8712,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 22445910}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -8772,10 +8782,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children:
-  - {fileID: 22431372}
+  m_Children: []
   m_Father: {fileID: 22445910}
-  m_RootOrder: 6
+  m_RootOrder: 9
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 123, y: 0}
@@ -8849,7 +8858,7 @@ RectTransform:
   - {fileID: 22466892}
   - {fileID: 22423446}
   m_Father: {fileID: 22445910}
-  m_RootOrder: 3
+  m_RootOrder: 7
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -33.7, y: -0}
@@ -9052,11 +9061,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 22444052}
-  m_RootOrder: 0
+  m_Father: {fileID: 22445910}
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 11, y: 0}
+  m_AnchoredPosition: {x: -112.99999, y: 0}
   m_SizeDelta: {x: 23, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &22482128
@@ -9326,7 +9335,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
   m_Children:
   - {fileID: 22401110}
   - {fileID: 22441686}

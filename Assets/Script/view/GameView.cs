@@ -590,10 +590,12 @@ namespace AssemblyCSharp
 				_actionHlpr.showEffect (ActionType.HU);
 
 				for (int i = 0; i < hvo.avatarList.Count; i++) {
-					if (checkAvarHupai (hvo.avatarList [i]) == 1) {//胡
+					var item = hvo.avatarList [i];
+					var hutype = GameHelper.getHelper ().getHuType (item.totalInfo.getHuInfo ());
+					if (hutype == HuType.JIE_PAO) {
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundManager.getInstance ().playSoundByAction ("hu", avatarList [i].account.sex);
-					} else if (checkAvarHupai (hvo.avatarList [i]) == 2) {
+					} else if (hutype == HuType.ZI_MO) {
 						_uiHelper.getCardGOs (i).PlayerItem.setHuFlagDisplay ();
 						SoundManager.getInstance ().playSoundByAction ("zimo", avatarList [i].account.sex);
 					} else {
@@ -631,48 +633,6 @@ namespace AssemblyCSharp
 
 		}
 
-		/**
-	 *检测某人是否胡牌 
-	 */
-		public int checkAvarHupai (HupaiResponseItem itemData)
-		{
-			string hupaiStr = itemData.totalInfo.hu;
-			THuInfo hupaiObj = new THuInfo ();
-			if (hupaiStr != null && hupaiStr.Length > 0) {
-				hupaiObj.uuid = hupaiStr.Split (new char[1]{ ':' }) [0];
-				hupaiObj.cardPiont = int.Parse (hupaiStr.Split (new char[1]{ ':' }) [1]);
-				hupaiObj.type = hupaiStr.Split (new char[1]{ ':' }) [2];
-				//增加判断是否是自己胡牌的判断
-
-				if (hupaiStr.Contains ("d_other")) {//排除一炮多响的情况
-					return 0;
-				} else if (hupaiObj.type == "zi_common") {
-					return 2;
-
-				} else if (hupaiObj.type == "d_self") {
-					return 1;
-				} else if (hupaiObj.type == "qiyise") {
-					return 1;
-				} else if (hupaiObj.type == "zi_qingyise") {
-					return 2;
-				} else if (hupaiObj.type == "qixiaodui") {
-					return 1;
-				} else if (hupaiObj.type == "self_qixiaodui") {
-					return 2;
-				} else if (hupaiObj.type == "gangshangpao") {
-					return 1;
-				} else if (hupaiObj.type == "gangshanghua") {
-					return 2;
-				}
-
-
-			}
-			return 0;
-		}
-
-
-
-
 		private void hupaiCoinChange (string scores)
 		{
 			string[] scoreList = scores.Split (new char[1]{ ',' });
@@ -689,9 +649,9 @@ namespace AssemblyCSharp
 
 		}
 
-
+		//单局结算
 		private void openGameOverView ()
-		{//单局结算
+		{
 			_actionHlpr.liujuEffect.SetActive (false);
 			_uiHelper.hideHuIcon ();
 			if (zhuamaPanel != null) {
@@ -818,7 +778,8 @@ namespace AssemblyCSharp
 					//PengCard
 					if (checkPaiArrayContainType(avo.paiArray [1],PaiArrayType.PENG)) {
 						for (int j = 0; j < avo.paiArray[1].Length; j++) {
-							if (avo.paiArray[1] [j] == 1 && hand [j] > 0) {
+							var t = avo.paiArray [1] [j] & (int)PaiArrayType.PENG ;
+							if (t > 0 && hand [j] > 2) {
 								hand [j] -= 3;
 								_uiHelper.addPGCCards (i, j, 1);
 							}

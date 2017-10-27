@@ -80,9 +80,9 @@ public class GCurCellRenderView : MonoBehaviour
 
 		var hu = totalInfo.getHuInfo ();
 		if (hu != null) {
-
+			var kind = GameHelper.getHelper ().getHuType (hu);
 			mdesCribe += GameHelper.getHelper ().getHuString (hu);
-			if (! hu.type.Contains ("d_other")) {
+			if (kind == HuType.ZI_MO || kind == HuType.JIE_PAO) {
 				huFlag.SetActive (true);
 				paiArray [hu.cardPiont] -= 1;
 			}

@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace AssemblyCSharp
 {
@@ -105,6 +107,25 @@ namespace AssemblyCSharp
 		public const int TIP_MESSAGE = 0x160016;
 
 		public const int OTHER_TELE_LOGIN = 0x211211;//其他设备登录
+
+
+		public static Dictionary<int,string> nameMap;
+		public static string getCmdName(int cmd){
+			if (nameMap == null) {
+				nameMap = new Dictionary<int,string> ();
+				FieldInfo[] infos = typeof(APIS).GetFields ();
+				foreach (var i in infos) {
+					if (i.IsLiteral && i.FieldType.Name == "Int32") {
+						nameMap [(int)i.GetValue (null)] = i.Name;
+					}
+				}
+			}
+			if (nameMap.ContainsKey (cmd)) {
+				return nameMap [cmd];
+			}
+			return "";
+
+		}
 	}
 
 

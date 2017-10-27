@@ -97,6 +97,7 @@ public class ReplayView : MonoBehaviour
 		GameBehaviourVO gvo = replayVO.behavieList [curBehaviorIndex];
 		usedList.Insert (0, gvo);
 
+		Debug.Log (">" + curBehaviorIndex + " : " + JsonMapper.ToJson (gvo));
 		int avatarIndex = gvo.accountindex_id;
 		int cardPoint = int.Parse (gvo.cardIndex);
 		if (gvo.type == 1) {

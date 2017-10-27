@@ -15,8 +15,7 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	public Toggle agreeToggle;
 	public Text versionText;
-	public InputField uinInput;
-	public InputField roomIDInput;
+
 
 	public GameObject watingPanel;
 
@@ -60,6 +59,19 @@ public class LoginView : MonoBehaviour, ISceneView {
 
 	public void login(){
 
+		InputField ipInput = transform.FindChild ("IP").GetComponent<InputField> ();
+		if (ipInput.text != "") {
+			Constants.IP = ipInput.text;
+			Constants.UPDATE_INFO_JSON_URL = "http://"+Constants.IP+":8080/download/update.xml";
+			Constants.chatSocketUrl = Constants.IP;
+			Constants.socketUrl = Constants.IP;
+			Constants.PIC_PATH = "http://"+Constants.IP+":8080/";
+			Constants.ImgUrl = "http://"+Constants.IP+":8080/MaJiangManage/images";
+			Constants.Download_URL = "http://"+Constants.IP+":8080/download/index.html";
+
+		}
+
+		InputField uinInput = transform.FindChild ("uin").GetComponent<InputField> ();
 		if (!GameManager.getInstance().Server.Connected) {
 			GameManager.getInstance ().Server.connect ();
 			TipsManager.getInstance ().setTips ("正在连接服务器...");
@@ -81,6 +93,7 @@ public class LoginView : MonoBehaviour, ISceneView {
 	}
 	void onResponse (ClientResponse response)
 	{
+		InputField roomIDInput = transform.FindChild ("roomID").GetComponent<InputField> ();
 		switch (response.headCode) {
 		case APIS.LOGIN_RESPONSE://登录回包
 			if (roomIDInput.text != "") {

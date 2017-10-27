@@ -1,4 +1,4 @@
-﻿//#define JM
+﻿#define JM
 using System;
 using System.Collections.Generic;
 
@@ -13,15 +13,15 @@ namespace AssemblyCSharp
 		public static float GAME_DEFALUT_AGREE_TIME = 200.0f;
 		#if JM
 
-
-		public const string UPDATE_INFO_JSON_URL = "http://192.168.1.41:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
-		public const string chatSocketUrl = "192.168.1.41";
-		public const string socketUrl = "192.168.1.41";
-		public const string PIC_PATH = "http://192.168.1.41:8080/";
-		public const string ImgUrl = "http://192.168.1.41:8080/MaJiangManage/images";
-		public const string Download_URL = "http://192.168.1.41:8080/download/index.html";
+		public static string IP = "whyzx.com";
+		public static string UPDATE_INFO_JSON_URL = "http://"+IP+":8080/download/update.xml";
+		public static string chatSocketUrl = IP;
+		public static string socketUrl = IP;
+		public static string PIC_PATH = "http://"+IP+":8080/";
+		public static string ImgUrl = "http://"+IP+":8080/MaJiangManage/images";
+		public static string Download_URL = "http://"+IP+":8080/download/index.html";
 		#else
-		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";//服务器上最新的软件版本信息存储文件
+		public const string UPDATE_INFO_JSON_URL = "http://whyzx.com:8080/download/update.xml";
 		public const string chatSocketUrl = "whyzx.com";
 		public const string socketUrl = "whyzx.com";
 		public const string PIC_PATH = "http://whyzx.com:8080/";
@@ -99,6 +99,12 @@ namespace AssemblyCSharp
 		DSX = 14,
 		JLBD = 15,
 		SSY = 16
+	}
+	public enum HuType{
+		UNDEFINE,
+		DIAN_PAO,
+		JIE_PAO,
+		ZI_MO
 	}
 
 }
