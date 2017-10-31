@@ -66,8 +66,6 @@ public class ReplayView : MonoBehaviour
 			_data.AvatarList = replayVO.playerItems;
 
 			_uiHelper.start ();
-
-			_uiHelper.rangeHandCard ();
 			_data.isPlaying = true;
 			break;
 		}

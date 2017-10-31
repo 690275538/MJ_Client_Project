@@ -9,6 +9,7 @@ namespace AssemblyCSharp
 		public ReplayUIHelper ()
 		{
 		}
+
 		private GameObject _pointerGO;
 		/**自己摸到的牌**/
 		//		private GameObject pickCardItem;
@@ -32,22 +33,25 @@ namespace AssemblyCSharp
 				allCardGOs.Add (cgo);
 			}
 		}
-		public void start (){
+
+		public void start ()
+		{
 			for (int i = 0; i < _data.AvatarList.Count; i++) {
 				var cgo = getCardGOs (i);
-				Direction dir = _data.toGameDir(i);
+				Direction dir = _data.toGameDir (i);
 				//avatar
 				ReplayAvatarVO rvo = _data.AvatarList [i];
 				cgo.PlayerItem.setAvatarVo (rvo);
 
 
 				int[] tempPai = rvo.getPaiArray ();
-				for (int a = 0; a <tempPai.Length; a++) {
-					if (tempPai [a] > 0) {
+				for (int a = 0; a < tempPai.Length; a++) {
+					var num = tempPai [a];
+					if (num > 0) {
 						GameObject temp = null;
-						for (int b = 0; b < tempPai [a]; b++) {
-							temp = newGameObject ("Prefab/playBack/HandCard_"+ dir.ToString(), cgo.HandParent, Vector3.one);
-							temp.GetComponent<PutoutCardView> ().setPoint (a ,_data.toGameDir(i) );
+						for (int b = 0; b < num; b++) {
+							temp = newGameObject ("Prefab/playBack/HandCard_" + dir.ToString (), cgo.HandParent, Vector3.one);
+							temp.GetComponent<PutoutCardView> ().setPoint (a, _data.toGameDir (i));
 
 							if (dir == Direction.R) {
 								temp.transform.SetSiblingIndex (0);
@@ -58,37 +62,48 @@ namespace AssemblyCSharp
 				}
 
 			}
+			rangeHandCard ();
 		}
-		public void rangeHandCard(){
+
+		public void rangeHandCard ()
+		{
 			for (int i = 0; i < 4; i++) {
 				var cgo = allCardGOs [i];
-				int len = cgo.Hand.Count;
-				for (int a = 0; a <len; a++) {
-					int tempNum = len - a-1;
+				int l = cgo.Hand.Count;
+				for (int a = 0; a < l; a++) {
+					int _a = l - 1 - a;
+					if (l % 3 == 2) {
+						_a -= 1;
+					}
 					switch (i) {
 					case 0:
-						cgo.Hand[a].transform.localPosition = new Vector3 (410 - tempNum * 79, 0);
+						cgo.Hand [a].transform.localPosition = new Vector3 (410 - _a * 79, 0);
+						cgo.Hand [a].transform.SetSiblingIndex (a);
 						break;
 					case 1:
-						cgo.Hand[a].transform.localPosition = new Vector3 (0, 200 - tempNum * 32);
-						cgo.Hand[a].transform.SetSiblingIndex (0);
+						cgo.Hand [a].transform.localPosition = new Vector3 (0, 200 - _a * 28);
+						cgo.Hand [a].transform.SetSiblingIndex (0);
 						break;
 					case 2:
-						cgo.Hand[a].transform.localPosition = new Vector3 (-190 + tempNum * 55, 0);
+						cgo.Hand [a].transform.localPosition = new Vector3 (-190 + _a * 36, 0);
+						cgo.Hand [a].transform.SetSiblingIndex (a);
 						break;
 					case 3:
-						cgo.Hand[a].transform.localPosition = new Vector3 (0,-140+tempNum*32);
+						cgo.Hand [a].transform.localPosition = new Vector3 (0, -140 + _a * 28 );
+						cgo.Hand [a].transform.SetSiblingIndex (a);
 						break;
 					}
 				}
 			}
 		}
+
 		public void huCard (int avatarIndex, int cardPoint)
 		{
 			var cgo = getCardGOs (avatarIndex);
 			cgo.PlayerItem.showHuEffect ();
 			SoundManager.getInstance ().playSoundByAction ("hu", cgo.PlayerItem.getSex ());
 		}
+
 		public void gangCard (int avatarIndex, int cardPoint, int gangType)
 		{
 			var cgo = getCardGOs (avatarIndex);
@@ -111,6 +126,7 @@ namespace AssemblyCSharp
 			}
 			rangeHandCard ();
 		}
+
 		public void pengCard (int avatarIndex, int cardPoint)//其他人碰牌
 		{
 			var cgo = getCardGOs (avatarIndex);
@@ -128,6 +144,7 @@ namespace AssemblyCSharp
 
 
 		}
+
 		/**type:1碰2明杠3暗杠4吃5先碰后杠**/
 		private void addPGCCards (int avatarIndex, int cardPoint, int type)
 		{
@@ -152,15 +169,15 @@ namespace AssemblyCSharp
 				if (dir == Direction.R) {
 					card.transform.SetSiblingIndex (0);
 				}
-				card.GetComponent<PutoutCardView> ().setPoint (cardPoint,dir);
+				card.GetComponent<PutoutCardView> ().setPoint (cardPoint, dir);
 				cgo.PGC [index].Add (card);
 				return;
-			}else if (type == 3 || type == 2) {
+			} else if (type == 3 || type == 2) {
 				points = new int[]{ cardPoint, cardPoint, cardPoint, cardPoint };
 			} else if (type == 1) {
 				points = new int[]{ cardPoint, cardPoint, cardPoint };
 			} else {
-				points = new int[]{ cardPoint , cardPoint + 1, cardPoint + 2 };
+				points = new int[]{ cardPoint, cardPoint + 1, cardPoint + 2 };
 			}
 
 			List<GameObject> cards = new List<GameObject> ();
@@ -175,7 +192,7 @@ namespace AssemblyCSharp
 
 				card = newGameObject (path, cgo.PGCParent, position);
 				if (!(i < 3 && type == 3)) {
-					card.GetComponent<PutoutCardView> ().setPoint (points [i],dir);
+					card.GetComponent<PutoutCardView> ().setPoint (points [i], dir);
 				}
 				if (i < 3 && dir == Direction.R) {
 					card.transform.SetSiblingIndex (0);
@@ -185,7 +202,9 @@ namespace AssemblyCSharp
 			cgo.PGC.Add (cards);
 
 		}
-		public int findIndexInPGC(int avatarIndex,int cardPoint){
+
+		public int findIndexInPGC (int avatarIndex, int cardPoint)
+		{
 			var PGC = getCardGOs (avatarIndex).PGC;
 			for (int i = 0; i < PGC.Count; i++) {
 				var list = PGC [i];
@@ -197,7 +216,9 @@ namespace AssemblyCSharp
 			}
 			return -1;
 		}
-		private Vector3 _getPGCPosition(Direction dir,int k,int j,int count){
+
+		private Vector3 _getPGCPosition (Direction dir, int k, int j, int count)
+		{
 			Vector3 position = Vector3.one;
 			if (dir == Direction.B) {
 				position = new Vector3 (-370f + count * 190f + k * 60f, j * 24);
@@ -228,7 +249,8 @@ namespace AssemblyCSharp
 
 
 
-		private void removeHandCard(int avatarIndex, int cardPoint,int num){
+		private void removeHandCard (int avatarIndex, int cardPoint, int num)
+		{
 			var Hand = getCardGOs (avatarIndex).Hand;
 			for (int i = 0; i < Hand.Count; i++) {
 				GameObject card = Hand [i];
@@ -245,6 +267,7 @@ namespace AssemblyCSharp
 				}
 			}
 		}
+
 		/**把最后出的一张牌销毁，用于别人吃碰杠胡**/
 		public void removeLastPutoutCard ()
 		{
@@ -260,13 +283,14 @@ namespace AssemblyCSharp
 //				GameObject.Destroy (putOutCard);
 //			}
 		}
+
 		public void pickCard (int avatarIndex, int cardPoint)
 		{
 			var dir = _data.toGameDir (avatarIndex);
 			var cgo = getCardGOs (avatarIndex);
 
-			GameObject card = newGameObject ("Prefab/playBack/HandCard_" + dir.ToString(), cgo.HandParent, Vector3.one);
-			card.GetComponent<PutoutCardView> ().setPoint (cardPoint,dir);
+			GameObject card = newGameObject ("Prefab/playBack/HandCard_" + dir.ToString (), cgo.HandParent, Vector3.one);
+			card.GetComponent<PutoutCardView> ().setPoint (cardPoint, dir);
 
 			switch (dir) {
 			case Direction.B:
@@ -285,6 +309,7 @@ namespace AssemblyCSharp
 
 			cgo.Hand.Add (card);
 		}
+
 		public void qiangGangHu (int avatarIndex, int cardPoint)
 		{
 			pickCard (avatarIndex, cardPoint);
@@ -294,6 +319,7 @@ namespace AssemblyCSharp
 			SoundManager.getInstance ().playSoundByAction ("hu", cgo.PlayerItem.getSex ());
 
 		}
+
 		public void putoutCard (int avatarIndex, int cardPoint)
 		{
 			var cgo = getCardGOs (avatarIndex);
@@ -320,6 +346,7 @@ namespace AssemblyCSharp
 
 			lastCardOnTable = addCardToTable (avatarIndex, cardPoint);
 		}
+
 		private void paiSort (List<GameObject> Hand)
 		{
 			GameObject lastCard = Hand [Hand.Count - 1];
@@ -336,7 +363,7 @@ namespace AssemblyCSharp
 		}
 
 		/**提示用，打出的牌，1秒后会自动销毁**/
-		private void addPutoutCardEffect (int avatarIndex,int cardPoint)
+		private void addPutoutCardEffect (int avatarIndex, int cardPoint)
 		{
 			var cgo = getCardGOs (avatarIndex);
 			SoundManager.getInstance ().playSound (cardPoint, cgo.PlayerItem.getSex ());
@@ -369,10 +396,11 @@ namespace AssemblyCSharp
 
 
 		}
+
 		/**往桌子上打出一张牌**/
 		public GameObject addCardToTable (int avatarIndex, int cardpoint)//
 		{
-			Direction dir = _data.toGameDir(avatarIndex);
+			Direction dir = _data.toGameDir (avatarIndex);
 			GameObject card = null;
 			String path = "";
 			Vector3 position = Vector3.one;
@@ -393,7 +421,7 @@ namespace AssemblyCSharp
 			}
 
 			card = newGameObject (path, cgo.TableParent, position);
-			card.GetComponent<PutoutCardView> ().setPoint (cardpoint,dir);
+			card.GetComponent<PutoutCardView> ().setPoint (cardpoint, dir);
 
 			cgo.Table.Add (card);
 			card.GetComponent<PutoutCardView> ().setOwnerList (cgo.Table);
@@ -415,9 +443,10 @@ namespace AssemblyCSharp
 			var dir = _data.toGameDir (avatarIndex);
 			return getCardGOs (dir);
 		}
-		private GameObject newGameObject(string path,Transform parent,Vector3 position)
+
+		private GameObject newGameObject (string path, Transform parent, Vector3 position)
 		{
-			GameObject obj = GameObject.Instantiate(Resources.Load(path)) as GameObject;
+			GameObject obj = GameObject.Instantiate (Resources.Load (path)) as GameObject;
 			obj.transform.SetParent (parent);
 			obj.transform.localScale = Vector3.one;
 			obj.transform.localPosition = position;
