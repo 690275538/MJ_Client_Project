@@ -356,9 +356,9 @@ namespace AssemblyCSharp
 			if (type == 5) {
 				int index = findIndexInPGC (avatarIndex, cardPoint);
 				GameObject card = newGameObject (Normal_PATHS [(int)dir], cgo.PGCParent, _getPGCPosition (dir, 1, 1, index));
-				if (dir == Direction.R) {
-					card.transform.SetSiblingIndex (0);
-				}
+//				if (dir == Direction.R) {
+//					card.transform.SetSiblingIndex (0);
+//				}
 				card.GetComponent<PutoutCardView> ().setPoint (cardPoint,dir);
 				cgo.PGC [index].Add (card);
 				return;
@@ -407,7 +407,7 @@ namespace AssemblyCSharp
 		private Vector3 _getPGCPosition(Direction dir,int k,int j,int count){
 			Vector3 position = Vector3.one;
 			if (dir == Direction.B) {
-				position = new Vector3 (-370f + count * 190f + k * 60f, j * 24);
+				position = new Vector3 (-370f + count * 190f + k * 59f, j * 24);
 			} else if (dir == Direction.T) {
 				position = new Vector3 (251 - count * 120f + k * 37, j * 13);
 			} else if (dir == Direction.L) {

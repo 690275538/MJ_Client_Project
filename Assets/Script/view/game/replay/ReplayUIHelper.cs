@@ -77,7 +77,7 @@ namespace AssemblyCSharp
 					}
 					switch (i) {
 					case 0:
-						cgo.Hand [a].transform.localPosition = new Vector3 (410 - _a * 79, 0);
+						cgo.Hand [a].transform.localPosition = new Vector3 (370 - _a * 57, 0);
 						cgo.Hand [a].transform.SetSiblingIndex (a);
 						break;
 					case 1:
@@ -126,7 +126,32 @@ namespace AssemblyCSharp
 			}
 			rangeHandCard ();
 		}
+		public void chiCard (int avatarIndex, int cardPoint,int chiType)//其他人碰牌
+		{
+			var cgo = getCardGOs (avatarIndex);
 
+			cgo.PlayerItem.showChiEffect ();
+			SoundManager.getInstance ().playSoundByAction ("chi", cgo.PlayerItem.getSex ());
+
+
+			removeLastPutoutCard ();
+			if (chiType < 0) {
+				removeHandCard (avatarIndex, cardPoint - 1, 1);
+				removeHandCard (avatarIndex, cardPoint - 2, 1);
+				addPGCCards (avatarIndex, cardPoint - 2, 4);
+			} else if (chiType == 0) {
+				removeHandCard (avatarIndex, cardPoint - 1, 1);
+				removeHandCard (avatarIndex, cardPoint + 1, 1);
+				addPGCCards (avatarIndex, cardPoint - 1, 4);
+			} else {
+				removeHandCard (avatarIndex, cardPoint + 1, 1);
+				removeHandCard (avatarIndex, cardPoint + 2, 1);
+				addPGCCards (avatarIndex, cardPoint, 4);
+			}
+			rangeHandCard ();
+
+
+		}
 		public void pengCard (int avatarIndex, int cardPoint)//其他人碰牌
 		{
 			var cgo = getCardGOs (avatarIndex);
@@ -166,9 +191,9 @@ namespace AssemblyCSharp
 			if (type == 5) {
 				int index = findIndexInPGC (avatarIndex, cardPoint);
 				GameObject card = newGameObject (Normal_PATHS [(int)dir], cgo.PGCParent, _getPGCPosition (dir, 1, 1, index));
-				if (dir == Direction.R) {
-					card.transform.SetSiblingIndex (0);
-				}
+//				if (dir == Direction.R) {
+//					card.transform.SetSiblingIndex (0);
+//				}
 				card.GetComponent<PutoutCardView> ().setPoint (cardPoint, dir);
 				cgo.PGC [index].Add (card);
 				return;
@@ -221,29 +246,15 @@ namespace AssemblyCSharp
 		{
 			Vector3 position = Vector3.one;
 			if (dir == Direction.B) {
-				position = new Vector3 (-370f + count * 190f + k * 60f, j * 24);
+				position = new Vector3 (-270f + count * 190f + k * 57f, j * 24);
 			} else if (dir == Direction.T) {
-				position = new Vector3 (251 - count * 120f + k * 37, j * 13);
+				position = new Vector3 (0f - count * 120f + k * 36, j * 13);
 			} else if (dir == Direction.L) {
 				position = new Vector3 (0f, 122 - count * 95f - k * 28f + j * 15);
 			} else if (dir == Direction.R) {
 				position = new Vector3 (0, -122 + count * 95 + k * 28f + j * 13);
 			}
 
-//			switch (avaIndex) {
-//			case 0:
-//				tempvector3 = new Vector3 (-380 + pengGangLists [avaIndex].Count * 200 + i * 60, 0);
-//				break;
-//			case 1:
-//				tempvector3 = new Vector3 (0, -116 + pengGangLists [avaIndex].Count * 90 + i * 26f);
-//				break;
-//			case 2:
-//				tempvector3 = new Vector3 (231 - pengGangLists [avaIndex].Count * 120f + i * 37, 0, 0);
-//				break;
-//			case 3:
-//				tempvector3 = new Vector3 (0, 142 - pengGangLists [avaIndex].Count * 90f - i * 26f, 0);
-//				break;
-//			}
 			return position;
 		}
 
@@ -294,7 +305,7 @@ namespace AssemblyCSharp
 
 			switch (dir) {
 			case Direction.B:
-				card.transform.localPosition = new Vector3 (520, 0);
+				card.transform.localPosition = new Vector3 (480, 0);
 				break;
 			case Direction.R:
 				card.transform.localPosition = new Vector3 (0, 250);
@@ -372,21 +383,21 @@ namespace AssemblyCSharp
 			Direction dir = _data.toGameDir (avatarIndex);
 			switch (dir) {
 			case Direction.T: //上
-				position = new Vector3 (0, -180f);
+				position = new Vector3 (0, 157f);
 				break;
 			case Direction.L: //左
-				position = new Vector3 (100, 0f);
+				position = new Vector3 (-250, 0f);
 				break;
 			case Direction.R: //右
-				position = new Vector3 (-100, 0f);
+				position = new Vector3 (250, 0f);
 				break;
 			case Direction.B:
-				position = new Vector3 (0, 180);
+				position = new Vector3 (0, -177);
 				break;
 			}
 
 
-			GameObject card = newGameObject ("Prefab/card/PutOutCard", cgo.HandParent, position);
+			GameObject card = newGameObject ("Prefab/card/PutOutCard", cgo.HandParent.parent, position);
 			card.name = "putOutCard";
 			card.transform.localScale = Vector3.one;
 			card.GetComponent<PutoutCardView> ().setPoint (cardPoint);

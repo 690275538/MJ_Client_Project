@@ -61,9 +61,8 @@ public class ReplayView : MonoBehaviour
 		case APIS.REPLAY_RESPONSE://回放
 			replayVO = JsonMapper.ToObject<GamePlayResponseVo> (response.message);
 			_data.replayVO = replayVO;
-			_tableView.updateRule ();
-
 			_data.AvatarList = replayVO.playerItems;
+			_tableView.updateRule ();
 
 			_uiHelper.start ();
 			_data.isPlaying = true;
@@ -89,7 +88,7 @@ public class ReplayView : MonoBehaviour
 			}
 		}
 	}
-
+	//type           操作相关步骤 1出牌，2摸牌，3吃，4碰，5杠，6胡(自摸/点炮),7抢胡,8抓码,9:流局.....
 	private void stepAction ()
 	{
 		GameBehaviourVO gvo = replayVO.behavieList [curBehaviorIndex];
@@ -103,6 +102,8 @@ public class ReplayView : MonoBehaviour
 		} else if (gvo.type == 2) {
 			_data.remainCardNum--;
 			_uiHelper.pickCard (avatarIndex, cardPoint);
+		} else if (gvo.type == 3) {
+			_uiHelper.chiCard (avatarIndex, cardPoint, gvo.gangType);
 		} else if (gvo.type == 4) {
 			_uiHelper.pengCard (avatarIndex, cardPoint);
 		} else if (gvo.type == 5) {

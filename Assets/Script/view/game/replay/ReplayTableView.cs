@@ -59,6 +59,7 @@ namespace AssemblyCSharp
 		{
 			RoomVO rvo = _data.replayVO.roomvo;
 			roomRemarkText.text = GameHelper.getHelper(rvo.roomType).getRuleStr(rvo);
+			remainRoundText.text = (rvo.roundNumber - _data.AvatarList [_data.myIndex].gameRound).ToString();
 		}
 	}
 }
