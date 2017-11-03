@@ -661,7 +661,7 @@ GameObject:
   - 222: {fileID: 22237506}
   - 114: {fileID: 11429964}
   m_Layer: 5
-  m_Name: Gang
+  m_Name: SpecialEffects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2649,7 +2649,7 @@ Animator:
   m_GameObject: {fileID: 108882}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: b334aeddbc40f4c4e9e8cea371fe7b57, type: 2}
+  m_Controller: {fileID: 9100000, guid: 13e22ed356256e54a9cbc3b316c23322, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
